@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffff;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Add to your globals.css */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #FF4F18 #22262A;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #22262A;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #FF4F18;
+  border-radius: 20px;
+}

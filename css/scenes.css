@@ -1,0 +1,226 @@
+.scenes-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.scenes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.scenes-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+}
+
+.back-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.scenes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.scene-card {
+    background: rgba(33, 33, 33, 0.95);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.scene-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.scene-preview {
+    width: 100%;
+    height: 200px;
+    background: #1a1a1a;
+    position: relative;
+}
+
+.scene-info {
+    padding: 1rem;
+}
+
+.scene-title {
+    color: white;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.scene-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.scene-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.view-btn {
+    background: #2196f3;
+    color: white;
+}
+
+.book-btn {
+    background: #f44336;
+    color: white;
+}
+
+.scene-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.bookable {
+    position: relative;
+}
+
+.bookable::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #f44336;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.booking-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.booking-dialog-content {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.booking-dialog h2 {
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.bookable-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.bookable-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+}
+
+.bookable-item.booked {
+    opacity: 0.6;
+    background: rgba(244, 67, 54, 0.1);
+}
+
+.bookable-item i {
+    font-size: 1.5rem;
+}
+
+.book-item-btn {
+    margin-left: auto;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: #f44336;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.book-item-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.book-item-btn:not(:disabled):hover {
+    background: #d32f2f;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.close-dialog {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: #666;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-dialog:hover {
+    background: #777;
+}
+
+.scene-stats {
+    margin-bottom: 1rem;
+    color: #aaa;
+}
+
+.stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}

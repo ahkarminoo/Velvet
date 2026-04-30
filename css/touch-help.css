@@ -1,0 +1,666 @@
+/* Touch help overlay for 3D floorplan */
+.touch-help-overlay {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    max-width: 250px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.touch-help-overlay h4 {
+    margin: 0 0 0.5rem 0;
+    color: #FF4F18;
+    font-size: 1rem;
+}
+
+.touch-help-overlay ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.touch-help-overlay li {
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+}
+
+.touch-help-overlay .close-help {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.touch-help-overlay .close-help:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.touch-help-overlay .close-help:active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Hide on desktop */
+@media (hover: hover) and (pointer: fine) {
+    .touch-help-overlay {
+        display: none;
+    }
+}
+
+/* Show only on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .touch-help-overlay {
+        display: block;
+    }
+}
+
+/* Animation for help overlay */
+.touch-help-overlay {
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Touch gesture indicators */
+.touch-gesture {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.8rem;
+    margin: 0 0.2rem;
+}
+
+/* Visual feedback for touch interactions */
+.touch-feedback {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    background: rgba(255, 79, 24, 0.3);
+    border: 2px solid #FF4F18;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: touchPulse 0.3s ease-out;
+}
+
+@keyframes touchPulse {
+    0% {
+        width: 20px;
+        height: 20px;
+        opacity: 1;
+    }
+    100% {
+        width: 60px;
+        height: 60px;
+        opacity: 0;
+    }
+}
+
+/* Rotation indicator */
+.rotation-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    z-index: 1001;
+    pointer-events: none;
+    animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    20%, 80% { opacity: 1; }
+}
+
+/* Rotation Mode Indicator */
+.rotation-mode-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 136, 255, 0.9);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 1002;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(0, 136, 255, 0.3);
+    transform: translateX(100%);
+    opacity: 0;
+    animation: slideInRight 0.5s forwards;
+}
+
+.rotation-mode-indicator .mode-info {
+    text-align: center;
+}
+
+.rotation-mode-indicator strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.rotation-mode-indicator small {
+    opacity: 0.8;
+    font-size: 0.8rem;
+}
+
+/* Rotation Feedback */
+.rotation-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 136, 255, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    z-index: 1001;
+    pointer-events: none;
+    animation: pulse 0.5s ease-in-out;
+}
+
+/* Rotation Button Styles */
+.rotation-button {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rotation-button:hover {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+.rotation-button:active {
+    transform: scale(0.9);
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* Scaling Feedback */
+.scaling-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 165, 0, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    z-index: 1001;
+    pointer-events: none;
+    animation: pulse 0.5s ease-in-out;
+}
+
+/* Touch Scaling Indicator */
+.touch-scaling-indicator {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 165, 0, 0.9);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 1002;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+    transform: translateX(-100%);
+    opacity: 0;
+    animation: slideInLeft 0.5s forwards;
+}
+
+.touch-scaling-indicator .scaling-info {
+    text-align: center;
+}
+
+.touch-scaling-indicator strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.touch-scaling-indicator small {
+    opacity: 0.8;
+    font-size: 0.8rem;
+}
+
+/* Animations */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Scaling Slider Container */
+.scaling-slider-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1003;
+    min-width: 350px;
+    max-width: 90vw;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scaling-slider-container.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.scaling-slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.scaling-slider-header h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.close-slider {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-slider:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.scaling-slider-content {
+    padding: 25px;
+}
+
+.slider-wrapper {
+    margin-bottom: 25px;
+}
+
+.slider-wrapper label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #333;
+    font-size: 1rem;
+}
+
+.scale-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #e0e0e0;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.scale-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+    transition: all 0.2s ease;
+}
+
+.scale-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.scale-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+    transition: all 0.2s ease;
+}
+
+.scale-slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.slider-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.reset-scale-btn,
+.preset-scale-btn {
+    padding: 10px 16px;
+    border: 2px solid #007bff;
+    background: white;
+    color: #007bff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 60px;
+}
+
+.reset-scale-btn:hover,
+.preset-scale-btn:hover {
+    background: #007bff;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.reset-scale-btn:active,
+.preset-scale-btn:active {
+    transform: translateY(0);
+}
+
+/* Touch device specific styles */
+@media (hover: none) and (pointer: coarse) {
+    .rotation-mode-indicator {
+        font-size: 1rem;
+        padding: 20px 25px;
+    }
+    
+    .rotation-feedback {
+        font-size: 1.2rem;
+        padding: 15px 25px;
+    }
+    
+    .rotation-button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .scaling-feedback {
+        font-size: 1.2rem;
+        padding: 15px 25px;
+    }
+    
+    .touch-scaling-indicator {
+        font-size: 1rem;
+        padding: 20px 25px;
+    }
+    
+    .scaling-slider-container {
+        min-width: 300px;
+        max-width: 95vw;
+    }
+    
+    .scaling-slider-header {
+        padding: 25px 30px 20px;
+    }
+    
+    .scaling-slider-content {
+        padding: 30px;
+    }
+    
+    .close-slider {
+        width: 44px;
+        height: 44px;
+        font-size: 1.8rem;
+    }
+    
+    .scale-slider {
+        height: 12px;
+    }
+    
+    .scale-slider::-webkit-slider-thumb {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .scale-slider::-moz-range-thumb {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .reset-scale-btn,
+    .preset-scale-btn {
+        min-height: 44px;
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+
+    /* Enhanced touch-friendly toolbar buttons */
+    .toolbar-btn {
+        min-width: 48px !important;
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+        font-size: 1rem !important;
+        margin: 4px !important;
+    }
+
+    /* Better touch targets for sidebar */
+    .sidebar-toggle {
+        min-width: 48px !important;
+        min-height: 48px !important;
+        padding: 12px !important;
+    }
+
+    /* Larger touch targets for library items */
+    .library-item {
+        min-height: 60px !important;
+        padding: 12px !important;
+        margin: 6px 0 !important;
+    }
+}
+
+/* Portrait orientation specific adjustments */
+@media (hover: none) and (pointer: coarse) and (orientation: portrait) {
+    .touch-help-overlay {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        width: auto;
+    }
+
+    .rotation-mode-indicator,
+    .touch-scaling-indicator {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        transform: none;
+        animation: slideInDown 0.5s forwards;
+    }
+
+    .scaling-slider-container {
+        top: 20%;
+        max-width: 95vw;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+}
+
+/* Landscape orientation optimizations */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+    .touch-help-overlay {
+        max-width: 280px;
+    }
+
+    .scaling-slider-container {
+        min-width: 350px;
+        max-width: 60vw;
+    }
+}
+
+/* Small screen mobile devices */
+@media (hover: none) and (pointer: coarse) and (max-width: 480px) {
+    .touch-help-overlay {
+        font-size: 0.8rem;
+        padding: 0.8rem;
+        max-width: calc(100vw - 20px);
+    }
+
+    .rotation-feedback,
+    .scaling-feedback {
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+
+    .scaling-slider-container {
+        min-width: 280px;
+        max-width: 95vw;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+
+    .scaling-slider-container.show {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* High DPI displays */
+@media (hover: none) and (pointer: coarse) and (-webkit-min-device-pixel-ratio: 2) {
+    .touch-feedback {
+        border-width: 1px;
+    }
+
+    .rotation-mode-indicator,
+    .touch-scaling-indicator {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Animation for slide down (portrait mode) */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Touch ripple effect for better feedback */
+.touch-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Improved accessibility for touch devices */
+@media (hover: none) and (pointer: coarse) {
+    /* Ensure all interactive elements are large enough */
+    button, .btn, .toolbar-btn, .sidebar-toggle {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 8px 12px;
+    }
+
+    /* Better focus indicators for keyboard navigation on touch devices */
+    button:focus, .btn:focus, .toolbar-btn:focus {
+        outline: 3px solid #007bff;
+        outline-offset: 2px;
+    }
+
+    /* Improved spacing for touch interfaces */
+    .toolbar {
+        gap: 8px;
+        padding: 12px;
+    }
+
+    /* Larger close buttons for better usability */
+    .close-help, .close-slider {
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 1.5rem;
+    }
+}
