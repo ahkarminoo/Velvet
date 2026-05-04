@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { 
-  FaHome, 
-  FaSignOutAlt, 
-  FaUserEdit, 
+import {
+  FaHome,
+  FaSignOutAlt,
+  FaUserEdit,
   FaUser,
   FaEnvelope,
   FaPhone,
@@ -20,6 +20,7 @@ import {
   FaClock,
   FaUsers,
   FaTable,
+  FaTicketAlt,
 } from "react-icons/fa";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -46,6 +47,8 @@ export default function CustomerProfile() {
   const [savedRestaurants, setSavedRestaurants] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [bookingsLoading, setBookingsLoading] = useState(false);
+  const [tickets, setTickets] = useState([]);
+  const [ticketsLoading, setTicketsLoading] = useState(false);
 
   // ✅ Initialize form only ONCE when userProfile is loaded
   useEffect(() => {
@@ -354,11 +357,32 @@ export default function CustomerProfile() {
     return hoursUntilBooking >= 2;
   };
 
+  const fetchUserTickets = async () => {
+    if (!userProfile) return;
+    setTicketsLoading(true);
+    try {
+      const token = await getAuthToken();
+      const res = await fetch('/api/customer/tickets', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Failed to fetch tickets');
+      const data = await res.json();
+      setTickets(data.tickets || []);
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+    } finally {
+      setTicketsLoading(false);
+    }
+  };
+
   // Effect for fetching data based on active tab
   useEffect(() => {
     if (activeTab === "activities") {
       fetchSavedRestaurants();
       fetchUserBookings();
+    }
+    if (activeTab === "tickets") {
+      fetchUserTickets();
     }
   }, [activeTab, userProfile]);
 
@@ -488,6 +512,18 @@ export default function CustomerProfile() {
                   >
                     <FaHeart />
                     <span>My Activities</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab("tickets")}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                      activeTab === "tickets"
+                        ? "bg-[#FF4F18] text-white"
+                        : "text-gray-600 hover:bg-gray-100"
+                    }`}
+                  >
+                    <FaTicketAlt />
+                    <span>My Tickets</span>
                   </button>
                 </nav>
               </div>
@@ -757,6 +793,94 @@ export default function CustomerProfile() {
                     ) : (
                       <div className="text-center py-8 text-gray-500">
                         No reservations found
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              {/* My Tickets Tab */}
+              {activeTab === "tickets" && (
+                <div className="space-y-4">
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">My Event Tickets</h3>
+                    {ticketsLoading ? (
+                      <div className="flex justify-center py-8">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4F18]" />
+                      </div>
+                    ) : tickets.length === 0 ? (
+                      <div className="text-center py-12 text-gray-500">
+                        <FaTicketAlt className="text-4xl mx-auto mb-3 text-gray-300" />
+                        <p>No tickets yet</p>
+                        <button
+                          onClick={() => router.push('/events')}
+                          className="mt-4 px-6 py-2 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90 transition-colors text-sm"
+                        >
+                          Browse Events
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {tickets.map((ticket) => {
+                          const ev = ticket.eventId;
+                          const venue = ticket.venueId;
+                          const eventDate = ev?.date ? new Date(ev.date).toLocaleDateString('en-GB', {
+                            weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+                          }) : '—';
+                          const isPast = ev?.date ? new Date(ev.date) < new Date() : false;
+                          return (
+                            <div key={ticket._id}
+                              className="border rounded-xl overflow-hidden"
+                              style={{ borderColor: isPast ? '#E5E7EB' : '#FF4F18' }}
+                            >
+                              {/* Ticket header */}
+                              <div className="px-5 py-3 flex items-center justify-between"
+                                style={{ background: isPast ? '#F9FAFB' : '#FFF5F2' }}>
+                                <div className="flex items-center gap-2">
+                                  <FaTicketAlt style={{ color: isPast ? '#9CA3AF' : '#FF4F18' }} />
+                                  <span className="font-bold text-sm" style={{ color: isPast ? '#6B7280' : '#FF4F18' }}>
+                                    {ticket.ticketRef}
+                                  </span>
+                                </div>
+                                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                                  isPast ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-700'
+                                }`}>
+                                  {isPast ? 'Past' : 'Upcoming'}
+                                </span>
+                              </div>
+
+                              {/* Ticket body */}
+                              <div className="px-5 py-4">
+                                <h4 className="font-bold text-gray-900 text-base">{ev?.name || 'Event'}</h4>
+                                {venue?.restaurantName && (
+                                  <p className="text-sm text-gray-500 mt-0.5">{venue.restaurantName}</p>
+                                )}
+                                <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                                  <div className="flex items-center gap-2 text-gray-600">
+                                    <FaCalendarAlt className="text-[#FF4F18] flex-shrink-0" />
+                                    {eventDate}
+                                  </div>
+                                  <div className="flex items-center gap-2 text-gray-600">
+                                    <FaClock className="text-[#FF4F18] flex-shrink-0" />
+                                    {ev?.startTime || '—'}
+                                  </div>
+                                  <div className="flex items-center gap-2 text-gray-600">
+                                    <FaUsers className="text-[#FF4F18] flex-shrink-0" />
+                                    {ticket.quantity} guest{ticket.quantity !== 1 ? 's' : ''}
+                                  </div>
+                                  <div className="flex items-center gap-2 text-gray-600">
+                                    <FaTicketAlt className="text-[#FF4F18] flex-shrink-0" />
+                                    {ticket.attendanceType === 'ga' ? 'General Admission' : 'Table'}
+                                  </div>
+                                </div>
+                                {ticket.coverCharge > 0 && (
+                                  <p className="mt-2 text-sm font-semibold" style={{ color: '#FF4F18' }}>
+                                    ฿{ticket.coverCharge * ticket.quantity} cover at door
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>

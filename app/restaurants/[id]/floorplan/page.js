@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import RestaurantFloorPlan from '@/components/RestaurantFloorPlan';
 import { FaMapMarkerAlt, FaClock, FaPhone, FaStar, FaHome, FaShare, FaBookmark, FaUtensils, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Image from 'next/image';
@@ -37,14 +37,19 @@ function toLatLngLiteral(coordinates) {
   return null;
 }
 
-export default function RestaurantFloorplanPage() {
+function RestaurantFloorplanContent() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
   const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
   const router = useRouter();
+
+  const prefilledDate = searchParams.get('date') || null;
+  const prefilledTime = searchParams.get('time') || null;
+  const prefilledEventId = searchParams.get('eventId') || null;
   
   // Get restaurant ID from URL params or LIFF query parameters
   const getRestaurantId = () => {
@@ -443,14 +448,42 @@ export default function RestaurantFloorplanPage() {
 
         {/* Main panel — floorplan + reviews */}
         <div className="flex-1 overflow-y-auto" style={{ background: '#0C0B10' }}>
+          {/* Event banner — only shown when arriving from an event page */}
+          {prefilledDate && prefilledTime && (
+            <div className="mx-4 lg:mx-6 mt-4 px-4 py-3 rounded-xl flex items-center gap-3"
+              style={{ background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)' }}>
+              <span style={{ color: '#C9A84C', fontSize: 18 }}>🎟</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold" style={{ color: '#C9A84C' }}>Booking for Event Night</p>
+                <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>
+                  Date and time pre-selected from the event. Pick your table below.
+                </p>
+              </div>
+              <button
+                onClick={() => window.history.back()}
+                className="text-xs flex-shrink-0 hover:opacity-70 transition-opacity"
+                style={{ color: '#9B96A8' }}
+              >
+                ← Back to event
+              </button>
+            </div>
+          )}
+
           {/* Floorplan */}
           <div className="m-4 lg:m-6 rounded-2xl overflow-hidden" style={{ border: '1px solid #1E1D2A' }}>
             <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: '#1E1D2A', background: '#161520' }}>
               <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>Floor Plan</h2>
-              <span className="text-xs" style={{ color: '#9B96A8' }}>Click a table to book</span>
+              <span className="text-xs" style={{ color: '#9B96A8' }}>
+                {prefilledDate ? `${prefilledDate} · ${prefilledTime}` : 'Click a table to book'}
+              </span>
             </div>
             <div style={{ background: '#0C0B10' }}>
-              <PublicFloorplanSelector restaurant={restaurant} />
+              <PublicFloorplanSelector
+                restaurant={restaurant}
+                defaultDate={prefilledDate}
+                defaultTime={prefilledTime}
+                defaultEventId={prefilledEventId}
+              />
             </div>
           </div>
 
@@ -462,4 +495,17 @@ export default function RestaurantFloorplanPage() {
       </div>
     </div>
   );
-} 
+}
+
+export default function RestaurantFloorplanPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0C0B10' }}>
+        <div className="w-10 h-10 rounded-full border-2 animate-spin"
+          style={{ borderColor: 'rgba(201,168,76,0.2)', borderTop: '2px solid #C9A84C' }} />
+      </div>
+    }>
+      <RestaurantFloorplanContent />
+    </Suspense>
+  );
+}

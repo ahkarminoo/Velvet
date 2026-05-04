@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import RestaurantInformation from '@/components/RestaurantInformation'
 import RestaurantProfileForm from '@/components/RestaurantProfileForm'
 import SubscriptionManagement from '@/components/SubscriptionManagement'
-import { RiRestaurantLine, RiLayoutLine, RiCalendarLine, RiVipCrownLine, RiUserLine, RiTeamLine, RiBarChartLine, RiMapPinLine, RiCalendarEventLine } from 'react-icons/ri'
+import { RiRestaurantLine, RiLayoutLine, RiCalendarLine, RiVipCrownLine, RiUserLine, RiTeamLine, RiBarChartLine, RiMapPinLine, RiCalendarEventLine, RiDashboardLine, RiCameraLine, RiPriceTag3Line } from 'react-icons/ri'
 import { motion } from 'framer-motion'
 import OwnerProfile from '@/components/OwnerProfile'
 import RestaurantFloorPlan from '@/components/RestaurantFloorPlan'
@@ -13,6 +13,9 @@ import RestaurantReservation from '@/components/RestaurantReservation'
 import StaffManagement from '@/components/StaffManagement'
 import ZoneManager from '@/components/ZoneManager'
 import EventManager from '@/components/EventManager'
+import DashboardOverview from '@/components/DashboardOverview'
+import RealViewManager from '@/components/RealViewManager'
+import TableLabelManager from '@/components/TableLabelManager'
 import Link from 'next/link'
 import Image from 'next/image'
 import { FaHome, FaSignOutAlt } from 'react-icons/fa'
@@ -43,7 +46,7 @@ export default function RestaurantSetupDashboard() {
   const router = useRouter()
   const [restaurant, setRestaurant] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [activeSection, setActiveSection] = useState('owner-profile')
+  const [activeSection, setActiveSection] = useState('overview')
   const [isCreatingNew, setIsCreatingNew] = useState(false)
   const [floorplan, setFloorplan] = useState(null)
   const [token, setToken] = useState(null)
@@ -150,178 +153,112 @@ export default function RestaurantSetupDashboard() {
   };
 
 
+  const NAV = [
+    { id: 'overview',               icon: RiDashboardLine,    label: 'Overview' },
+    { id: 'owner-profile',          icon: RiUserLine,         label: 'Profile' },
+    { id: 'profile',                icon: RiRestaurantLine,   label: 'Venue Profile' },
+    { id: 'floorplan',              icon: RiLayoutLine,       label: 'Floor Plan' },
+    { id: 'reservation',            icon: RiCalendarLine,     label: 'Reservations' },
+    { id: 'zones',                  icon: RiMapPinLine,       label: 'Zones & Pricing' },
+    { id: 'events',                 icon: RiCalendarEventLine,label: 'Events' },
+    { id: 'realview',               icon: RiCameraLine,       label: '360° Views' },
+    { id: 'table-labels',           icon: RiPriceTag3Line,    label: 'Table Labels' },
+    { id: 'subscription-management',icon: RiVipCrownLine,     label: 'Subscription' },
+    { id: 'staff',                  icon: RiTeamLine,         label: 'Staff' },
+  ];
+
+  const SECTION_LABEL = {
+    'overview': 'Overview', 'owner-profile': 'Owner Profile', 'profile': 'Venue Profile',
+    'floorplan': 'Floor Plan', 'reservation': 'Reservations', 'zones': 'Zones & Pricing',
+    'events': 'Events', 'realview': '360° Views', 'table-labels': 'Table Labels', 'subscription-management': 'Subscription & Usage', 'staff': 'Staff Management',
+  };
+
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="flex min-h-screen" style={{ background: '#F8F7F5' }}>
       {/* Sidebar */}
-      <div className="w-72 bg-white z-50 shadow-lg fixed left-0 top-0 h-screen border-r border-gray-100">
-        <div className="p-6 flex flex-col h-full">
-          {/* Velvet Brand */}
-          <div className="mb-8">
-            <Link href="/restaurant-owner" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #C9A84C, #E8C97A)' }}>
-                <span className="font-black text-sm" style={{ color: '#0C0B10' }}>V</span>
-              </div>
-              <span className="font-black text-xl tracking-tight text-gray-800" style={{ fontFamily: 'serif' }}>
-                Velvet
-              </span>
-            </Link>
-            <p className="text-xs text-gray-400 mt-1 ml-10">Venue Management</p>
-          </div>
-
-          {/* Navigation Menu */}
-          <nav className="flex-1 space-y-2">
-            <button
-              onClick={() => setActiveSection('owner-profile')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'owner-profile'
-                  ? 'bg-[#FF4F18] text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]'
-              }`}
-            >
-              <RiUserLine className="text-xl" />
-              <span className="text-sm">Profile</span>
-            </button>
-
-            <button
-              onClick={() => setActiveSection('profile')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'profile'
-                  ? 'bg-[#FF4F18] text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]'
-              }`}
-              type="button"
-            >
-              <RiRestaurantLine className="text-xl" />
-              <span className="text-sm">Restaurant Profile</span>
-            </button>
-            
-            <button
-              onClick={() => setActiveSection('floorplan')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'floorplan'
-                  ? 'bg-[#FF4F18] text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]'
-              }`}
-              type="button"
-            >
-              <RiLayoutLine className="text-xl" />
-              <span className="text-sm">Floor Plan</span>
-            </button>
-            
-            <button
-              onClick={() => setActiveSection('reservation')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'reservation'
-                  ? 'bg-[#FF4F18] text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]'
-              }`}
-            >
-              <RiCalendarLine className="text-xl" />
-              <span className="text-sm">Reservation</span>
-            </button>
-            
-            <button
-              onClick={() => setActiveSection('zones')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'zones'
-                  ? 'text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
-              style={activeSection === 'zones' ? { background: '#C9A84C' } : {}}
-              type="button"
-            >
-              <RiMapPinLine className="text-xl" />
-              <span className="text-sm">Zones & Pricing</span>
-            </button>
-
-            <button
-              onClick={() => setActiveSection('events')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'events'
-                  ? 'text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
-              style={activeSection === 'events' ? { background: '#C9A84C' } : {}}
-              type="button"
-            >
-              <RiCalendarEventLine className="text-xl" />
-              <span className="text-sm">Events</span>
-            </button>
-
-            <button
-              onClick={() => setActiveSection('subscription-management')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'subscription-management'
-                  ? 'bg-[#FF4F18] text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]'
-              }`}
-            >
-              <RiVipCrownLine className="text-xl" />
-              <span className="text-sm">Subscription & Usage</span>
-            </button>
-            
-            <button
-              onClick={() => setActiveSection('staff')}
-              className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200 ${
-                activeSection === 'staff'
-                  ? 'bg-[#FF4F18] text-white font-medium shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]'
-              }`}
-            >
-              <RiTeamLine className="text-xl" />
-              <span className="text-sm">Staff Management</span>
-            </button>
-            
-            <Link
-              href="/restaurant-owner"
-              className="flex items-center space-x-3 w-full p-3 rounded-lg transition-all duration-200
-                text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]"
-            >
-              <FaHome className="text-xl" />
-              <span className="text-sm">Home</span>
-            </Link>
-
-            {/* Sign Out Button at Bottom */}
-            <div className="absolute bottom-0 left-0 w-full p-4 border-t border-gray-100">
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-3 w-full p-3 rounded-lg text-red-500 hover:bg-red-50 transition-all duration-200"
-              >
-                <FaSignOutAlt className="text-xl" />
-                <span className="text-sm">Sign Out</span>
-              </button>
+      <div className="w-64 z-50 fixed left-0 top-0 h-screen flex flex-col" style={{ background: '#0C0B10', borderRight: '1px solid #1E1D2A' }}>
+        {/* Brand */}
+        <div className="px-5 py-5 border-b" style={{ borderColor: '#1E1D2A' }}>
+          <Link href="/restaurant-owner" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: 'linear-gradient(135deg, #C9A84C, #E8C97A)' }}>
+              <span className="font-black text-sm" style={{ color: '#0C0B10', fontFamily: 'serif' }}>V</span>
             </div>
-          </nav>
+            <span className="font-black text-lg tracking-tight" style={{ color: '#F5F0E8', fontFamily: 'serif' }}>Velvet</span>
+          </Link>
+          <p className="text-xs mt-1 ml-10" style={{ color: '#9B96A8' }}>Venue Management</p>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+          {NAV.map(({ id, icon: Icon, label }) => {
+            const active = activeSection === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setActiveSection(id)}
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150"
+                style={{
+                  background: active ? 'rgba(201,168,76,0.15)' : 'transparent',
+                  color: active ? '#C9A84C' : '#9B96A8',
+                  border: active ? '1px solid rgba(201,168,76,0.25)' : '1px solid transparent',
+                }}
+              >
+                <Icon style={{ fontSize: '16px', flexShrink: 0 }} />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Bottom actions */}
+        <div className="px-3 py-4 border-t space-y-0.5" style={{ borderColor: '#1E1D2A' }}>
+          <Link
+            href="/restaurant-owner"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+            style={{ color: '#9B96A8' }}
+          >
+            <FaHome style={{ fontSize: '14px' }} />
+            <span>Home</span>
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+            style={{ color: '#EF4444' }}
+          >
+            <FaSignOutAlt style={{ fontSize: '14px' }} />
+            <span>Sign Out</span>
+          </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-72 p-8">
-        <motion.div 
+      <div className="flex-1 ml-64 p-8">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
           className="max-w-4xl mx-auto"
         >
-          {/* Header Section */}
+          {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-gray-800">
-              {activeSection === 'owner-profile' && 'Owner Profile'}
-              {activeSection === 'profile' && 'Venue Profile'}
-              {activeSection === 'floorplan' && 'Floor Plan'}
-              {activeSection === 'reservation' && 'Reservations'}
-              {activeSection === 'zones' && 'Zones & Pricing'}
-              {activeSection === 'events' && 'Events'}
-              {activeSection === 'subscription-management' && 'Subscription & Usage'}
-              {activeSection === 'staff' && 'Staff Management'}
-            </h1>
-            <p className="text-gray-500 mt-1">
-              Manage your venue settings and information
-            </p>
+            <h1 className="text-2xl font-bold text-gray-800">{SECTION_LABEL[activeSection]}</h1>
+            <p className="text-gray-500 mt-1">Manage your venue settings and information</p>
           </div>
 
           {/* Content Sections */}
+          {activeSection === 'overview' && (
+            <div className="rounded-xl">
+              {restaurant ? (
+                <DashboardOverview restaurantId={restaurant._id} token={token} />
+              ) : (
+                <div className="text-center py-12 text-gray-400">
+                  Create your restaurant profile first to see your overview.
+                </div>
+              )}
+            </div>
+          )}
+
           {activeSection === 'profile' && (
             <div className="space-y-6">
               {!restaurant && !isCreatingNew ? (
@@ -331,8 +268,8 @@ export default function RestaurantSetupDashboard() {
                   </h2>
                   <button
                     onClick={() => setIsCreatingNew(true)}
-                    className="px-4 py-2 rounded-lg bg-[#FF4F18] text-white hover:bg-[#FF4F18]/90 
-                             transition-all duration-200 flex items-center gap-2"
+                    className="px-4 py-2 rounded-lg text-white transition-all duration-200 flex items-center gap-2"
+                    style={{ background: '#C9A84C', color: '#0C0B10' }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
@@ -457,6 +394,38 @@ export default function RestaurantSetupDashboard() {
               ) : (
                 <p className="text-center py-8" style={{ color: '#9B96A8' }}>
                   Create your venue profile first to manage events.
+                </p>
+              )}
+            </div>
+          )}
+
+          {activeSection === 'realview' && (
+            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              {restaurant ? (
+                <RealViewManager
+                  restaurantId={restaurant._id}
+                  token={token}
+                  floorplans={allFloorplans}
+                />
+              ) : (
+                <p className="text-center py-8" style={{ color: '#9B96A8' }}>
+                  Create your venue profile first to manage 360° views.
+                </p>
+              )}
+            </div>
+          )}
+
+          {activeSection === 'table-labels' && (
+            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              {restaurant ? (
+                <TableLabelManager
+                  restaurantId={restaurant._id}
+                  token={token}
+                  floorplans={allFloorplans}
+                />
+              ) : (
+                <p className="text-center py-8" style={{ color: '#9B96A8' }}>
+                  Create your venue profile first to manage table labels.
                 </p>
               )}
             </div>

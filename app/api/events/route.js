@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Event from '@/models/Event';
+import '@/models/Restaurants';
 
 // GET /api/events — public event listing
 // Query params: venueId, type, date (YYYY-MM-DD), upcoming (true)

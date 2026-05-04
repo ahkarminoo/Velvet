@@ -33,6 +33,7 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
   const [showCreator, setShowCreator] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [ticketCounts, setTicketCounts] = useState({});
 
   const fetchEvents = useCallback(async () => {
     if (!restaurantId || !token) return;
@@ -53,6 +54,22 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
   }, [restaurantId, token]);
 
   useEffect(() => { fetchEvents(); }, [fetchEvents]);
+
+  useEffect(() => {
+    if (events.length === 0) return;
+    const published = events.filter(e => e.status === 'published' || e.status === 'completed');
+    Promise.all(
+      published.map(ev =>
+        fetch(`/api/events/${ev._id}/tickets`)
+          .then(r => r.ok ? r.json() : null)
+          .then(d => ({ id: ev._id, guests: d?.totalGuests || 0, count: d?.count || 0 }))
+      )
+    ).then(results => {
+      const map = {};
+      results.forEach(r => { map[r.id] = r; });
+      setTicketCounts(map);
+    });
+  }, [events]);
 
   const handlePublish = async (eventId) => {
     try {
@@ -237,6 +254,12 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
                         {ev.capacity > 0 && (
                           <span className="text-sm" style={{ color: VELVET.muted }}>
                             {ev.currentBookings}/{ev.capacity} capacity
+                          </span>
+                        )}
+                        {ticketCounts[ev._id]?.guests > 0 && (
+                          <span className="flex items-center gap-1 text-sm" style={{ color: VELVET.purple }}>
+                            <RiTicketLine size={13} />
+                            {ticketCounts[ev._id].guests} ticket{ticketCounts[ev._id].guests !== 1 ? 's' : ''}
                           </span>
                         )}
                       </div>

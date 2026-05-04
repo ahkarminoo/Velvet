@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Event from '@/models/Event';
+import '@/models/Restaurants';
+import '@/models/Floorplan';
+import '@/models/Zone';
 
 // GET /api/events/[id] — public event detail
 export async function GET(request, { params }) {

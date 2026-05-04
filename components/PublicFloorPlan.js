@@ -23,6 +23,55 @@ import { useAuth } from '@/context/AuthContext';
 import '@/css/loading.css';
 import PaymentDialog from './PaymentDialog';
 
+// Panorama minimap — top-down SVG of table positions
+function PanoramaMinimap({ objects, currentTableId, availableTables }) {
+  const tables = (objects || []).filter(obj => obj.userData?.isTable);
+  if (tables.length === 0) return null;
+
+  const xs = tables.map(t => t.position[0]);
+  const zs = tables.map(t => t.position[2]);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minZ = Math.min(...zs), maxZ = Math.max(...zs);
+  const rangeX = (maxX - minX) || 1;
+  const rangeZ = (maxZ - minZ) || 1;
+  const size = 100;
+  const pad = 10;
+
+  const toSvg = (x, z) => ({
+    sx: pad + ((x - minX) / rangeX) * (size - pad * 2),
+    sy: pad + ((z - minZ) / rangeZ) * (size - pad * 2),
+  });
+
+  return (
+    <div className="absolute bottom-4 right-4 rounded-xl overflow-hidden" style={{
+      background: 'rgba(12,11,16,0.85)',
+      border: '1px solid rgba(255,255,255,0.1)',
+      backdropFilter: 'blur(8px)',
+      pointerEvents: 'none',
+    }}>
+      <div className="px-2 py-1 text-center" style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+        Map
+      </div>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        {tables.map(t => {
+          const { sx, sy } = toSvg(t.position[0], t.position[2]);
+          const isCurrent = t.objectId === currentTableId;
+          const isAvail = availableTables.size === 0 || availableTables.has(t.objectId);
+          return (
+            <circle key={t.objectId} cx={sx} cy={sy}
+              r={isCurrent ? 6 : 4}
+              fill={isCurrent ? '#C9A84C' : isAvail ? '#22c55e' : '#ef4444'}
+              opacity={isCurrent ? 1 : 0.75}
+              stroke={isCurrent ? '#fff' : 'none'}
+              strokeWidth={isCurrent ? 1.5 : 0}
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 // New Booking Confirmation Dialog Component
 function BookingConfirmationDialog({ bookingDetails, onClose, onConfirm }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -47,136 +96,71 @@ function BookingConfirmationDialog({ bookingDetails, onClose, onConfirm }) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-md mx-auto overflow-hidden max-h-[95vh] sm:max-h-[90vh] flex flex-col my-auto"
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="w-full max-w-[95vw] sm:max-w-md mx-auto overflow-hidden max-h-[95vh] sm:max-h-[90vh] flex flex-col my-auto rounded-2xl"
+        style={{ background: '#161520', border: '1px solid #1E1D2A', boxShadow: '0 24px 60px rgba(0,0,0,0.6)' }}
       >
-        {/* Header - Sticky */}
-        <div className="bg-gradient-to-r from-[#FF4F18] to-[#FF6B35] p-4 sm:p-6 text-white flex-shrink-0">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="text-lg sm:text-2xl font-bold">Confirm Booking</h3>
-              <p className="text-orange-100 text-xs sm:text-sm mt-1">Review your reservation details</p>
+        {/* Header */}
+        <div className="px-6 py-5 border-b flex items-center justify-between flex-shrink-0" style={{ borderColor: '#1E1D2A' }}>
+          <div>
+            <h3 className="text-lg font-black" style={{ color: '#F5F0E8', fontFamily: 'serif' }}>Confirm Booking</h3>
+            <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>Review your reservation details</p>
+          </div>
+          <button onClick={onClose} disabled={isLoading}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all text-lg font-light"
+            style={{ color: '#9B96A8', background: '#1E1D2A' }}>×</button>
+        </div>
+
+        {/* Content */}
+        <div className="p-5 overflow-y-auto flex-1 space-y-3">
+          {[
+            { emoji: '📅', label: 'Date', value: formatDate(bookingDetails.date) },
+            { emoji: '🕐', label: 'Time', value: bookingDetails.time, sub: bookingDetails.durationMinutes ? `${bookingDetails.durationMinutes} min` : null },
+            { emoji: '🪑', label: 'Table', value: bookingDetails.tableName || bookingDetails.tableId },
+            { emoji: '👥', label: 'Guests', value: bookingDetails.guestCount },
+          ].map(({ emoji, label, value, sub }) => (
+            <div key={label} className="flex items-center gap-4 p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              <span className="text-xl">{emoji}</span>
+              <div>
+                <p className="text-xs" style={{ color: '#9B96A8' }}>{label}</p>
+                <p className="font-semibold text-sm" style={{ color: '#F5F0E8' }}>{value}</p>
+                {sub && <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>{sub}</p>}
+              </div>
             </div>
-            <button 
-              onClick={onClose}
-              className="text-white/80 hover:text-white transition-colors text-xl sm:text-2xl font-light p-1 rounded-full hover:bg-white/10 min-w-[32px] min-h-[32px] flex items-center justify-center"
-              disabled={isLoading}
-            >
-              ×
-            </button>
+          ))}
+
+          <div className="p-4 rounded-xl" style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.2)' }}>
+            <p className="text-xs font-semibold mb-1" style={{ color: '#C9A84C' }}>Pending Confirmation</p>
+            <p className="text-xs leading-relaxed" style={{ color: '#9B96A8' }}>Your booking will be submitted and is pending venue confirmation. You'll be notified once approved.</p>
           </div>
         </div>
 
-        {/* Content - Scrollable */}
-        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
-          {/* Booking Summary */}
-          <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
-            <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg sm:rounded-xl">
-              <div className="flex items-center space-x-3 w-full">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-orange-600 font-semibold text-sm sm:text-base">📅</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-gray-500">Date</p>
-                  <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">{formatDate(bookingDetails.date)}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg sm:rounded-xl">
-              <div className="flex items-center space-x-3 w-full">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-blue-600 font-semibold text-sm sm:text-base">🕐</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-gray-500">Time</p>
-                  <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">{bookingDetails.time}</p>
-                  {bookingDetails.durationMinutes ? (
-                    <p className="text-xs text-gray-500 mt-1">Duration: {bookingDetails.durationMinutes} minutes</p>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg sm:rounded-xl">
-                <div className="flex items-center space-x-3 w-full">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-green-600 font-semibold text-sm sm:text-base">🪑</span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs sm:text-sm text-gray-500">Table</p>
-                    <p className="font-semibold text-gray-800 text-sm sm:text-base">{bookingDetails.tableId}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg sm:rounded-xl">
-                <div className="flex items-center space-x-3 w-full">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-purple-600 font-semibold text-sm sm:text-base">👥</span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs sm:text-sm text-gray-500">Guests</p>
-                    <p className="font-semibold text-gray-800 text-sm sm:text-base">{bookingDetails.guestCount}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Info Note */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-            <div className="flex items-start space-x-3">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-blue-600 text-xs sm:text-sm">ℹ️</span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-blue-800 font-medium text-xs sm:text-sm">Booking Confirmation</p>
-                <p className="text-blue-700 text-xs sm:text-sm mt-1 leading-relaxed">Your booking will be submitted and is pending restaurant confirmation. You'll receive a notification once approved.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons - Sticky */}
-        <div className="p-4 sm:p-6 border-t border-gray-100 bg-white flex-shrink-0">
-          <div className="flex flex-col-reverse sm:flex-row gap-3">
-            <button
-              onClick={onClose}
-              disabled={isLoading}
-              className="flex-1 px-4 sm:px-6 py-3 sm:py-3 border border-gray-300 text-gray-700 rounded-lg sm:rounded-xl font-medium hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] touch-manipulation"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleConfirm}
-              disabled={isLoading}
-              className="flex-1 px-4 sm:px-6 py-3 sm:py-3 bg-gradient-to-r from-[#FF4F18] to-[#FF6B35] text-white rounded-lg sm:rounded-xl font-medium hover:from-[#FF4F18]/90 hover:to-[#FF6B35]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base min-h-[44px] touch-manipulation"
-            >
-              {isLoading ? (
-                <>
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Confirming...</span>
-                </>
-              ) : (
-                <>
-                  <span>Confirm Booking</span>
-                  <span className="hidden sm:inline">✨</span>
-                </>
-              )}
-            </button>
-          </div>
+        {/* Actions */}
+        <div className="px-5 pb-5 pt-4 border-t flex gap-3 flex-shrink-0" style={{ borderColor: '#1E1D2A' }}>
+          <button onClick={onClose} disabled={isLoading}
+            className="flex-1 py-3 rounded-xl font-medium text-sm transition-all"
+            style={{ background: '#1E1D2A', color: '#9B96A8', border: '1px solid #1E1D2A' }}>
+            Cancel
+          </button>
+          <button onClick={handleConfirm} disabled={isLoading}
+            className="flex-1 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all"
+            style={{ background: '#C9A84C', color: '#0C0B10' }}>
+            {isLoading ? (
+              <><div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(12,11,16,0.2)', borderTopColor: '#0C0B10' }} /><span>Confirming...</span></>
+            ) : (
+              <span>Confirm Booking</span>
+            )}
+          </button>
         </div>
       </motion.div>
     </div>
   );
 }
 
-export default function PublicFloorPlan({ floorplanData, floorplanId, restaurantId, allFloorplans = [] }) {
+export default function PublicFloorPlan({ floorplanData, floorplanId, restaurantId, allFloorplans = [], defaultDate, defaultTime, defaultEventId }) {
   // Clean up any existing tooltips on component mount
   useEffect(() => {
     const cleanupExistingTooltips = () => {
@@ -212,16 +196,28 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const animateFnRef = useRef(null);
+  const cameraRef = useRef(null);
+  const controlsRef = useRef(null);
+  // panorama viewer refs
+  const panoramaModeRef = useRef(false);
+  const panoramaCameraRef = useRef(null);
+  const panoramaSceneRef = useRef(null);
+  const panoramaControlsRef = useRef(null);
+  const panoramaHotspotsRef = useRef([]);
+  const panoramaAnimateRef = useRef(null);
+  const openPanoramaFnRef = useRef(null);
+  const hotspotDotsContainerRef = useRef(null);
   const doorManagerRef = useRef(null);
   const windowManagerRef = useRef(null);
   const availableTablesRef = useRef(new Set());
   const [selectedDate, setSelectedDate] = useState(() => {
+    if (defaultDate) return defaultDate;
     const today = new Date();
-    // Adjust for local timezone
     today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
     return today.toISOString().split('T')[0];
   });
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState(defaultTime || '');
   const [selectedDuration, setSelectedDuration] = useState(120);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
@@ -235,6 +231,12 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   const [localFloorplanId, setLocalFloorplanId] = useState(floorplanId);
   const [venueEvents, setVenueEvents] = useState([]);
   const [activeEvent, setActiveEvent] = useState(null);
+  // panorama viewer state
+  const [panoramaActive, setPanoramaActive] = useState(false);
+  const [panoramaPhotoLoaded, setPanoramaPhotoLoaded] = useState(false);
+  const [panoramaCurrentTableId, setPanoramaCurrentTableId] = useState(null);
+  const [panoramaCurrentTableName, setPanoramaCurrentTableName] = useState(null);
+  const [panoramaHotspots, setPanoramaHotspots] = useState([]);
 
   // Cache floorplan JSON (non-sensitive) for fast revisits
   useEffect(() => {
@@ -258,7 +260,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     if (!restaurantId) return;
     const fetchEvents = async () => {
       try {
-        const res = await fetch(`/api/venues/${restaurantId}/events?public=true&upcoming=true`);
+        const res = await fetch(`/api/venues/${restaurantId}/events?public=true`);
         if (res.ok) {
           const data = await res.json();
           setVenueEvents(data.events || []);
@@ -272,14 +274,19 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 
   // ── Check if selected date has an event and swap floorplan ─────────────────
   useEffect(() => {
-    if (!selectedDate) return;
+    if (!selectedDate && !defaultEventId) return;
 
-    // Find event for selected date
-    const eventForDate = venueEvents.find(ev => {
-      const evDateObj = new Date(ev.date);
-      evDateObj.setMinutes(evDateObj.getMinutes() - evDateObj.getTimezoneOffset());
-      return evDateObj.toISOString().split('T')[0] === selectedDate;
-    });
+    // Prefer direct event ID lookup (passed from event page) over date-based matching
+    const eventForDate = defaultEventId
+      ? venueEvents.find(ev => ev._id?.toString() === defaultEventId)
+      : venueEvents.find(ev => {
+          const evDate = new Date(ev.date);
+          // Compare against local-date string to handle timezone correctly
+          const localDateStr = evDate.getFullYear() + '-' +
+            String(evDate.getMonth() + 1).padStart(2, '0') + '-' +
+            String(evDate.getDate()).padStart(2, '0');
+          return localDateStr === selectedDate;
+        });
 
     setActiveEvent(eventForDate || null);
 
@@ -326,7 +333,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         setLocalFloorplanId(floorplanId);
       }
     }
-  }, [selectedDate, venueEvents, floorplanData, floorplanId, allFloorplans, restaurantId]); // exclude localFloorplanId to prevent loops
+  }, [selectedDate, defaultEventId, venueEvents, floorplanData, floorplanId, allFloorplans, restaurantId]); // exclude localFloorplanId to prevent loops
 
   const durationOptions = [
     { value: 60, label: '1 hour' },
@@ -478,6 +485,13 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           document.body.removeChild(label);
         }
       });
+
+      // Cancel panorama loop if active
+      if (panoramaAnimateRef.current) {
+        cancelAnimationFrame(panoramaAnimateRef.current);
+        panoramaAnimateRef.current = null;
+      }
+      panoramaModeRef.current = false;
 
       // Cancel animation frame
       if (animationFrameRef.current) {
@@ -631,6 +645,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         controls.maxPolarAngle = Math.PI / 2;
         controls.minDistance = 5;
         controls.maxDistance = 20;
+
+        cameraRef.current = camera;
+        controlsRef.current = controls;
 
         // Add floor
         console.log('Adding floor');
@@ -841,6 +858,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           controls.update();
           renderer.render(scene, camera);
         };
+        animateFnRef.current = animate;
         animate();
 
         // Handle window resize
@@ -848,9 +866,13 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           if (!containerRef.current || !rendererRef.current) return;
           const newWidth = containerRef.current.clientWidth;
           const newHeight = containerRef.current.clientHeight;
-          
+
           camera.aspect = newWidth / newHeight;
           camera.updateProjectionMatrix();
+          if (panoramaCameraRef.current) {
+            panoramaCameraRef.current.aspect = newWidth / newHeight;
+            panoramaCameraRef.current.updateProjectionMatrix();
+          }
           rendererRef.current.setSize(newWidth, newHeight);
         };
         window.addEventListener('resize', handleResize);
@@ -862,7 +884,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           // Table hover tooltip functionality
           let hoverTooltip = null;
 
-          const createHoverTooltip = (tableId, event) => {
+          const createHoverTooltip = (tableId, event, tableUserData = {}) => {
             // Remove existing tooltip
             if (hoverTooltip) {
               document.body.removeChild(hoverTooltip);
@@ -879,13 +901,19 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                  </div>`
               : '';
 
+            const has360 = !!(tableUserData?.realView?.photoUrl);
+            const view360Html = has360
+              ? `<button data-view360 style="margin-top:8px;display:block;width:100%;padding:5px 10px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.4);border-radius:7px;color:#C9A84C;font-size:11px;font-weight:700;cursor:pointer;text-align:center;letter-spacing:0.02em;">&#128065; 360° View</button>`
+              : '';
+
             // Create new tooltip
             hoverTooltip = document.createElement('div');
             hoverTooltip.className = 'table-hover-tooltip';
             hoverTooltip.innerHTML = `
               <div class="tooltip-content" style="background:#161520;border:1px solid rgba(201,168,76,0.25);color:#F5F0E8;padding:8px 12px;border-radius:10px;min-width:120px">
-                <span class="table-number" style="font-size:12px;font-weight:700">Table ${tableId}</span>
+                <span class="table-number" style="font-size:12px;font-weight:700">Table ${tableUserData.customName || tableId}</span>
                 ${zoneHtml}
+                ${view360Html}
               </div>
             `;
 
@@ -894,8 +922,20 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             hoverTooltip.style.left = (event.clientX + 15) + 'px';
             hoverTooltip.style.top = (event.clientY - 10) + 'px';
             hoverTooltip.style.zIndex = '10000';
-            hoverTooltip.style.pointerEvents = 'none';
-            
+            hoverTooltip.style.pointerEvents = has360 ? 'auto' : 'none';
+
+            if (has360) {
+              hoverTooltip.addEventListener('mouseleave', removeHoverTooltip);
+              const btn = hoverTooltip.querySelector('[data-view360]');
+              if (btn) {
+                btn.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  removeHoverTooltip();
+                  openPanoramaFnRef.current?.(tableUserData);
+                });
+              }
+            }
+
             document.body.appendChild(hoverTooltip);
           };
 
@@ -930,7 +970,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
               renderer.domElement.style.cursor = 'pointer';
               
               // Create or update tooltip
-              createHoverTooltip(tableId, event);
+              createHoverTooltip(tableId, event, table.userData);
             } else {
               // Reset cursor
               renderer.domElement.style.cursor = 'default';
@@ -1037,6 +1077,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 
             console.log('Table clicked:', table.userData);
             const tableId = table.userData.objectId || table.userData.friendlyId;
+            const tableName = table.userData.customName || tableId;
 
             // Check if table is booked using the backend data state
             const isBooked = availableTablesRef.current.size > 0 && !availableTablesRef.current.has(tableId);
@@ -1150,55 +1191,53 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             const guestCountDialog = document.createElement('div');
             guestCountDialog.className = 'booking-dialog';
             guestCountDialog.innerHTML = `
-              <div class="booking-dialog-content max-h-[90vh] overflow-y-auto">
-                <div class="sticky top-0 bg-white pb-4 border-b border-gray-200 mb-4">
-                  <h3 class="text-xl sm:text-2xl font-bold text-[#141517]">Complete Booking</h3>
+              <div class="booking-dialog-content max-h-[90vh] overflow-y-auto" style="background:#161520;border-radius:16px;border:1px solid #1E1D2A;">
+                <div style="padding:20px 20px 16px;border-bottom:1px solid #1E1D2A;margin-bottom:16px;">
+                  <h3 style="font-size:1.2rem;font-weight:900;color:#F5F0E8;font-family:serif;margin:0;">Complete Booking</h3>
                 </div>
-                
-                <div class="booking-details mb-6 space-y-3">
-                  <div class="bg-gray-50 p-3 sm:p-4 rounded-lg">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-sm sm:text-base">
-                      <div class="flex items-center">
-                        <span class="font-medium text-gray-600 mr-2">📅</span>
-                        <span class="text-[#141517]">${new Date(dateRef.current).toLocaleDateString()}</span>
+
+                <div style="padding:0 20px;margin-bottom:16px;">
+                  <div style="background:#0C0B10;border:1px solid #1E1D2A;border-radius:12px;padding:14px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.85rem;">
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span>📅</span>
+                        <span style="color:#F5F0E8;">${new Date(dateRef.current).toLocaleDateString()}</span>
                       </div>
-                      <div class="flex items-center">
-                        <span class="font-medium text-gray-600 mr-2">🕐</span>
-                        <span class="text-[#141517]">${timeRef.current}</span>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span>🕐</span>
+                        <span style="color:#F5F0E8;">${timeRef.current}</span>
                       </div>
-                      <div class="flex items-center">
-                        <span class="font-medium text-gray-600 mr-2">🪑</span>
-                        <span class="text-[#141517]">Table ${tableId}</span>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span>🪑</span>
+                        <span style="color:#F5F0E8;">Table ${tableName}</span>
                       </div>
-                      <div class="flex items-center">
-                        <span class="font-medium text-gray-600 mr-2">👥</span>
-                        <span class="text-[#141517]">Max: ${table.userData.maxCapacity || 4} guests</span>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span>👥</span>
+                        <span style="color:#F5F0E8;">Max: ${table.userData.maxCapacity || 4}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                
-                <div class="form-group mb-6">
-                  <label for="guest-count" class="text-[#141517] font-medium block mb-3 text-base sm:text-lg">
+
+                <div style="padding:0 20px;margin-bottom:16px;">
+                  <label for="guest-count" style="color:#9B96A8;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:10px;">
                     Number of Guests (Max: ${table.userData.maxCapacity || 4})
                   </label>
-                  <input 
-                    type="number" 
-                    id="guest-count" 
-                    min="1" 
-                    max="${table.userData.maxCapacity || 4}" 
+                  <input
+                    type="number"
+                    id="guest-count"
+                    min="1"
+                    max="${table.userData.maxCapacity || 4}"
                     required
-                    class="w-full p-3 sm:p-4 border-2 rounded-lg focus:ring-2 focus:ring-[#FF4F18] focus:border-[#FF4F18] text-[#141517] font-medium text-lg sm:text-xl"
+                    style="width:100%;padding:14px;border:1px solid #1E1D2A;border-radius:10px;background:#0C0B10;color:#F5F0E8;font-size:1.1rem;font-weight:600;box-sizing:border-box;outline:none;"
                     placeholder="Enter number of guests"
                   >
-                  <p class="text-xs sm:text-sm text-gray-500 mt-2">Please enter a number between 1 and ${table.userData.maxCapacity || 4}</p>
+                  <p style="font-size:0.75rem;color:#9B96A8;margin-top:6px;">Enter a number between 1 and ${table.userData.maxCapacity || 4}</p>
                 </div>
-                
-                <div class="sticky bottom-0 bg-white pt-4 border-t border-gray-200 mt-6">
-                  <div class="dialog-buttons flex flex-col-reverse sm:flex-row justify-end gap-3">
-                    <button type="button" id="cancel-booking" class="w-full sm:w-auto px-4 sm:px-6 py-3 bg-gray-200 text-[#141517] rounded-lg hover:bg-gray-300 transition-all font-medium text-base min-h-[44px] touch-manipulation">Cancel</button>
-                    <button type="button" id="confirm-booking" class="w-full sm:w-auto px-4 sm:px-6 py-3 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90 transition-all font-medium text-base min-h-[44px] touch-manipulation">Confirm Booking</button>
-                  </div>
+
+                <div style="padding:16px 20px 20px;border-top:1px solid #1E1D2A;display:flex;gap:10px;flex-direction:row-reverse;">
+                  <button type="button" id="confirm-booking" style="flex:1;padding:12px;background:#C9A84C;color:#0C0B10;border:none;border-radius:10px;font-weight:700;font-size:0.9rem;cursor:pointer;min-height:44px;">Confirm Booking</button>
+                  <button type="button" id="cancel-booking" style="flex:1;padding:12px;background:#1E1D2A;color:#9B96A8;border:1px solid #1E1D2A;border-radius:10px;font-weight:600;font-size:0.9rem;cursor:pointer;min-height:44px;">Cancel</button>
                 </div>
               </div>
             `;
@@ -1226,7 +1265,8 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 await handleBookingSubmission(table, tableId, {
                   date: dateRef.current,
                   time: timeRef.current,
-                  guestCount
+                  guestCount,
+                  tableName
                 });
               } catch (error) {
                 console.error('Booking error:', error);
@@ -1477,6 +1517,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   }, [selectedDate, selectedDuration, restaurant]);
 
   const handleBookingSubmission = async (table, tableId, bookingDetails) => {
+    const tableName = bookingDetails.tableName || tableId;
     // The `userProfile` from the context is now the single source of truth.
     if (!isAuthenticated || !userProfile) {
         throw new Error('Please log in to make a booking');
@@ -1587,6 +1628,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             time: timeRef.current,
             durationMinutes: selectedDuration,
             tableId,
+            tableName,
             guestCount: bookingDetails.guestCount,
             tableCapacity: table.userData?.capacity || (bookingDetails.guestCount <= 2 ? 2 : bookingDetails.guestCount <= 4 ? 4 : 6),
             tableLocation: table.userData?.location || 'center'
@@ -1692,34 +1734,25 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       const modal = document.createElement('div');
       modal.className = 'fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4';
       modal.innerHTML = `
-        <div class="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-[95vw] sm:max-w-md w-full mx-auto overflow-hidden animate-fade-up max-h-[90vh] overflow-y-auto">
-          <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-4 sm:p-6 text-white text-center">
-            <div class="text-3xl sm:text-4xl mb-2 sm:mb-3">🎉</div>
-            <h3 class="text-lg sm:text-xl font-bold">Booking Submitted!</h3>
-            <p class="text-green-100 text-xs sm:text-sm mt-1">Your reservation request has been sent</p>
+        <div style="background:#161520;border:1px solid #1E1D2A;border-radius:20px;max-width:min(95vw,440px);width:100%;margin:auto;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.7);">
+          <div style="padding:28px 24px 20px;text-align:center;border-bottom:1px solid #1E1D2A;">
+            <div style="font-size:2.5rem;margin-bottom:10px;">🎉</div>
+            <h3 style="font-size:1.3rem;font-weight:900;color:#F5F0E8;font-family:serif;margin:0 0 4px;">Booking Submitted!</h3>
+            <p style="font-size:0.8rem;color:#9B96A8;margin:0;">Your reservation request has been sent</p>
           </div>
-          <div class="p-4 sm:p-6">
-            <div class="text-center mb-4 sm:mb-6">
-              <div class="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
-                <div class="flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-2 text-gray-700 mb-2">
-                  <span class="font-semibold text-sm sm:text-base">Reference:</span>
-                  <span class="font-mono text-xs sm:text-sm bg-gray-200 px-2 py-1 rounded break-all">${result.booking.bookingRef}</span>
-                </div>
-                <p class="text-xs sm:text-sm text-gray-600">
-                  <strong>Table ${tableId}</strong> for <strong>${bookingDetails.guestCount} guests</strong>
-                </p>
-              </div>
-              <div class="bg-blue-50 border border-blue-200 rounded-lg sm:rounded-xl p-3 sm:p-4">
-                <div class="flex items-center justify-center space-x-2 text-blue-700 mb-2">
-                  <span class="text-base sm:text-lg">⏳</span>
-                  <span class="font-medium text-xs sm:text-sm">Pending restaurant confirmation</span>
-                </div>
-                <p class="text-blue-600 text-xs leading-relaxed">You'll receive a notification once your booking is approved</p>
-              </div>
+          <div style="padding:20px 24px 24px;">
+            <div style="background:#0C0B10;border:1px solid #1E1D2A;border-radius:12px;padding:16px;margin-bottom:14px;text-align:center;">
+              <p style="font-size:0.75rem;color:#9B96A8;margin:0 0 6px;">Booking Reference</p>
+              <span style="font-family:monospace;font-size:0.85rem;background:#1E1D2A;color:#C9A84C;padding:4px 10px;border-radius:6px;word-break:break-all;">${result.booking.bookingRef}</span>
+              <p style="font-size:0.8rem;color:#9B96A8;margin:10px 0 0;">Table ${tableName} · ${bookingDetails.guestCount} guests</p>
             </div>
-            <button onclick="this.closest('.fixed').remove()" 
-                    class="w-full px-4 sm:px-6 py-3 bg-gradient-to-r from-[#FF4F18] to-[#FF6B35] text-white rounded-lg sm:rounded-xl font-medium hover:from-[#FF4F18]/90 hover:to-[#FF6B35]/90 transition-all transform hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base min-h-[44px] touch-manipulation">
-              Got it! ✨
+            <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:14px;margin-bottom:20px;text-align:center;">
+              <p style="font-size:0.8rem;color:#C9A84C;font-weight:600;margin:0 0 4px;">⏳ Pending Confirmation</p>
+              <p style="font-size:0.75rem;color:#9B96A8;margin:0;line-height:1.5;">You'll receive a notification once your booking is approved</p>
+            </div>
+            <button onclick="this.closest('.fixed').remove()"
+              style="width:100%;padding:14px;background:#C9A84C;color:#0C0B10;border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;min-height:44px;">
+              Got it
             </button>
           </div>
         </div>
@@ -1961,27 +1994,27 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   // Add or update the CSS styles for the date selection
   const dateSliderStyles = `
     .date-option {
-      background: white;
-      color: #141517;
-      border: 1px solid #e5e7eb;
+      background: #161520;
+      color: #9B96A8;
+      border: 1px solid #1E1D2A;
       transition: all 0.2s ease;
     }
 
     .date-option:hover {
-      background: #fff5f2;
-      border-color: #FF4F18;
+      background: rgba(201,168,76,0.08);
+      border-color: #C9A84C;
       transform: translateY(-2px);
     }
 
     .date-option.selected {
-      background: #FF4F18;
-      color: white;
-      border-color: #FF4F18;
-      box-shadow: 0 4px 12px rgba(255, 79, 24, 0.2);
+      background: #C9A84C;
+      color: #0C0B10;
+      border-color: #C9A84C;
+      box-shadow: 0 4px 12px rgba(201,168,76,0.25);
     }
 
     .date-option.today {
-      border-color: #FF4F18;
+      border-color: rgba(201,168,76,0.5);
       position: relative;
     }
 
@@ -1991,29 +2024,17 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       top: -8px;
       left: 50%;
       transform: translateX(-50%);
-      background: #FF4F18;
-      color: white;
+      background: #C9A84C;
+      color: #0C0B10;
       padding: 2px 8px;
       border-radius: 12px;
       font-size: 0.7rem;
-      font-weight: 500;
-    }
-
-    .date-day {
-      color: inherit;
       font-weight: 600;
     }
 
-    .date-date {
-      color: inherit;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .date-month {
-      color: inherit;
-      font-weight: 500;
-    }
+    .date-day { color: inherit; font-weight: 600; }
+    .date-date { color: inherit; font-size: 1.2rem; font-weight: 700; }
+    .date-month { color: inherit; font-weight: 500; }
   `;
 
   // Add the styles to the document
@@ -2046,9 +2067,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 
     .time-slot-btn {
       padding: 0.75rem 1rem;
-      background: white;
-      color: #141517;
-      border: 2px solid #e5e7eb;
+      background: #161520;
+      color: #9B96A8;
+      border: 1px solid #1E1D2A;
       border-radius: 0.5rem;
       white-space: nowrap;
       transition: all 0.2s;
@@ -2063,17 +2084,17 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     }
 
     .time-slot-btn:hover {
-      background: #fff5f2;
-      border-color: #FF4F18;
+      background: rgba(201,168,76,0.08);
+      border-color: #C9A84C;
+      color: #C9A84C;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 79, 24, 0.1);
     }
 
     .time-slot-btn.selected {
-      background: #FF4F18;
-      color: white;
-      border-color: #FF4F18;
-      box-shadow: 0 4px 12px rgba(255, 79, 24, 0.2);
+      background: #C9A84C;
+      color: #0C0B10;
+      border-color: #C9A84C;
+      box-shadow: 0 4px 12px rgba(201,168,76,0.25);
     }
 
     /* Add a subtle indicator for available slots */
@@ -2093,9 +2114,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       width: 2rem;
       height: 2rem;
       border-radius: 50%;
-      background-color: #FF4F18;
-      color: white;
-      border: none;
+      background-color: #1E1D2A;
+      color: #C9A84C;
+      border: 1px solid #1E1D2A;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2107,7 +2128,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     }
 
     .slider-arrow:hover {
-      background-color: #e63900;
+      background-color: rgba(201,168,76,0.15);
       transform: scale(1.1);
     }
 
@@ -2138,17 +2159,17 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     .table-hover-tooltip {
       position: fixed;
       z-index: 10000;
-      background: linear-gradient(135deg, #FF4F18 0%, #FF6B3D 100%);
-      color: white;
+      background: #161520;
+      color: #F5F0E8;
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(255, 79, 24, 0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       pointer-events: none;
       transform: translateY(-5px);
       animation: tooltipFadeIn 0.2s ease-out;
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid #C9A84C;
       backdrop-filter: blur(10px);
     }
 
@@ -2158,7 +2179,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       top: 100%;
       left: 20px;
       border: 6px solid transparent;
-      border-top-color: #FF4F18;
+      border-top-color: #C9A84C;
       transform: translateX(-50%);
     }
 
@@ -2209,6 +2230,153 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       });
     };
   }, []);
+
+  // ── 360° panorama helpers ──────────────────────────────────────────────────
+
+  const updateHotspotDOMPositions = () => {
+    const container = hotspotDotsContainerRef.current;
+    if (!container || !panoramaCameraRef.current) return;
+    const w = container.offsetWidth || 1;
+    const h = container.offsetHeight || 1;
+    for (const hotspot of panoramaHotspotsRef.current) {
+      const el = container.querySelector(`[data-table-id="${hotspot.tableId}"]`);
+      if (!el) continue;
+      const pos = hotspot.position.clone().project(panoramaCameraRef.current);
+      if (pos.z > 1) { el.style.display = 'none'; continue; }
+      const x = (pos.x + 1) / 2 * w;
+      const y = (1 - pos.y) / 2 * h;
+      if (x < -30 || x > w + 30 || y < -30 || y > h + 30) {
+        el.style.display = 'none';
+      } else {
+        el.style.display = 'flex';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+      }
+    }
+  };
+
+  const closePanorama = () => {
+    if (panoramaAnimateRef.current) {
+      cancelAnimationFrame(panoramaAnimateRef.current);
+      panoramaAnimateRef.current = null;
+    }
+    if (panoramaSceneRef.current) {
+      panoramaSceneRef.current.traverse((o) => {
+        if (o.geometry) o.geometry.dispose();
+        if (o.material) {
+          if (o.material.map) o.material.map.dispose();
+          o.material.dispose();
+        }
+      });
+      panoramaSceneRef.current = null;
+    }
+    if (panoramaControlsRef.current) {
+      panoramaControlsRef.current.dispose();
+      panoramaControlsRef.current = null;
+    }
+    panoramaCameraRef.current = null;
+    panoramaHotspotsRef.current = [];
+    panoramaModeRef.current = false;
+    setPanoramaActive(false);
+    setPanoramaCurrentTableId(null);
+    setPanoramaCurrentTableName(null);
+    setPanoramaPhotoLoaded(false);
+    setPanoramaHotspots([]);
+    // Restart floorplan loop
+    if (animateFnRef.current) animateFnRef.current();
+  };
+
+  const openPanoramaForTable = (tableUserData) => {
+    const realView = tableUserData?.realView;
+    if (!realView?.photoUrl || !rendererRef.current) return;
+
+    // Stop floorplan loop
+    cancelAnimationFrame(animationFrameRef.current);
+    animationFrameRef.current = null;
+
+    const renderer = rendererRef.current;
+    const w = containerRef.current?.clientWidth || 800;
+    const h = containerRef.current?.clientHeight || 600;
+
+    // Panorama scene: inside-out sphere
+    const panoramaScene = new THREE.Scene();
+    const sphereGeom = new THREE.SphereGeometry(50, 64, 32);
+    sphereGeom.scale(-1, 1, 1);
+    const sphereMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+    const sphere = new THREE.Mesh(sphereGeom, sphereMat);
+    panoramaScene.add(sphere);
+
+    // Load equirectangular texture
+    setPanoramaPhotoLoaded(false);
+    const texLoader = new THREE.TextureLoader();
+    texLoader.load(
+      realView.photoUrl,
+      (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        sphere.material = new THREE.MeshBasicMaterial({ map: texture });
+        sphere.material.needsUpdate = true;
+        setPanoramaPhotoLoaded(true);
+      },
+      undefined,
+      () => setPanoramaPhotoLoaded(true)
+    );
+
+    // Panorama camera
+    const panoCam = new THREE.PerspectiveCamera(75, w / h, 0.1, 200);
+    panoCam.position.set(0, 0, 0.001);
+
+    // Orbit controls — look around only
+    const panoControls = new OrbitControls(panoCam, renderer.domElement);
+    panoControls.enableZoom = false;
+    panoControls.enablePan = false;
+    panoControls.rotateSpeed = -0.3;
+    panoControls.minPolarAngle = 0.15;
+    panoControls.maxPolarAngle = Math.PI - 0.15;
+    const headingRad = THREE.MathUtils.degToRad(realView.heading || 0);
+    panoControls.target.set(Math.sin(headingRad), 0, Math.cos(headingRad));
+    panoControls.update();
+
+    // Compute hotspot 3D positions from table world positions
+    const capturePoint = realView.capturePoint
+      ? new THREE.Vector3(...realView.capturePoint)
+      : new THREE.Vector3(0, 1.5, 0);
+    const invHeading = THREE.MathUtils.degToRad(-(realView.heading || 0));
+    const yAxis = new THREE.Vector3(0, 1, 0);
+
+    const hotspots = [];
+    if (localFloorplanData?.objects) {
+      for (const obj of localFloorplanData.objects) {
+        if (!obj.userData?.isTable) continue;
+        const tablePos = new THREE.Vector3(...obj.position);
+        const dir = tablePos.clone().sub(capturePoint).normalize();
+        dir.applyAxisAngle(yAxis, invHeading);
+        const isAvailable = availableTablesRef.current.size === 0 || availableTablesRef.current.has(obj.objectId);
+        hotspots.push({ tableId: obj.objectId, tableName: obj.userData?.customName || obj.objectId, position: dir.multiplyScalar(45), isAvailable });
+      }
+    }
+
+    panoramaSceneRef.current = panoramaScene;
+    panoramaCameraRef.current = panoCam;
+    panoramaControlsRef.current = panoControls;
+    panoramaHotspotsRef.current = hotspots;
+    panoramaModeRef.current = true;
+
+    setPanoramaHotspots(hotspots);
+    setPanoramaCurrentTableId(tableUserData.objectId);
+    setPanoramaCurrentTableName(tableUserData.customName || tableUserData.objectId);
+    setPanoramaActive(true);
+
+    // Start panorama render loop
+    const panoLoop = () => {
+      panoramaAnimateRef.current = requestAnimationFrame(panoLoop);
+      panoControls.update();
+      renderer.render(panoramaScene, panoCam);
+      updateHotspotDOMPositions();
+    };
+    panoLoop();
+  };
+
+  openPanoramaFnRef.current = openPanoramaForTable;
 
   // Skip the basic loading screen entirely - go straight to 3D scene loading
   // The exciting loading experience will be handled within the 3D scene initialization
@@ -2293,7 +2461,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(12,11,16,0.85);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2310,8 +2478,8 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #FF4F18;
+  border: 3px solid rgba(201,168,76,0.15);
+  border-top: 3px solid #C9A84C;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -2425,11 +2593,10 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           {/* Time Selection with Slider */}
           <div className="booking-column">
             <div className="mb-3">
-              <label className="block text-sm font-medium text-[#141517] mb-2">Duration</label>
-              <div className="relative inline-flex w-full md:w-auto rounded-xl bg-[#fff5f2] p-1 border border-[#ffd8c9] shadow-sm overflow-x-auto">
+              <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>Duration</label>
+              <div className="relative inline-flex w-full md:w-auto rounded-xl p-1 overflow-x-auto" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
                 {durationOptions.map((option) => {
                   const isSelected = selectedDuration === option.value;
-
                   return (
                     <motion.button
                       key={option.value}
@@ -2437,14 +2604,14 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                       onClick={() => setSelectedDuration(option.value)}
                       whileHover={{ y: -1 }}
                       whileTap={{ scale: 0.98 }}
-                      className={`relative z-10 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${
-                        isSelected ? 'text-white' : 'text-[#7a341f] hover:text-[#FF4F18]'
-                      }`}
+                      className="relative z-10 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors"
+                      style={{ color: isSelected ? '#0C0B10' : '#9B96A8' }}
                     >
                       {isSelected && (
                         <motion.span
                           layoutId="duration-pill"
-                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#FF4F18] to-[#FF6B35] shadow-md"
+                          className="absolute inset-0 rounded-lg shadow-md"
+                          style={{ background: '#C9A84C' }}
                           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                         />
                       )}
@@ -2454,7 +2621,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 })}
               </div>
             </div>
-            <h4 className="text-lg font-semibold mb-3 text-[#FF4F18]">Available Times</h4>
+            <h4 className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: '#C9A84C' }}>Available Times</h4>
             <div className="time-slots-slider">
               <button 
                 className="slider-arrow left"
@@ -2518,9 +2685,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
               exit={{ opacity: 0 }}
               className="absolute top-3 right-3 z-40"
             >
-              <div className="bg-white/90 backdrop-blur-md border border-[#FF4F18]/20 rounded-xl px-3 py-2 shadow-lg">
-                <div className="flex items-center gap-2 text-[#141517] text-sm font-medium">
-                  <span className="inline-block w-2 h-2 rounded-full bg-[#FF4F18] animate-pulse"></span>
+              <div className="backdrop-blur-md rounded-xl px-3 py-2" style={{ background: 'rgba(22,21,32,0.9)', border: '1px solid rgba(201,168,76,0.25)' }}>
+                <div className="flex items-center gap-2 text-sm font-medium" style={{ color: '#C9A84C' }}>
+                  <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: '#C9A84C' }}></span>
                   Syncing table status...
                 </div>
               </div>
@@ -2619,6 +2786,115 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           )}
         </div>
 
+        {/* ── 360° Panorama Overlay ───────────────────────────────────────────── */}
+        <AnimatePresence>
+          {panoramaActive && (
+            <motion.div
+              key="panorama-overlay"
+              ref={hotspotDotsContainerRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 z-30"
+              style={{ pointerEvents: 'none' }}
+            >
+              {/* Loading spinner */}
+              {!panoramaPhotoLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center" style={{ pointerEvents: 'none' }}>
+                  <div className="loading-spinner" />
+                </div>
+              )}
+
+              {/* Back button */}
+              <button
+                onClick={closePanorama}
+                className="absolute top-4 left-4 z-40 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
+                style={{
+                  background: 'rgba(12,11,16,0.85)',
+                  border: '1px solid rgba(201,168,76,0.35)',
+                  color: '#C9A84C',
+                  pointerEvents: 'auto',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                ← Floorplan
+              </button>
+
+              {/* Label bar */}
+              <div
+                className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-sm z-40"
+                style={{
+                  background: 'rgba(12,11,16,0.85)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#9B96A8',
+                  backdropFilter: 'blur(8px)',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                360° View
+                {panoramaCurrentTableId && (
+                  <span className="ml-2 font-semibold" style={{ color: '#C9A84C' }}>
+                    · Table {panoramaCurrentTableName || panoramaCurrentTableId}
+                  </span>
+                )}
+              </div>
+
+              {/* Drag hint */}
+              {panoramaPhotoLoaded && (
+                <div
+                  className="absolute bottom-16 left-1/2 -translate-x-1/2 text-xs px-3 py-1.5 rounded-full"
+                  style={{ background: 'rgba(12,11,16,0.65)', color: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(4px)' }}
+                >
+                  Drag to look around
+                </div>
+              )}
+
+              {/* Hotspot dots — positioned per-frame by updateHotspotDOMPositions */}
+              {panoramaHotspots.map(hotspot => (
+                <div
+                  key={hotspot.tableId}
+                  data-table-id={hotspot.tableId}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+                  style={{ display: 'none', pointerEvents: 'none' }}
+                >
+                  <span
+                    style={{
+                      fontSize: '9px',
+                      fontWeight: 700,
+                      color: '#F5F0E8',
+                      background: 'rgba(12,11,16,0.85)',
+                      padding: '2px 5px',
+                      borderRadius: '4px',
+                      marginBottom: '3px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {hotspot.tableName}
+                  </span>
+                  <div
+                    style={{
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      background: hotspot.isAvailable ? '#22c55e' : '#ef4444',
+                      border: '2px solid rgba(255,255,255,0.85)',
+                      boxShadow: `0 0 8px ${hotspot.isAvailable ? '#22c55e88' : '#ef444488'}`,
+                    }}
+                  />
+                </div>
+              ))}
+
+              {/* Minimap */}
+              <PanoramaMinimap
+                objects={localFloorplanData?.objects || []}
+                currentTableId={panoramaCurrentTableId}
+                availableTables={availableTablesRef.current}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Instructions Overlay */}
         <AnimatePresence>
           {sceneLoaded && showInstructions && (
@@ -2652,16 +2928,16 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
               <motion.div
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="text-[#FF4F18] text-4xl mb-3"
+                className="text-4xl mb-3"
               >
                 👆
               </motion.div>
-              <h3 className="text-xl font-semibold mb-2">How to Reserve</h3>
-              <p className="text-gray-200">
-                Click on any <span className="text-[#FF4F18] font-semibold">table</span> to make a reservation
+              <h3 className="text-xl font-semibold mb-2" style={{ color: '#F5F0E8' }}>How to Reserve</h3>
+              <p style={{ color: '#9B96A8' }}>
+                Click on any <span style={{ color: '#C9A84C', fontWeight: 600 }}>table</span> to make a reservation
               </p>
-              <p className="text-sm text-gray-400 mt-2">
-                Tables are color-coded by zone · <span style={{ color: '#888888' }}>Dark Grey</span> = booked
+              <p className="text-sm mt-2" style={{ color: '#9B96A8' }}>
+                Tables are color-coded by zone · <span style={{ color: '#555' }}>Dark Grey</span> = booked
               </p>
             </motion.div>
           )}

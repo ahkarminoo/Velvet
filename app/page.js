@@ -77,6 +77,8 @@ export default function HomePage() {
         setRestaurants(transformedRestaurants);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -89,7 +91,6 @@ export default function HomePage() {
       setShowBackToTop(window.scrollY > 500);
     };
     window.addEventListener('scroll', handleScroll);
-    setTimeout(() => setIsLoading(false), 1500);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -261,6 +262,7 @@ export default function HomePage() {
                 src="/images/body-images/gastraeum-features-contemporary-dining-atmosphere-where-elegant-design-meets-exquisite-culinary-creations.jpg"
                 alt="Modern Restaurant Interior"
                 className="w-full h-full object-cover"
+                fetchPriority="high"
               />
             </motion.div>
           </div>

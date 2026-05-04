@@ -5,6 +5,27 @@ import Booking from '@/models/Booking';
 import { verifyFirebaseAuth } from '@/lib/firebase-admin';
 import User from '@/models/user';
 import Restaurant from '@/models/Restaurants';
+import jwt from 'jsonwebtoken';
+
+async function resolveUser(request) {
+    const authToken = request.headers.get('authorization')?.split(' ')[1];
+    if (!authToken) return null;
+    if (authToken.startsWith('line.')) {
+        return User.findOne({ lineUserId: authToken.replace('line.', '') });
+    }
+    try {
+        const secret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
+        if (secret) {
+            const { userId } = jwt.verify(authToken, secret);
+            return User.findById(userId);
+        }
+    } catch {}
+    try {
+        const { success, firebaseUid } = await verifyFirebaseAuth(request);
+        if (success) return User.findOne({ firebaseUid });
+    } catch {}
+    return null;
+}
 
 function timeToMinutes(timeStr) {
     if (!timeStr || typeof timeStr !== 'string') return NaN;
@@ -104,18 +125,10 @@ export async function POST(request) {
             }
         }
 
-        // Verify authentication
-        const authResult = await verifyFirebaseAuth(request);
-        if (!authResult.success) {
-            return NextResponse.json({ error: authResult.error }, { status: 401 });
-        }
-
-        const { firebaseUid } = authResult;
-
-        // Find user by Firebase UID
-        const user = await User.findOne({ firebaseUid });
+        // Verify authentication (supports LINE, custom JWT, and Firebase)
+        const user = await resolveUser(request);
         if (!user) {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const lockDate = new Date(date);

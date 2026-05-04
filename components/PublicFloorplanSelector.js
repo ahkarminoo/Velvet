@@ -3,7 +3,7 @@
 import PublicFloorPlan from './PublicFloorPlan';
 import { RiLayoutLine } from 'react-icons/ri';
 
-export default function PublicFloorplanSelector({ restaurant }) {
+export default function PublicFloorplanSelector({ restaurant, defaultDate, defaultTime, defaultEventId }) {
   if (!restaurant.allFloorplans || restaurant.allFloorplans.length === 0) {
     return (
       <div className="h-full flex flex-col items-center justify-center py-12">
@@ -20,11 +20,14 @@ export default function PublicFloorplanSelector({ restaurant }) {
 
   return (
     <PublicFloorPlan
-      key={defaultFloorplan._id}
+      key={`${defaultFloorplan._id}-${defaultDate ?? 'today'}-${defaultTime ?? 'free'}-${defaultEventId ?? 'none'}`}
       floorplanData={defaultFloorplan.data}
       floorplanId={defaultFloorplan._id}
       restaurantId={restaurant._id}
       allFloorplans={restaurant.allFloorplans}
+      defaultDate={defaultDate}
+      defaultTime={defaultTime}
+      defaultEventId={defaultEventId}
     />
   );
 }

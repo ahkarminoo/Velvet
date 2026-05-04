@@ -19,7 +19,10 @@ export async function GET(request) {
       .select('restaurantName cuisineType venueType location description openingHours images rating totalReviews venueSettings')
       .lean();
 
-    return NextResponse.json({ restaurants }, { status: 200 });
+    return NextResponse.json({ restaurants }, {
+      status: 200,
+      headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' }
+    });
   } catch (error) {
     console.error("Error fetching restaurants:", error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

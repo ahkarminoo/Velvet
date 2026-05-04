@@ -75,14 +75,15 @@ export class FileManager {
                 if (obj.userData?.isMovable || obj.userData?.isWall || 
                     obj.userData?.isDoor || obj.userData?.isWindow) {
                     
-                    // Generate user-friendly ID based on object type
+                    // Preserve existing custom ID if already set; only auto-generate if new
                     let friendlyId;
                     if (obj.userData.isTable) {
-                        friendlyId = `t${counters.table++}`;
+                        // Preserve custom table ID — only generate if none exists
+                        friendlyId = obj.userData.objectId || obj.userData.friendlyId || `t${counters.table++}`;
                     } else if (obj.userData.isChair) {
-                        friendlyId = `c${counters.chair++}`;
+                        friendlyId = obj.userData.objectId || obj.userData.friendlyId || `c${counters.chair++}`;
                     } else if (obj.userData.isSofa) {
-                        friendlyId = `s${counters.sofa++}`;
+                        friendlyId = obj.userData.objectId || obj.userData.friendlyId || `s${counters.sofa++}`;
                     } else if (obj.userData.isWall) {
                         friendlyId = `w${counters.wall++}`;
                     } else if (obj.userData.isDoor) {
@@ -121,6 +122,7 @@ export class FileManager {
                         userData: { 
                             ...obj.userData,
                             friendlyId, // Store the friendly ID in userData as well
+                            objectId: friendlyId, // Ensure objectId is always in sync
                             maxCapacity: obj.userData.isTable ? (obj.userData.maxCapacity || 4) : undefined
                         }
                     };

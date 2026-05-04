@@ -492,6 +492,8 @@ export default function RestaurantFloorPlan({ token, restaurantId, isCustomerVie
                     model = await plant01(scene);
                   } else if (objData.userData.isPlant02) {
                     model = await plant02(scene);
+                  } else {
+                    model = await plant01(scene);
                   }
                 } else if (objData.userData.isFridge) {
                   model = await largeFridge(scene);
@@ -602,15 +604,15 @@ export default function RestaurantFloorPlan({ token, restaurantId, isCustomerVie
               label.className = 'restaurant-table-label';
               label.setAttribute('data-table-id', uniqueTableId);
               label.setAttribute('data-component', 'restaurant-floorplan');
-              label.innerHTML = `<span class="table-number">${uniqueTableId}</span>`;
+              const displayName = object.userData.customName || uniqueTableId;
+              label.innerHTML = `<span class="table-number">${displayName}</span>`;
               label.style.position = 'absolute';
               label.style.pointerEvents = 'none';
               label.style.zIndex = '1000';
               label.style.transform = 'translate(-50%, -50%)';
-              
-              // Store reference to the table object for positioning
+
               label.tableObject = object;
-              
+
               // Append to the container instead of document.body
               if (containerRef.current) {
                 containerRef.current.appendChild(label);

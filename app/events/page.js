@@ -153,64 +153,89 @@ function EventsContent() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((ev, i) => (
+            {filtered.map((ev, i) => {
+              const spotsLeft = ev.capacity > 0 ? ev.capacity - ev.currentBookings : null;
+              const almostFull = spotsLeft !== null && spotsLeft <= Math.ceil(ev.capacity * 0.2);
+              return (
               <motion.div
                 key={ev._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
                 onClick={() => router.push(`/events/${ev._id}`)}
-                className="rounded-2xl overflow-hidden cursor-pointer group transition-all hover:-translate-y-1"
+                className="rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
                 style={{ background: '#161520', border: '1px solid #1E1D2A' }}
               >
-                {/* Event image or gradient header */}
-                <div className="h-40 relative overflow-hidden flex items-center justify-center"
-                  style={{ background: `linear-gradient(135deg, #161520, #0C0B10)` }}>
+                {/* Image / header */}
+                <div className="h-44 relative overflow-hidden flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #1E1D2A 0%, #0C0B10 100%)' }}>
                   {ev.images?.[0] ? (
-                    <img src={ev.images[0]} alt={ev.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
+                    <img src={ev.images[0]} alt={ev.name}
+                      className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500" />
                   ) : (
-                    <span className="text-6xl">{EVENT_TYPE_EMOJI[ev.type] || '📅'}</span>
+                    <span className="text-7xl select-none group-hover:scale-110 transition-transform duration-300">
+                      {EVENT_TYPE_EMOJI[ev.type] || '📅'}
+                    </span>
                   )}
-                  {ev.coverCharge > 0 && (
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-xl text-xs font-bold"
-                      style={{ background: 'rgba(12,11,16,0.85)', color: '#C9A84C', border: '1px solid rgba(201,168,76,0.3)' }}>
-                      ฿{ev.coverCharge} cover
-                    </div>
-                  )}
-                  {ev.coverCharge === 0 && (
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-xl text-xs font-bold"
-                      style={{ background: 'rgba(16,185,129,0.15)', color: '#10B981', border: '1px solid rgba(16,185,129,0.3)' }}>
-                      Free Entry
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(12,11,16,0.9) 0%, transparent 60%)' }} />
+
+                  {/* Badges */}
+                  <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                    <span className="text-xs px-2.5 py-1 rounded-lg font-semibold capitalize"
+                      style={{ background: 'rgba(12,11,16,0.75)', color: '#C9A84C', backdropFilter: 'blur(4px)' }}>
+                      {ev.type?.replace(/_/g, ' ')}
+                    </span>
+                    {ev.coverCharge > 0 ? (
+                      <span className="text-xs px-2.5 py-1 rounded-lg font-bold"
+                        style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C', border: '1px solid rgba(201,168,76,0.4)', backdropFilter: 'blur(4px)' }}>
+                        ฿{ev.coverCharge}
+                      </span>
+                    ) : (
+                      <span className="text-xs px-2.5 py-1 rounded-lg font-bold"
+                        style={{ background: 'rgba(16,185,129,0.2)', color: '#10B981', border: '1px solid rgba(16,185,129,0.4)', backdropFilter: 'blur(4px)' }}>
+                        Free
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Almost full warning */}
+                  {almostFull && (
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg font-semibold"
+                      style={{ background: 'rgba(239,68,68,0.2)', color: '#F87171', border: '1px solid rgba(239,68,68,0.3)', backdropFilter: 'blur(4px)' }}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                      {spotsLeft} spot{spotsLeft !== 1 ? 's' : ''} left
                     </div>
                   )}
                 </div>
 
                 <div className="p-4">
-                  <h3 className="font-bold text-base mb-1 line-clamp-1" style={{ color: '#F5F0E8' }}>{ev.name}</h3>
+                  <h3 className="font-black text-base leading-tight mb-1 line-clamp-1" style={{ color: '#F5F0E8' }}>{ev.name}</h3>
 
                   {ev.venueId && (
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <RiMapPinLine style={{ color: '#9B96A8', fontSize: '13px', flexShrink: 0 }} />
+                    <div className="flex items-center gap-1.5 mb-3">
+                      <RiMapPinLine style={{ color: '#9B96A8', fontSize: '12px', flexShrink: 0 }} />
                       <span className="text-xs truncate" style={{ color: '#9B96A8' }}>{ev.venueId.restaurantName}</span>
-                      {ev.venueId.venueType && (
-                        <VenueTypeBadge venueType={ev.venueId.venueType} size="sm" />
-                      )}
                     </div>
                   )}
 
-                  <div className="flex items-center gap-3 mt-3 pt-3" style={{ borderTop: '1px solid #1E1D2A' }}>
-                    <div className="flex items-center gap-1.5">
-                      <RiCalendarEventLine style={{ color: '#C9A84C', fontSize: '13px' }} />
-                      <span className="text-xs" style={{ color: '#9B96A8' }}>{formatDate(ev.date)}</span>
+                  <div className="flex items-center justify-between pt-3" style={{ borderTop: '1px solid #1E1D2A' }}>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <RiCalendarEventLine style={{ color: '#C9A84C', fontSize: '12px' }} />
+                        <span className="text-xs font-medium" style={{ color: '#9B96A8' }}>{formatDate(ev.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <RiTimeLine style={{ color: '#C9A84C', fontSize: '12px' }} />
+                        <span className="text-xs font-medium" style={{ color: '#9B96A8' }}>{ev.startTime}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <RiTimeLine style={{ color: '#C9A84C', fontSize: '13px' }} />
-                      <span className="text-xs" style={{ color: '#9B96A8' }}>{ev.startTime}</span>
-                    </div>
+                    <span className="text-xs font-bold" style={{ color: '#C9A84C' }}>→</span>
                   </div>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

@@ -58,6 +58,9 @@ function generateTimeSlots(openingTime, closingTime, interval = 30) {
     let current = new Date(`2000-01-01T${openingTime}`);
     const end = new Date(`2000-01-01T${closingTime}`);
 
+    // Handle overnight venues (e.g. open 17:30, close 01:30 next day)
+    if (end <= current) end.setDate(end.getDate() + 1);
+
     while (current <= end) {
         const timeString = current.toTimeString().slice(0, 5);
         slots.push(timeString);
