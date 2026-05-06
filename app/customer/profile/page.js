@@ -797,6 +797,7 @@ export default function CustomerProfile() {
                     )}
                   </div>
                 </div>
+              )}
 
               {/* My Tickets Tab */}
               {activeTab === "tickets" && (

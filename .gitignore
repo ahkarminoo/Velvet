@@ -49,3 +49,6 @@ ngrok.exe
 ngrok.zip
 temp-registration-tokens.json
 -remote origin main
+
+# 360 prototype (separate repo)
+prototype-360/
