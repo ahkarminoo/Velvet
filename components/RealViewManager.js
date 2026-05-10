@@ -3,12 +3,26 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import QRCode from 'qrcode';
 import { createScene, createFloor } from '@/scripts/floor';
 import {
   chair, table, roundTable, sofa,
   create2SeaterTable, create8SeaterTable,
   plant01, plant02, largeFridge, foodStand, drinkStand, iceBox, iceCreamBox,
 } from '@/scripts/asset';
+
+const VELVET360_URL = process.env.NEXT_PUBLIC_VELVET360_URL || 'https://velvet360-production.up.railway.app';
+const STAGE_LABELS = {
+  starting:  'Starting stitcher…',
+  loading:   'Loading photos…',
+  matching:  'Matching features…',
+  optimizing:'Optimizing geometry…',
+  stitching: 'Stitching panorama…',
+  saving:    'Saving result…',
+  done:      'Done',
+  error:     'Stitch failed',
+  unknown:   'Waiting for phone…',
+};
 
 function placeholderDims(ud = {}) {
   if (ud.isChair) return [0.7, 1.0, 0.7];
@@ -61,6 +75,15 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
   const [heading, setHeading]     = useState(0);
   const [previewUrl, setPreviewUrl] = useState('');
   const [toast, setToast]         = useState(null);
+
+  // Phone capture modal state
+  const [phoneModalOpen, setPhoneModalOpen]   = useState(false);
+  const [phoneSessionId, setPhoneSessionId]   = useState('');
+  const [phoneQrDataUrl, setPhoneQrDataUrl]   = useState('');
+  const [phoneStage, setPhoneStage]           = useState('unknown');
+  const [phoneError, setPhoneError]           = useState('');
+  const [phoneFinalizing, setPhoneFinalizing] = useState(false);
+  const phonePollRef = useRef(null);
 
   const fileInputRef   = useRef(null);
   const containerRef   = useRef(null);
@@ -492,6 +515,86 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
     }
   };
 
+  // ─── Phone capture flow ───────────────────────────────────────────────────
+  const stopPhonePolling = useCallback(() => {
+    if (phonePollRef.current) {
+      clearInterval(phonePollRef.current);
+      phonePollRef.current = null;
+    }
+  }, []);
+
+  const closePhoneModal = useCallback(() => {
+    stopPhonePolling();
+    setPhoneModalOpen(false);
+    setPhoneSessionId('');
+    setPhoneQrDataUrl('');
+    setPhoneStage('unknown');
+    setPhoneError('');
+    setPhoneFinalizing(false);
+  }, [stopPhonePolling]);
+
+  const finalizePhoneCapture = useCallback(async (sessionId) => {
+    setPhoneFinalizing(true);
+    try {
+      const res = await fetch('/api/realview/capture-finalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ sessionId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Finalize failed');
+      setPreviewUrl(data.url);
+      showToast('Phone capture saved — click Save to attach it');
+      closePhoneModal();
+    } catch (err) {
+      setPhoneError(err.message);
+      setPhoneFinalizing(false);
+    }
+  }, [token, closePhoneModal]);
+
+  const openPhoneCapture = useCallback(async () => {
+    if (!selectedTable) return;
+    // Random 12-char session id (matches server's _SAFE_ID regex)
+    const sid = Array.from({ length: 12 }, () =>
+      'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random() * 36)]
+    ).join('');
+    const captureUrl = `${VELVET360_URL}/static/capture.html?session=${sid}`;
+    let qrDataUrl = '';
+    try {
+      qrDataUrl = await QRCode.toDataURL(captureUrl, { width: 280, margin: 1 });
+    } catch (e) {
+      showToast('Failed to generate QR', 'error');
+      return;
+    }
+
+    setPhoneSessionId(sid);
+    setPhoneQrDataUrl(qrDataUrl);
+    setPhoneStage('unknown');
+    setPhoneError('');
+    setPhoneFinalizing(false);
+    setPhoneModalOpen(true);
+
+    // Poll Railway status; finalize when done
+    stopPhonePolling();
+    phonePollRef.current = setInterval(async () => {
+      try {
+        const r = await fetch(`${VELVET360_URL}/status/${sid}`);
+        if (!r.ok) return;
+        const d = await r.json();
+        setPhoneStage(d.stage || 'unknown');
+        if (d.stage === 'done') {
+          stopPhonePolling();
+          finalizePhoneCapture(sid);
+        } else if (d.stage === 'error') {
+          stopPhonePolling();
+          setPhoneError(d.message || 'Stitch failed on phone');
+        }
+      } catch (_) { /* ignore polling errors, retry next tick */ }
+    }, 2000);
+  }, [selectedTable, stopPhonePolling, finalizePhoneCapture]);
+
+  useEffect(() => () => stopPhonePolling(), [stopPhonePolling]);
+
   // ─── Save handler ─────────────────────────────────────────────────────────
   const handleSave = async () => {
     if (!selectedTable || !selectedFloorplanId) return;
@@ -565,6 +668,99 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
 
   return (
     <div style={{ color: '#F5F0E8', minHeight: '500px' }}>
+      {/* Phone capture modal */}
+      {phoneModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-6"
+          style={{ background: 'rgba(12,11,16,0.85)', backdropFilter: 'blur(8px)' }}
+        >
+          <div
+            className="rounded-2xl p-7 w-full max-w-md"
+            style={{ background: '#161520', border: '1px solid #2E2D3A' }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-base font-black" style={{ color: '#F5F0E8' }}>
+                  Capture with Phone
+                </h3>
+                <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>
+                  {selectedTable?.userData?.customName || selectedTable?.objectId}
+                </p>
+              </div>
+              <button
+                onClick={closePhoneModal}
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ background: 'rgba(255,255,255,0.05)', color: '#9B96A8' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {!phoneFinalizing && phoneStage !== 'done' && !phoneError && (
+              <>
+                <div
+                  className="rounded-xl p-4 mb-4 flex items-center justify-center"
+                  style={{ background: '#fff' }}
+                >
+                  {phoneQrDataUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={phoneQrDataUrl} alt="QR code" style={{ width: 240, height: 240 }} />
+                  ) : (
+                    <div style={{ width: 240, height: 240 }} />
+                  )}
+                </div>
+                <ol className="text-sm space-y-1.5 mb-4" style={{ color: '#9B96A8' }}>
+                  <li>1. Scan with your phone camera</li>
+                  <li>2. Aim at the floating rings — auto-snaps when aligned</li>
+                  <li>3. Tap <span style={{ color: '#C9A84C', fontWeight: 700 }}>Stitch</span> when you have ≥2 shots</li>
+                </ol>
+                <div
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs"
+                  style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)', color: '#C9A84C' }}
+                >
+                  <div
+                    className="w-2 h-2 rounded-full animate-pulse"
+                    style={{ background: '#C9A84C' }}
+                  />
+                  <span>{STAGE_LABELS[phoneStage] || 'Waiting…'}</span>
+                </div>
+                <p className="text-xs mt-3 font-mono break-all" style={{ color: '#555' }}>
+                  Session: {phoneSessionId}
+                </p>
+              </>
+            )}
+
+            {phoneFinalizing && (
+              <div className="py-12 flex flex-col items-center gap-3">
+                <div
+                  className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin"
+                  style={{ borderColor: '#C9A84C', borderTopColor: 'transparent' }}
+                />
+                <p className="text-sm font-medium" style={{ color: '#F5F0E8' }}>
+                  Saving panorama to permanent storage…
+                </p>
+              </div>
+            )}
+
+            {phoneError && (
+              <div
+                className="rounded-lg p-3 text-sm"
+                style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}
+              >
+                {phoneError}
+                <button
+                  onClick={closePhoneModal}
+                  className="block mt-3 px-3 py-1.5 rounded-lg text-xs font-bold"
+                  style={{ background: 'rgba(255,255,255,0.05)', color: '#F5F0E8', border: '1px solid #2E2D3A' }}
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Toast */}
       {toast && (
         <div className="fixed top-6 right-6 z-50 px-4 py-3 rounded-xl text-sm font-medium shadow-2xl"
@@ -666,10 +862,31 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                   </div>
                 </div>
 
+                {/* Capture with phone */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>
+                    Capture On-Site
+                  </label>
+                  <button
+                    onClick={openPhoneCapture}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all"
+                    style={{
+                      background: 'rgba(201,168,76,0.12)',
+                      border: '1px solid rgba(201,168,76,0.4)',
+                      color: '#C9A84C',
+                    }}
+                  >
+                    📱 Capture with Phone
+                  </button>
+                  <p className="text-xs mt-1.5 leading-snug" style={{ color: '#555' }}>
+                    Opens a guided capture flow on your phone. Stitches automatically when done.
+                  </p>
+                </div>
+
                 {/* Photo upload zone */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>
-                    360° Equirectangular Photo
+                    Or Upload Existing 360° Photo
                   </label>
 
                   {previewUrl ? (

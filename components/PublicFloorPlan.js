@@ -14,6 +14,7 @@ import '@/css/loading.css';
 import { toast } from 'react-hot-toast';
 import { createRoot } from 'react-dom/client';
 import RestaurantReservation from '@/components/RestaurantReservation';
+import Panorama360Modal from '@/components/Panorama360Modal';
 import gsap from 'gsap';
 import { motion, AnimatePresence } from "framer-motion";
 import { performanceMonitor, measurePerformance } from '@/utils/performance';
@@ -22,55 +23,6 @@ import { useFirebaseAuth } from '@/contexts/FirebaseAuthContext';
 import { useAuth } from '@/context/AuthContext';
 import '@/css/loading.css';
 import PaymentDialog from './PaymentDialog';
-
-// Panorama minimap — top-down SVG of table positions
-function PanoramaMinimap({ objects, currentTableId, availableTables }) {
-  const tables = (objects || []).filter(obj => obj.userData?.isTable);
-  if (tables.length === 0) return null;
-
-  const xs = tables.map(t => t.position[0]);
-  const zs = tables.map(t => t.position[2]);
-  const minX = Math.min(...xs), maxX = Math.max(...xs);
-  const minZ = Math.min(...zs), maxZ = Math.max(...zs);
-  const rangeX = (maxX - minX) || 1;
-  const rangeZ = (maxZ - minZ) || 1;
-  const size = 100;
-  const pad = 10;
-
-  const toSvg = (x, z) => ({
-    sx: pad + ((x - minX) / rangeX) * (size - pad * 2),
-    sy: pad + ((z - minZ) / rangeZ) * (size - pad * 2),
-  });
-
-  return (
-    <div className="absolute bottom-4 right-4 rounded-xl overflow-hidden" style={{
-      background: 'rgba(12,11,16,0.85)',
-      border: '1px solid rgba(255,255,255,0.1)',
-      backdropFilter: 'blur(8px)',
-      pointerEvents: 'none',
-    }}>
-      <div className="px-2 py-1 text-center" style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        Map
-      </div>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {tables.map(t => {
-          const { sx, sy } = toSvg(t.position[0], t.position[2]);
-          const isCurrent = t.objectId === currentTableId;
-          const isAvail = availableTables.size === 0 || availableTables.has(t.objectId);
-          return (
-            <circle key={t.objectId} cx={sx} cy={sy}
-              r={isCurrent ? 6 : 4}
-              fill={isCurrent ? '#C9A84C' : isAvail ? '#22c55e' : '#ef4444'}
-              opacity={isCurrent ? 1 : 0.75}
-              stroke={isCurrent ? '#fff' : 'none'}
-              strokeWidth={isCurrent ? 1.5 : 0}
-            />
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
 
 // New Booking Confirmation Dialog Component
 function BookingConfirmationDialog({ bookingDetails, onClose, onConfirm }) {
@@ -199,15 +151,6 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   const animateFnRef = useRef(null);
   const cameraRef = useRef(null);
   const controlsRef = useRef(null);
-  // panorama viewer refs
-  const panoramaModeRef = useRef(false);
-  const panoramaCameraRef = useRef(null);
-  const panoramaSceneRef = useRef(null);
-  const panoramaControlsRef = useRef(null);
-  const panoramaHotspotsRef = useRef([]);
-  const panoramaAnimateRef = useRef(null);
-  const openPanoramaFnRef = useRef(null);
-  const hotspotDotsContainerRef = useRef(null);
   const doorManagerRef = useRef(null);
   const windowManagerRef = useRef(null);
   const availableTablesRef = useRef(new Set());
@@ -231,12 +174,11 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   const [localFloorplanId, setLocalFloorplanId] = useState(floorplanId);
   const [venueEvents, setVenueEvents] = useState([]);
   const [activeEvent, setActiveEvent] = useState(null);
-  // panorama viewer state
-  const [panoramaActive, setPanoramaActive] = useState(false);
-  const [panoramaPhotoLoaded, setPanoramaPhotoLoaded] = useState(false);
-  const [panoramaCurrentTableId, setPanoramaCurrentTableId] = useState(null);
-  const [panoramaCurrentTableName, setPanoramaCurrentTableName] = useState(null);
-  const [panoramaHotspots, setPanoramaHotspots] = useState([]);
+  // panorama modal — when set, the Panorama360Modal opens with this table's data
+  const [panoramaTable, setPanoramaTable] = useState(null); // tableUserData object or null
+  // 360° badge overlay (toggleable per-table buttons that float over tables with realView)
+  const [show360Badges, setShow360Badges] = useState(false);
+  const badge360sRef = useRef([]); // [{el, tableObject}]
 
   // Cache floorplan JSON (non-sensitive) for fast revisits
   useEffect(() => {
@@ -485,13 +427,6 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           document.body.removeChild(label);
         }
       });
-
-      // Cancel panorama loop if active
-      if (panoramaAnimateRef.current) {
-        cancelAnimationFrame(panoramaAnimateRef.current);
-        panoramaAnimateRef.current = null;
-      }
-      panoramaModeRef.current = false;
 
       // Cancel animation frame
       if (animationFrameRef.current) {
@@ -869,10 +804,6 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 
           camera.aspect = newWidth / newHeight;
           camera.updateProjectionMatrix();
-          if (panoramaCameraRef.current) {
-            panoramaCameraRef.current.aspect = newWidth / newHeight;
-            panoramaCameraRef.current.updateProjectionMatrix();
-          }
           rendererRef.current.setSize(newWidth, newHeight);
         };
         window.addEventListener('resize', handleResize);
@@ -901,19 +832,13 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                  </div>`
               : '';
 
-            const has360 = !!(tableUserData?.realView?.photoUrl);
-            const view360Html = has360
-              ? `<button data-view360 style="margin-top:8px;display:block;width:100%;padding:5px 10px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.4);border-radius:7px;color:#C9A84C;font-size:11px;font-weight:700;cursor:pointer;text-align:center;letter-spacing:0.02em;">&#128065; 360° View</button>`
-              : '';
-
-            // Create new tooltip
+            // Create new tooltip — hover info only; 360° access is via the badge toggle
             hoverTooltip = document.createElement('div');
             hoverTooltip.className = 'table-hover-tooltip';
             hoverTooltip.innerHTML = `
               <div class="tooltip-content" style="background:#161520;border:1px solid rgba(201,168,76,0.25);color:#F5F0E8;padding:8px 12px;border-radius:10px;min-width:120px">
                 <span class="table-number" style="font-size:12px;font-weight:700">Table ${tableUserData.customName || tableId}</span>
                 ${zoneHtml}
-                ${view360Html}
               </div>
             `;
 
@@ -922,19 +847,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             hoverTooltip.style.left = (event.clientX + 15) + 'px';
             hoverTooltip.style.top = (event.clientY - 10) + 'px';
             hoverTooltip.style.zIndex = '10000';
-            hoverTooltip.style.pointerEvents = has360 ? 'auto' : 'none';
-
-            if (has360) {
-              hoverTooltip.addEventListener('mouseleave', removeHoverTooltip);
-              const btn = hoverTooltip.querySelector('[data-view360]');
-              if (btn) {
-                btn.addEventListener('click', (e) => {
-                  e.stopPropagation();
-                  removeHoverTooltip();
-                  openPanoramaFnRef.current?.(tableUserData);
-                });
-              }
-            }
+            hoverTooltip.style.pointerEvents = 'none';
 
             document.body.appendChild(hoverTooltip);
           };
@@ -2231,152 +2144,108 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     };
   }, []);
 
-  // ── 360° panorama helpers ──────────────────────────────────────────────────
-
-  const updateHotspotDOMPositions = () => {
-    const container = hotspotDotsContainerRef.current;
-    if (!container || !panoramaCameraRef.current) return;
-    const w = container.offsetWidth || 1;
-    const h = container.offsetHeight || 1;
-    for (const hotspot of panoramaHotspotsRef.current) {
-      const el = container.querySelector(`[data-table-id="${hotspot.tableId}"]`);
-      if (!el) continue;
-      const pos = hotspot.position.clone().project(panoramaCameraRef.current);
-      if (pos.z > 1) { el.style.display = 'none'; continue; }
-      const x = (pos.x + 1) / 2 * w;
-      const y = (1 - pos.y) / 2 * h;
-      if (x < -30 || x > w + 30 || y < -30 || y > h + 30) {
-        el.style.display = 'none';
-      } else {
-        el.style.display = 'flex';
-        el.style.left = x + 'px';
-        el.style.top = y + 'px';
+  // ── 360° panorama: pause/resume floorplan render while modal is open ───────
+  useEffect(() => {
+    if (panoramaTable) {
+      // Modal is opening — stop the floorplan render loop to save battery
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    } else {
+      // Modal closed — restart the floorplan render loop
+      if (!animationFrameRef.current && animateFnRef.current) {
+        animateFnRef.current();
       }
     }
-  };
+  }, [panoramaTable]);
 
-  const closePanorama = () => {
-    if (panoramaAnimateRef.current) {
-      cancelAnimationFrame(panoramaAnimateRef.current);
-      panoramaAnimateRef.current = null;
-    }
-    if (panoramaSceneRef.current) {
-      panoramaSceneRef.current.traverse((o) => {
-        if (o.geometry) o.geometry.dispose();
-        if (o.material) {
-          if (o.material.map) o.material.map.dispose();
-          o.material.dispose();
-        }
+  // ─── 360° badge overlay (toggleable, per-table floating buttons) ─────────
+  useEffect(() => {
+    // Tear down any existing badges
+    badge360sRef.current.forEach(({ el }) => {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    });
+    badge360sRef.current = [];
+
+    if (!show360Badges || !sceneLoaded || !sceneRef.current || !containerRef.current) return;
+
+    sceneRef.current.traverse((obj) => {
+      if (!obj.userData?.isTable) return;
+      if (!obj.userData?.realView?.photoUrl) return;
+
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'velvet-360-badge';
+      el.innerHTML = '<span style="font-size:13px">👁</span><span>360°</span>';
+      el.style.cssText = [
+        'position:absolute',
+        'transform:translate(-50%,-50%)',
+        'display:none',
+        'align-items:center',
+        'gap:5px',
+        'padding:6px 11px',
+        'border-radius:999px',
+        'background:rgba(201,168,76,0.95)',
+        'color:#0C0B10',
+        'font-size:11px',
+        'font-weight:800',
+        'letter-spacing:0.04em',
+        'border:2px solid rgba(255,255,255,0.55)',
+        'box-shadow:0 4px 14px rgba(0,0,0,0.35), 0 0 0 4px rgba(201,168,76,0.18)',
+        'cursor:pointer',
+        'z-index:25',
+        'white-space:nowrap',
+        'user-select:none',
+        '-webkit-tap-highlight-color:transparent',
+      ].join(';');
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setPanoramaTable(obj.userData);
       });
-      panoramaSceneRef.current = null;
-    }
-    if (panoramaControlsRef.current) {
-      panoramaControlsRef.current.dispose();
-      panoramaControlsRef.current = null;
-    }
-    panoramaCameraRef.current = null;
-    panoramaHotspotsRef.current = [];
-    panoramaModeRef.current = false;
-    setPanoramaActive(false);
-    setPanoramaCurrentTableId(null);
-    setPanoramaCurrentTableName(null);
-    setPanoramaPhotoLoaded(false);
-    setPanoramaHotspots([]);
-    // Restart floorplan loop
-    if (animateFnRef.current) animateFnRef.current();
-  };
+      containerRef.current.appendChild(el);
+      badge360sRef.current.push({ el, tableObject: obj });
+    });
 
-  const openPanoramaForTable = (tableUserData) => {
-    const realView = tableUserData?.realView;
-    if (!realView?.photoUrl || !rendererRef.current) return;
-
-    // Stop floorplan loop
-    cancelAnimationFrame(animationFrameRef.current);
-    animationFrameRef.current = null;
-
-    const renderer = rendererRef.current;
-    const w = containerRef.current?.clientWidth || 800;
-    const h = containerRef.current?.clientHeight || 600;
-
-    // Panorama scene: inside-out sphere
-    const panoramaScene = new THREE.Scene();
-    const sphereGeom = new THREE.SphereGeometry(50, 64, 32);
-    sphereGeom.scale(-1, 1, 1);
-    const sphereMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
-    const sphere = new THREE.Mesh(sphereGeom, sphereMat);
-    panoramaScene.add(sphere);
-
-    // Load equirectangular texture
-    setPanoramaPhotoLoaded(false);
-    const texLoader = new THREE.TextureLoader();
-    texLoader.load(
-      realView.photoUrl,
-      (texture) => {
-        texture.colorSpace = THREE.SRGBColorSpace;
-        sphere.material = new THREE.MeshBasicMaterial({ map: texture });
-        sphere.material.needsUpdate = true;
-        setPanoramaPhotoLoaded(true);
-      },
-      undefined,
-      () => setPanoramaPhotoLoaded(true)
-    );
-
-    // Panorama camera
-    const panoCam = new THREE.PerspectiveCamera(75, w / h, 0.1, 200);
-    panoCam.position.set(0, 0, 0.001);
-
-    // Orbit controls — look around only
-    const panoControls = new OrbitControls(panoCam, renderer.domElement);
-    panoControls.enableZoom = false;
-    panoControls.enablePan = false;
-    panoControls.rotateSpeed = -0.3;
-    panoControls.minPolarAngle = 0.15;
-    panoControls.maxPolarAngle = Math.PI - 0.15;
-    const headingRad = THREE.MathUtils.degToRad(realView.heading || 0);
-    panoControls.target.set(Math.sin(headingRad), 0, Math.cos(headingRad));
-    panoControls.update();
-
-    // Compute hotspot 3D positions from table world positions
-    const capturePoint = realView.capturePoint
-      ? new THREE.Vector3(...realView.capturePoint)
-      : new THREE.Vector3(0, 1.5, 0);
-    const invHeading = THREE.MathUtils.degToRad(-(realView.heading || 0));
-    const yAxis = new THREE.Vector3(0, 1, 0);
-
-    const hotspots = [];
-    if (localFloorplanData?.objects) {
-      for (const obj of localFloorplanData.objects) {
-        if (!obj.userData?.isTable) continue;
-        const tablePos = new THREE.Vector3(...obj.position);
-        const dir = tablePos.clone().sub(capturePoint).normalize();
-        dir.applyAxisAngle(yAxis, invHeading);
-        const isAvailable = availableTablesRef.current.size === 0 || availableTablesRef.current.has(obj.objectId);
-        hotspots.push({ tableId: obj.objectId, tableName: obj.userData?.customName || obj.objectId, position: dir.multiplyScalar(45), isAvailable });
+    // Position update loop — independent of main animate so we don't risk the existing render path
+    let raf;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const cam = cameraRef.current;
+      const container = containerRef.current;
+      if (!cam || !container) {
+        badge360sRef.current.forEach(({ el }) => { el.style.display = 'none'; });
+        return;
       }
-    }
-
-    panoramaSceneRef.current = panoramaScene;
-    panoramaCameraRef.current = panoCam;
-    panoramaControlsRef.current = panoControls;
-    panoramaHotspotsRef.current = hotspots;
-    panoramaModeRef.current = true;
-
-    setPanoramaHotspots(hotspots);
-    setPanoramaCurrentTableId(tableUserData.objectId);
-    setPanoramaCurrentTableName(tableUserData.customName || tableUserData.objectId);
-    setPanoramaActive(true);
-
-    // Start panorama render loop
-    const panoLoop = () => {
-      panoramaAnimateRef.current = requestAnimationFrame(panoLoop);
-      panoControls.update();
-      renderer.render(panoramaScene, panoCam);
-      updateHotspotDOMPositions();
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      const wp = new THREE.Vector3();
+      for (const { el, tableObject } of badge360sRef.current) {
+        tableObject.getWorldPosition(wp);
+        wp.y += 1.0; // float above the table
+        const ndc = wp.clone().project(cam);
+        if (ndc.z >= 1) { el.style.display = 'none'; continue; }
+        el.style.display = 'flex';
+        el.style.left = ((ndc.x * 0.5 + 0.5) * w) + 'px';
+        el.style.top = ((ndc.y * -0.5 + 0.5) * h) + 'px';
+      }
     };
-    panoLoop();
-  };
+    tick();
 
-  openPanoramaFnRef.current = openPanoramaForTable;
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      badge360sRef.current.forEach(({ el }) => {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      });
+      badge360sRef.current = [];
+    };
+  }, [show360Badges, sceneLoaded, localFloorplanId, localFloorplanData]);
+
+  // True if at least one table has a 360° photo — controls toggle visibility
+  const hasAny360Photos = !!localFloorplanData?.objects?.some(
+    (o) => o.userData?.isTable && o.userData?.realView?.photoUrl
+  );
 
   // Skip the basic loading screen entirely - go straight to 3D scene loading
   // The exciting loading experience will be handled within the 3D scene initialization
@@ -2784,116 +2653,40 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
               <div className="loading-spinner"></div>
             </div>
           )}
+
+          {/* 360° badge toggle — only visible when scene is loaded, not in panorama mode, and at least one table has a photo */}
+          {sceneLoaded && !panoramaTable && hasAny360Photos && (
+            <button
+              type="button"
+              onClick={() => setShow360Badges((v) => !v)}
+              className="absolute top-4 right-4 z-30 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all"
+              style={{
+                background: show360Badges ? 'rgba(201,168,76,0.95)' : 'rgba(12,11,16,0.85)',
+                border: `1px solid ${show360Badges ? 'rgba(201,168,76,1)' : 'rgba(201,168,76,0.4)'}`,
+                color: show360Badges ? '#0C0B10' : '#C9A84C',
+                backdropFilter: 'blur(8px)',
+                boxShadow: show360Badges ? '0 4px 14px rgba(201,168,76,0.4)' : '0 2px 8px rgba(0,0,0,0.3)',
+                minHeight: '40px',
+              }}
+            >
+              <span style={{ fontSize: '15px' }}>👁</span>
+              <span>{show360Badges ? '360° On' : 'Show 360° Tables'}</span>
+            </button>
+          )}
         </div>
 
-        {/* ── 360° Panorama Overlay ───────────────────────────────────────────── */}
-        <AnimatePresence>
-          {panoramaActive && (
-            <motion.div
-              key="panorama-overlay"
-              ref={hotspotDotsContainerRef}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="absolute inset-0 z-30"
-              style={{ pointerEvents: 'none' }}
-            >
-              {/* Loading spinner */}
-              {!panoramaPhotoLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center" style={{ pointerEvents: 'none' }}>
-                  <div className="loading-spinner" />
-                </div>
-              )}
-
-              {/* Back button */}
-              <button
-                onClick={closePanorama}
-                className="absolute top-4 left-4 z-40 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-                style={{
-                  background: 'rgba(12,11,16,0.85)',
-                  border: '1px solid rgba(201,168,76,0.35)',
-                  color: '#C9A84C',
-                  pointerEvents: 'auto',
-                  backdropFilter: 'blur(8px)',
-                }}
-              >
-                ← Floorplan
-              </button>
-
-              {/* Label bar */}
-              <div
-                className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-sm z-40"
-                style={{
-                  background: 'rgba(12,11,16,0.85)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#9B96A8',
-                  backdropFilter: 'blur(8px)',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                360° View
-                {panoramaCurrentTableId && (
-                  <span className="ml-2 font-semibold" style={{ color: '#C9A84C' }}>
-                    · Table {panoramaCurrentTableName || panoramaCurrentTableId}
-                  </span>
-                )}
-              </div>
-
-              {/* Drag hint */}
-              {panoramaPhotoLoaded && (
-                <div
-                  className="absolute bottom-16 left-1/2 -translate-x-1/2 text-xs px-3 py-1.5 rounded-full"
-                  style={{ background: 'rgba(12,11,16,0.65)', color: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(4px)' }}
-                >
-                  Drag to look around
-                </div>
-              )}
-
-              {/* Hotspot dots — positioned per-frame by updateHotspotDOMPositions */}
-              {panoramaHotspots.map(hotspot => (
-                <div
-                  key={hotspot.tableId}
-                  data-table-id={hotspot.tableId}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
-                  style={{ display: 'none', pointerEvents: 'none' }}
-                >
-                  <span
-                    style={{
-                      fontSize: '9px',
-                      fontWeight: 700,
-                      color: '#F5F0E8',
-                      background: 'rgba(12,11,16,0.85)',
-                      padding: '2px 5px',
-                      borderRadius: '4px',
-                      marginBottom: '3px',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {hotspot.tableName}
-                  </span>
-                  <div
-                    style={{
-                      width: '12px',
-                      height: '12px',
-                      borderRadius: '50%',
-                      background: hotspot.isAvailable ? '#22c55e' : '#ef4444',
-                      border: '2px solid rgba(255,255,255,0.85)',
-                      boxShadow: `0 0 8px ${hotspot.isAvailable ? '#22c55e88' : '#ef444488'}`,
-                    }}
-                  />
-                </div>
-              ))}
-
-              {/* Minimap */}
-              <PanoramaMinimap
-                objects={localFloorplanData?.objects || []}
-                currentTableId={panoramaCurrentTableId}
-                availableTables={availableTablesRef.current}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* ── 360° Panorama Modal (self-contained, mounts as fullscreen overlay) ── */}
+        <Panorama360Modal
+          isOpen={!!panoramaTable}
+          onClose={() => setPanoramaTable(null)}
+          photoUrl={panoramaTable?.realView?.photoUrl}
+          heading={panoramaTable?.realView?.heading || 0}
+          capturePoint={panoramaTable?.realView?.capturePoint}
+          tableId={panoramaTable?.objectId}
+          tableName={panoramaTable?.customName || panoramaTable?.objectId}
+          objects={localFloorplanData?.objects || []}
+          availableTables={availableTablesRef.current}
+        />
 
         {/* Instructions Overlay */}
         <AnimatePresence>
