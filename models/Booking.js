@@ -188,7 +188,7 @@ bookingSchema.pre('validate', function(next) {
 bookingSchema.index({ restaurantId: 1, date: 1 });
 bookingSchema.index({ tableId: 1, date: 1 });
 bookingSchema.index({ userId: 1 });
-bookingSchema.index({ bookingRef: 1 }, { unique: true });
+// bookingRef unique index is created by `unique: true` on the schema field
 bookingSchema.index({ 'history.timestamp': 1 });
  
 // Compound indexes for better performance

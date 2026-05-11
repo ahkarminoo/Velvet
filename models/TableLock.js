@@ -86,7 +86,7 @@ const tableLockSchema = new mongoose.Schema({
 });
 
 // Indexes for efficient queries
-tableLockSchema.index({ lockId: 1 }, { unique: true });
+// lockId unique index is created by `unique: true` on the schema field
 tableLockSchema.index({ restaurantId: 1, date: 1, tableId: 1 });
 tableLockSchema.index({ userId: 1 });
 tableLockSchema.index({ status: 1, expiresAt: 1 });
