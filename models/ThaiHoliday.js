@@ -68,7 +68,7 @@ const thaiHolidaySchema = new mongoose.Schema({
 });
 
 // Indexes for fast lookups
-thaiHolidaySchema.index({ date: 1 });
+// date unique index is created by `unique: true` on the schema field above
 thaiHolidaySchema.index({ type: 1 });
 thaiHolidaySchema.index({ businessImpact: 1 });
 
