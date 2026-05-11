@@ -168,6 +168,7 @@ const restaurantSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Indexes for SaaS functionality
+restaurantSchema.index({ ownerId: 1 });
 restaurantSchema.index({ subscriptionId: 1 });
 restaurantSchema.index({ organizationId: 1 });
 restaurantSchema.index({ saasStatus: 1 });

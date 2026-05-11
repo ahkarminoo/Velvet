@@ -343,6 +343,13 @@ bookingSchema.methods.addToHistory = function(action, details = {}) {
             action,
             details
         });
+
+        // Cap history to the most recent MAX_HISTORY_ENTRIES to prevent document bloat.
+        // Older entries are dropped — if you need full audit history, persist it externally.
+        const MAX_HISTORY_ENTRIES = 50;
+        if (this.history.length > MAX_HISTORY_ENTRIES) {
+            this.history.splice(0, this.history.length - MAX_HISTORY_ENTRIES);
+        }
     }
 };
  

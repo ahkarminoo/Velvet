@@ -119,6 +119,10 @@ staffSchema.pre('save', function(next) {
   next();
 });
 
+// Indexes for the most common query shapes (LINE webhook, notification fan-out)
+staffSchema.index({ restaurantId: 1, isActive: 1 });
+staffSchema.index({ lineUserId: 1, isActive: 1 });
+
 // Force model recreation to avoid cache issues
 if (mongoose.models.Staff) {
   delete mongoose.models.Staff;
