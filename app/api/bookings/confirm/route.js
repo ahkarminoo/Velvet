@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Booking from '@/models/Booking';
 import Staff from '@/models/Staff';
-import { notifyCustomerOfBookingConfirmation, notifyCustomerOfBookingRejection } from '@/lib/lineNotificationService';
+import { notifyCustomerOfBookingConfirmation, notifyCustomerOfBookingRejection } from '@/lib/notifications';
 
 // POST /api/bookings/confirm - Confirm or reject a booking
 export async function POST(request) {

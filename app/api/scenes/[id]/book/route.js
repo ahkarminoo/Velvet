@@ -5,7 +5,7 @@ import Floorplan from '@/models/Floorplan';
 import Booking from '@/models/Booking';
 import Restaurant from '@/models/Restaurants';
 import User from '@/models/user'; // Import the User model
-import { notifyStaffOfNewBooking } from '@/lib/lineNotificationService';
+import { notifyStaffOfNewBooking } from '@/lib/notifications';
 import Subscription from '@/models/Subscription'; // Import the Subscription model
 import { verifyFirebaseAuth } from "@/lib/firebase-admin";
 import jwt from 'jsonwebtoken';

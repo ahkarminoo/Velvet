@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Booking from '@/models/Booking';
 import Floorplan from '@/models/Floorplan';
+import { timeToMinutes } from '@/lib/time';
 
 export async function POST(request, { params }) {
   try {
@@ -229,21 +230,6 @@ export async function POST(request, { params }) {
       }
     });
   }
-}
-
-// Helper function to convert time string to minutes since midnight
-function timeToMinutes(timeStr) {
-  const [time, period] = timeStr.split(' ');
-  let [hours, minutes] = time.split(':').map(Number);
-  
-  // Convert to 24-hour format
-  if (period === 'PM' && hours !== 12) {
-    hours += 12;
-  } else if (period === 'AM' && hours === 12) {
-    hours = 0;
-  }
-  
-  return hours * 60 + minutes;
 }
 
 // For an overnight slot pair (e.g. "10:00 PM" – "2:00 AM"), the end time

@@ -2,75 +2,9 @@ import { NextResponse } from 'next/server';
 import dbConnect, { startSession } from '@/lib/mongodb';
 import TableLock from '@/models/TableLock';
 import Booking from '@/models/Booking';
-import { verifyFirebaseAuth } from '@/lib/firebase-admin';
-import User from '@/models/user';
 import Restaurant from '@/models/Restaurants';
-import jwt from 'jsonwebtoken';
-
-async function resolveUser(request) {
-    const authToken = request.headers.get('authorization')?.split(' ')[1];
-    if (!authToken) return null;
-    if (authToken.startsWith('line.')) {
-        return User.findOne({ lineUserId: authToken.replace('line.', '') });
-    }
-    try {
-        const secret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
-        if (secret) {
-            const { userId } = jwt.verify(authToken, secret);
-            return User.findById(userId);
-        }
-    } catch {}
-    try {
-        const { success, firebaseUid } = await verifyFirebaseAuth(request);
-        if (success) return User.findOne({ firebaseUid });
-    } catch {}
-    return null;
-}
-
-function timeToMinutes(timeStr) {
-    if (!timeStr || typeof timeStr !== 'string') return NaN;
-
-    const trimmed = timeStr.trim();
-    const twelveHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-    if (twelveHourMatch) {
-        let hours = Number(twelveHourMatch[1]);
-        const minutes = Number(twelveHourMatch[2]);
-        const period = twelveHourMatch[3].toUpperCase();
-
-        if (period === 'PM' && hours !== 12) hours += 12;
-        if (period === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + minutes;
-    }
-
-    const twentyFourHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
-    if (twentyFourHourMatch) {
-        const hours = Number(twentyFourHourMatch[1]);
-        const minutes = Number(twentyFourHourMatch[2]);
-        return hours * 60 + minutes;
-    }
-
-    return NaN;
-}
-
-function hasOverlap(startA, endA, startB, endB) {
-    const aStart = timeToMinutes(startA);
-    const aEnd = timeToMinutes(endA);
-    const bStart = timeToMinutes(startB);
-    const bEnd = timeToMinutes(endB);
-
-    if ([aStart, aEnd, bStart, bEnd].some(Number.isNaN)) return false;
-    return aStart < bEnd && aEnd > bStart;
-}
-
-function inferDurationMinutes(startTime, endTime) {
-    const start = timeToMinutes(startTime);
-    const end = timeToMinutes(endTime);
-
-    if (Number.isNaN(start) || Number.isNaN(end)) return 120;
-    let duration = end - start;
-    if (duration <= 0) duration += 24 * 60;
-    return duration;
-}
+import { hasOverlap, inferDurationMinutes } from '@/lib/time';
+import { resolveUser } from '@/lib/auth/resolveUser';
 
 export async function POST(request) {
     try {
@@ -90,18 +24,10 @@ export async function POST(request) {
             );
         }
 
-        // Verify authentication
-        const authResult = await verifyFirebaseAuth(request);
-        if (!authResult.success) {
-            return NextResponse.json({ error: authResult.error }, { status: 401 });
-        }
-
-        const { firebaseUid } = authResult;
-
-        // Find user by Firebase UID
-        const user = await User.findOne({ firebaseUid });
+        // Verify authentication (supports LINE, custom JWT, and Firebase)
+        const user = await resolveUser(request);
         if (!user) {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         // Find the lock

@@ -1,48 +1,7 @@
 import mongoose from 'mongoose';
+import { timeToMinutes, inferDurationMinutes, DEFAULT_BOOKING_DURATION_MINUTES } from '@/lib/time';
 
-const DEFAULT_BOOKING_DURATION_MINUTES = 120;
 
-function timeToMinutes(timeStr) {
-    if (!timeStr || typeof timeStr !== 'string') return NaN;
-
-    const trimmed = timeStr.trim();
-    const twelveHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-    if (twelveHourMatch) {
-        let hours = Number(twelveHourMatch[1]);
-        const minutes = Number(twelveHourMatch[2]);
-        const period = twelveHourMatch[3].toUpperCase();
-
-        if (period === 'PM' && hours !== 12) hours += 12;
-        if (period === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + minutes;
-    }
-
-    const twentyFourHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
-    if (twentyFourHourMatch) {
-        const hours = Number(twentyFourHourMatch[1]);
-        const minutes = Number(twentyFourHourMatch[2]);
-        return hours * 60 + minutes;
-    }
-
-    return NaN;
-}
-
-function inferDurationMinutes(startTime, endTime) {
-    const start = timeToMinutes(startTime);
-    const end = timeToMinutes(endTime);
-
-    if (Number.isNaN(start) || Number.isNaN(end)) return DEFAULT_BOOKING_DURATION_MINUTES;
-
-    let duration = end - start;
-    if (duration <= 0) duration += 24 * 60;
-
-    if (duration < 30 || duration > 360) {
-        return DEFAULT_BOOKING_DURATION_MINUTES;
-    }
-
-    return duration;
-}
- 
 const bookingSchema = new mongoose.Schema({
     bookingRef: {
         type: String,
@@ -267,31 +226,6 @@ bookingSchema.statics.isTableAvailable = async function(tableId, date, startTime
     bookingDate.setHours(0, 0, 0, 0);
     const nextDate = new Date(bookingDate);
     nextDate.setDate(nextDate.getDate() + 1);
-
-    const timeToMinutes = (timeStr) => {
-        if (!timeStr || typeof timeStr !== 'string') return NaN;
-
-        const trimmed = timeStr.trim();
-        const twelveHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-        if (twelveHourMatch) {
-            let hours = Number(twelveHourMatch[1]);
-            const minutes = Number(twelveHourMatch[2]);
-            const period = twelveHourMatch[3].toUpperCase();
-
-            if (period === 'PM' && hours !== 12) hours += 12;
-            if (period === 'AM' && hours === 12) hours = 0;
-            return hours * 60 + minutes;
-        }
-
-        const twentyFourHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
-        if (twentyFourHourMatch) {
-            const hours = Number(twentyFourHourMatch[1]);
-            const minutes = Number(twentyFourHourMatch[2]);
-            return hours * 60 + minutes;
-        }
-
-        return NaN;
-    };
 
     const requestStart = timeToMinutes(startTime);
     const requestEnd = timeToMinutes(endTime);

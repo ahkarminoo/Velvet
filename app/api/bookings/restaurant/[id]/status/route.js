@@ -5,8 +5,11 @@ import Restaurant from '@/models/Restaurants';
 import User from '@/models/user';
 import Staff from '@/models/Staff';
 import jwt from 'jsonwebtoken';
-import { sendBookingStatusNotification } from '@/lib/email/bookingNotifications';
-import { notifyCustomerOfBookingConfirmation, notifyCustomerOfBookingRejection } from '@/lib/lineNotificationService';
+import {
+  sendBookingStatusNotification,
+  notifyCustomerOfBookingConfirmation,
+  notifyCustomerOfBookingRejection,
+} from '@/lib/notifications';
 
 export async function PATCH(request, { params }) {
   try {

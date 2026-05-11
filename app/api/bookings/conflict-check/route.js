@@ -2,41 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import TableLock from '@/models/TableLock';
 import Booking from '@/models/Booking';
-
-function timeToMinutes(timeStr) {
-    if (!timeStr || typeof timeStr !== 'string') return NaN;
-
-    const trimmed = timeStr.trim();
-    const twelveHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-    if (twelveHourMatch) {
-        let hours = Number(twelveHourMatch[1]);
-        const minutes = Number(twelveHourMatch[2]);
-        const period = twelveHourMatch[3].toUpperCase();
-
-        if (period === 'PM' && hours !== 12) hours += 12;
-        if (period === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + minutes;
-    }
-
-    const twentyFourHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
-    if (twentyFourHourMatch) {
-        const hours = Number(twentyFourHourMatch[1]);
-        const minutes = Number(twentyFourHourMatch[2]);
-        return hours * 60 + minutes;
-    }
-
-    return NaN;
-}
-
-function hasOverlap(startA, endA, startB, endB) {
-    const aStart = timeToMinutes(startA);
-    const aEnd = timeToMinutes(endA);
-    const bStart = timeToMinutes(startB);
-    const bEnd = timeToMinutes(endB);
-
-    if ([aStart, aEnd, bStart, bEnd].some(Number.isNaN)) return false;
-    return aStart < bEnd && aEnd > bStart;
-}
+import { hasOverlap } from '@/lib/time';
 
 export async function POST(request) {
     try {
