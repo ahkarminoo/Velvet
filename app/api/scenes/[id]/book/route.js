@@ -5,7 +5,7 @@ import User from '@/models/user';
 import { verifyFirebaseAuth } from '@/lib/firebase-admin';
 import jwt from 'jsonwebtoken';
 import { createSceneBooking } from '@/lib/bookings/sceneBooking';
-import { BookingError, ERROR_CODES, ERROR_HTTP_STATUS } from '@/lib/bookings/errors';
+import { errorResponseFor } from '@/lib/api/bookingErrorResponse';
 
 /**
  * Auto-create a User document for a first-time Firebase login.
@@ -69,50 +69,6 @@ async function resolveSceneBookingUser(request) {
   return null;
 }
 
-function errorResponse(error) {
-  if (!(error instanceof BookingError)) {
-    console.error('Booking error:', error);
-    return NextResponse.json({
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-    }, { status: 500 });
-  }
-
-  const status = ERROR_HTTP_STATUS[error.code] ?? 500;
-
-  if (error.code === ERROR_CODES.LIMIT_REACHED) {
-    const { limit, currentUsage, currentPlan } = error.details;
-    return NextResponse.json({
-      error: 'Monthly booking limit reached',
-      message: `You have reached your monthly limit of ${limit} bookings. Please upgrade your plan to accept more bookings.`,
-      upgradeRequired: true,
-      currentPlan,
-      currentUsage,
-      limit,
-    }, { status });
-  }
-
-  if (error.code === ERROR_CODES.TABLE_UNAVAILABLE) {
-    return NextResponse.json({
-      error: error.message,
-      code: 'TABLE_UNAVAILABLE',
-    }, { status });
-  }
-
-  if (error.code === ERROR_CODES.DOUBLE_BOOKING_PREVENTED) {
-    return NextResponse.json({
-      error: error.message,
-      code: 'DOUBLE_BOOKING_PREVENTED',
-    }, { status });
-  }
-
-  return NextResponse.json({
-    error: error.message,
-    code: error.code,
-    ...(error.details ?? {}),
-  }, { status });
-}
-
 export async function POST(request, { params }) {
   try {
     await dbConnect();
@@ -154,6 +110,6 @@ export async function POST(request, { params }) {
       },
     });
   } catch (error) {
-    return errorResponse(error);
+    return errorResponseFor(error, { fallbackMessage: 'Booking error', includeDevStack: true });
   }
 }

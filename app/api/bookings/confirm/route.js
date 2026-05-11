@@ -4,16 +4,7 @@ import {
     staffConfirmOrReject,
     listPendingBookingsForStaff,
 } from '@/lib/bookings/staffDecision';
-import { BookingError, ERROR_HTTP_STATUS } from '@/lib/bookings/errors';
-
-function errorResponse(error, defaultMessage) {
-    if (!(error instanceof BookingError)) {
-        console.error(defaultMessage, error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    }
-    const status = ERROR_HTTP_STATUS[error.code] ?? 500;
-    return NextResponse.json({ error: error.message, code: error.code }, { status });
-}
+import { errorResponseFor } from '@/lib/api/bookingErrorResponse';
 
 // POST /api/bookings/confirm — staff confirms or rejects a pending booking
 export async function POST(request) {
@@ -57,7 +48,7 @@ export async function POST(request) {
             action,
         });
     } catch (error) {
-        return errorResponse(error, 'Error processing booking decision:');
+        return errorResponseFor(error, { fallbackMessage: 'Error processing booking decision' });
     }
 }
 
@@ -108,6 +99,6 @@ export async function GET(request) {
             },
         });
     } catch (error) {
-        return errorResponse(error, 'Error fetching pending bookings:');
+        return errorResponseFor(error, { fallbackMessage: 'Error fetching pending bookings' });
     }
 }

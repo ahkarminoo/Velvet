@@ -2,19 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import jwt from 'jsonwebtoken';
 import { changeBookingStatusAsOwner } from '@/lib/bookings/ownerStatusChange';
-import { BookingError, ERROR_HTTP_STATUS } from '@/lib/bookings/errors';
-
-function errorResponse(error) {
-  if (!(error instanceof BookingError)) {
-    console.error('Error updating booking status:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to update booking status' },
-      { status: 500 },
-    );
-  }
-  const status = ERROR_HTTP_STATUS[error.code] ?? 500;
-  return NextResponse.json({ error: error.message, code: error.code }, { status });
-}
+import { errorResponseFor } from '@/lib/api/bookingErrorResponse';
 
 export async function PATCH(request, { params }) {
   try {
@@ -60,6 +48,6 @@ export async function PATCH(request, { params }) {
       },
     });
   } catch (error) {
-    return errorResponse(error);
+    return errorResponseFor(error, { fallbackMessage: 'Failed to update booking status' });
   }
 }
