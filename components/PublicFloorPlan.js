@@ -9,6 +9,7 @@ import { createScene, createFloor } from '@/scripts/floor';
 import { chair, table, roundTable, sofa, create2SeaterTable, create8SeaterTable, plant01, plant02, largeFridge, foodStand, drinkStand, iceBox, iceCreamBox } from '@/scripts/asset';
 import { DoorManager } from '@/scripts/managers/DoorManager';
 import { WindowManager } from '@/scripts/managers/WindowManager';
+import { createSpotlightBeams } from '@/lib/spotlightBeams';
 import '@/css/booking.css';
 import '@/css/loading.css';
 import { toast } from 'react-hot-toast';
@@ -153,6 +154,13 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   const controlsRef = useRef(null);
   const doorManagerRef = useRef(null);
   const windowManagerRef = useRef(null);
+  const beamsRef = useRef(null);
+  const clockRef = useRef(null);
+  const handleClickRef = useRef(null);
+  const selectedTableRef = useRef(null);
+  const isTouchRef = useRef(false);
+  const [showMobileCTA, setShowMobileCTA] = useState(false);
+  const [mobileSelectedTableName, setMobileSelectedTableName] = useState(null);
   const availableTablesRef = useRef(new Set());
   const [selectedDate, setSelectedDate] = useState(() => {
     if (defaultDate) return defaultDate;
@@ -196,6 +204,42 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   useEffect(() => {
     availableTablesRef.current = availableTables;
   }, [availableTables]);
+
+  // Detect touch device once on mount
+  useEffect(() => {
+    isTouchRef.current =
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window || (navigator.maxTouchPoints || 0) > 0);
+  }, []);
+
+  // Drive red reserved beams from availableTables / date / time
+  useEffect(() => {
+    const beams = beamsRef.current;
+    const scene = sceneRef.current;
+    if (!beams || !scene) return;
+
+    const tableMap = new Map();
+    scene.traverse((obj) => {
+      if (obj.userData?.isTable) {
+        const id = obj.userData.objectId || obj.userData.friendlyId;
+        if (id) tableMap.set(id, obj);
+      }
+    });
+
+    // No date/time chosen OR availability data not yet fetched → no red beams.
+    // Empty availableTables means "we don't know yet" (matches the existing
+    // isBooked guard at line ~1138), NOT "everything is reserved".
+    if (!selectedDate || !selectedTime || availableTables.size === 0) {
+      beams.setReservedTables(tableMap, []);
+      return;
+    }
+
+    const reservedIds = [];
+    for (const id of tableMap.keys()) {
+      if (!availableTables.has(id)) reservedIds.push(id);
+    }
+    beams.setReservedTables(tableMap, reservedIds);
+  }, [availableTables, selectedDate, selectedTime]);
 
   // ── Fetch events for this venue ─────────────────────────────────────────────
   useEffect(() => {
@@ -428,6 +472,12 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         }
       });
 
+      // Dispose spotlight beams before the scene is torn down
+      if (beamsRef.current) {
+        try { beamsRef.current.dispose(); } catch (e) { /* scene may already be gone */ }
+        beamsRef.current = null;
+      }
+
       // Cancel animation frame
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -536,18 +586,35 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         updateLoadingProgress('Creating 3D scene...', 20);
 
         const scene = createScene();
+        // Premium charcoal palette with a subtle wine undertone. The wine
+        // reads as warmth/polish, not as the dominant color, so the gold
+        // and red spotlight beams stay visually dominant.
+        scene.background = new THREE.Color(0x100A0E);
         sceneRef.current = scene;
 
         console.log('Setting up lights');
         updateLoadingProgress('Setting up lighting...', 30);
 
-        // Add lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        // Quiet warm ambient so unlit corners aren't black.
+        const ambientLight = new THREE.AmbientLight(0xd6c2a0, 0.55);
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 10, 5);
-        
+        // Replaced the old (5,10,5) DirectionalLight (whose lit-side appeared
+        // to follow the camera as the room rotated). This is a wide SpotLight
+        // directly above the floorplan, pointing straight down — it stays put
+        // when the camera moves, and its cone is wide enough to bathe the
+        // whole 20×20 floor like a venue stage rig.
+        const directionalLight = new THREE.SpotLight(
+          0xfff0d8,         // warm cream
+          11,               // intensity — punchy stage-light brightness
+          90,               // distance reaches the corners
+          Math.PI / 2.05,   // angle ~87° — near-max, covers the whole room
+          0.9,              // very soft cone edge, no visible outline
+          0.45              // gentle falloff — corners still bright
+        );
+        directionalLight.position.set(0, 28, 0);
+        directionalLight.target.position.set(0, 0, 0);
+
         if (process.env.NODE_ENV === 'production') {
           directionalLight.castShadow = true;
           directionalLight.shadow.mapSize.width = 1024;
@@ -555,8 +622,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         } else {
           directionalLight.castShadow = false;
         }
-        
+
         scene.add(directionalLight);
+        scene.add(directionalLight.target);
 
         console.log('Setting up camera');
         updateLoadingProgress('Configuring camera...', 40);
@@ -589,12 +657,31 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         updateLoadingProgress('Creating floor plan...', 60);
 
         const floor = createFloor(20, 20, 2);
+        // Charcoal with a hint of wine. Specular set to 0 so the floor doesn't
+        // have a camera-following "shiny spot" hot-spot — the whole floor reads
+        // as uniformly lit under the overhead spotlight.
+        if (floor.material) {
+          floor.material.color.setHex(0x1F1820);
+          floor.material.shininess = 0;
+          floor.material.specular = new THREE.Color(0x000000);
+          floor.material.needsUpdate = true;
+        }
+        floor.traverse((child) => {
+          if (child.isLineSegments && child.material) {
+            child.material.color.setHex(0x4A3A28);
+            child.material.opacity = 0.32;
+            child.material.transparent = true;
+            child.material.needsUpdate = true;
+          }
+        });
         scene.add(floor);
 
         // Initialize managers
         console.log('Initializing managers');
         doorManagerRef.current = new DoorManager(scene, { walls: [] }, renderer);
         windowManagerRef.current = new WindowManager(scene, { walls: [] }, renderer);
+        beamsRef.current = createSpotlightBeams({ scene });
+        clockRef.current = new THREE.Clock();
 
         // Process floorplan data with optimized progressive loading
         if (localFloorplanData.objects) {
@@ -607,8 +694,10 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           const wallObjects = localFloorplanData.objects.filter(obj => obj.type === 'wall');
           for (const objData of wallObjects) {
             const wallGeometry = new THREE.BoxGeometry(2, 2, 0.2);
-            const wallMaterial = new THREE.MeshPhongMaterial({ 
-              color: 0x808080
+            const wallMaterial = new THREE.MeshPhongMaterial({
+              color: 0x231A20,           // dark charcoal with the faintest wine warmth
+              specular: 0x6B2438,
+              shininess: 30,
             });
             const wall = new THREE.Mesh(wallGeometry, wallMaterial);
             
@@ -791,6 +880,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         const animate = () => {
           animationFrameRef.current = requestAnimationFrame(animate);
           controls.update();
+          if (beamsRef.current && clockRef.current) {
+            beamsRef.current.tick(clockRef.current.getDelta());
+          }
           renderer.render(scene, camera);
         };
         animateFnRef.current = animate;
@@ -866,34 +958,128 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 
             raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
             const intersects = raycaster.intersectObjects(sceneRef.current.children, true);
-            
-            const tableObject = intersects.find(item => 
-              item.object?.userData?.isTable || 
+
+            const tableObject = intersects.find(item =>
+              item.object?.userData?.isTable ||
               item.object?.parent?.userData?.isTable
             );
 
+            const dateReady = !!dateRef.current && !!timeRef.current;
+            const beams = beamsRef.current;
+
             if (tableObject) {
-              const table = tableObject.object.userData?.isTable 
-                ? tableObject.object 
+              const table = tableObject.object.userData?.isTable
+                ? tableObject.object
                 : tableObject.object.parent;
 
               const tableId = table.userData.objectId || table.userData.friendlyId || 'Unknown';
-              
+
               // Change cursor to pointer
               renderer.domElement.style.cursor = 'pointer';
-              
+
               // Create or update tooltip
               createHoverTooltip(tableId, event, table.userData);
+
+              // Gold spotlight only on available tables once date+time chosen
+              if (beams && dateReady) {
+                const known = availableTablesRef.current.size > 0;
+                const isAvailable = !known || availableTablesRef.current.has(tableId);
+                if (isAvailable && known) {
+                  beams.setHoverPosition(table);
+                } else if (selectedTableRef.current) {
+                  beams.setHoverPosition(selectedTableRef.current);
+                } else {
+                  beams.setHoverPosition(null);
+                }
+              } else if (beams) {
+                beams.setHoverPosition(selectedTableRef.current || null);
+              }
             } else {
               // Reset cursor
               renderer.domElement.style.cursor = 'default';
-              
+
               // Remove tooltip
               removeHoverTooltip();
+              if (beams) beams.setHoverPosition(selectedTableRef.current || null);
             }
           };
 
+          const handleMouseLeave = () => {
+            if (beamsRef.current) {
+              beamsRef.current.setHoverPosition(selectedTableRef.current || null);
+            }
+          };
+
+          // ── Mobile tap / drag handling ──────────────────────────────────────
+          let tapDownX = 0;
+          let tapDownY = 0;
+          let tapDownT = 0;
+          const handlePointerDown = (event) => {
+            if (!isTouchRef.current) return;
+            tapDownX = event.clientX;
+            tapDownY = event.clientY;
+            tapDownT = performance.now();
+          };
+          const handlePointerUp = (event) => {
+            if (!isTouchRef.current) return;
+            const dx = event.clientX - tapDownX;
+            const dy = event.clientY - tapDownY;
+            const dt = performance.now() - tapDownT;
+            if (dt > 350 || Math.hypot(dx, dy) > 10) return; // drag, not tap
+
+            const rect = containerRef.current.getBoundingClientRect();
+            const ndc = new THREE.Vector2(
+              ((event.clientX - rect.left) / rect.width) * 2 - 1,
+              -((event.clientY - rect.top) / rect.height) * 2 + 1
+            );
+            const tapRay = new THREE.Raycaster();
+            tapRay.setFromCamera(ndc, camera);
+            const hits = tapRay.intersectObjects(sceneRef.current.children, true);
+
+            const hit = hits.find((h) =>
+              h.object?.userData?.isTable || h.object?.parent?.userData?.isTable
+            );
+            const tappedTable = hit
+              ? (hit.object.userData?.isTable ? hit.object : hit.object.parent)
+              : null;
+
+            const dateReady = !!dateRef.current && !!timeRef.current;
+            if (!dateReady) return; // existing click-time toast still informs the user
+
+            if (!tappedTable) {
+              selectedTableRef.current = null;
+              setShowMobileCTA(false);
+              setMobileSelectedTableName(null);
+              if (beamsRef.current) beamsRef.current.setHoverPosition(null);
+              return;
+            }
+
+            const tappedId = tappedTable.userData.objectId || tappedTable.userData.friendlyId;
+            const known = availableTablesRef.current.size > 0;
+            const isAvailable = !known || availableTablesRef.current.has(tappedId);
+            if (!isAvailable) return; // reserved — existing tooltip path handles it
+
+            if (selectedTableRef.current === tappedTable) {
+              // Tap same selected table again → deselect
+              selectedTableRef.current = null;
+              setShowMobileCTA(false);
+              setMobileSelectedTableName(null);
+              if (beamsRef.current) beamsRef.current.setHoverPosition(null);
+              return;
+            }
+
+            selectedTableRef.current = tappedTable;
+            setMobileSelectedTableName(tappedTable.userData.customName || tappedId);
+            setShowMobileCTA(true);
+            if (beamsRef.current) beamsRef.current.setHoverPosition(tappedTable);
+          };
+
           const handleClick = (event) => {
+            // On touch devices the booking dialog is reached via the mobile CTA
+            // bar, not by tapping the table directly. The CTA passes a synthetic
+            // event with __fromCTA so it can still drive the existing flow.
+            if (isTouchRef.current && !event.__fromCTA) return;
+
             // GUARD: Only block if we're still loading AND don't have any user info yet AND haven't overridden
             const effectiveLoading = authLoading && !authLoadingOverride;
             if (effectiveLoading && !userProfile && !isAuthenticated) {
@@ -1008,6 +1194,24 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             if (!timeRegex.test(timeRef.current) && !timeSlotRegex.test(timeRef.current)) {
               toast.error("Please select a valid time slot before booking");
               console.error('Invalid time format:', timeRef.current);
+              return;
+            }
+
+            // First click on an available table selects it (beam stays, Book CTA
+            // appears). Only the CTA's synthetic event (__fromCTA) is allowed to
+            // continue on to actually open the booking dialog.
+            if (!event.__fromCTA && !isBooked) {
+              if (selectedTableRef.current === table) {
+                selectedTableRef.current = null;
+                setShowMobileCTA(false);
+                setMobileSelectedTableName(null);
+                if (beamsRef.current) beamsRef.current.setHoverPosition(null);
+              } else {
+                selectedTableRef.current = table;
+                setMobileSelectedTableName(tableName);
+                setShowMobileCTA(true);
+                if (beamsRef.current) beamsRef.current.setHoverPosition(table);
+              }
               return;
             }
 
@@ -1215,6 +1419,10 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 
           renderer.domElement.addEventListener('click', handleClick);
           renderer.domElement.addEventListener('mousemove', handleMouseMove);
+          renderer.domElement.addEventListener('mouseleave', handleMouseLeave);
+          renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+          renderer.domElement.addEventListener('pointerup', handlePointerUp);
+          handleClickRef.current = handleClick;
 
           // All scene setup code, event handlers, and input validation must be before this return!
           return () => {
@@ -1225,7 +1433,11 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 rendererRef.current.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
                 rendererRef.current.domElement.removeEventListener('click', handleClick);
                 rendererRef.current.domElement.removeEventListener('mousemove', handleMouseMove);
+                rendererRef.current.domElement.removeEventListener('mouseleave', handleMouseLeave);
+                rendererRef.current.domElement.removeEventListener('pointerdown', handlePointerDown);
+                rendererRef.current.domElement.removeEventListener('pointerup', handlePointerUp);
             }
+            handleClickRef.current = null;
             cleanup();
           };
         } catch (error) {
@@ -1591,23 +1803,6 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       console.warn('Failed to invalidate floorplan cache:', e);
     }
 
-    // Immediately update table color to dark grey after successful booking
-    if (table && table.children) {
-        table.traverse((child) => {
-            if (child.isMesh) {
-                if (Array.isArray(child.material)) {
-                    child.material.forEach(mat => {
-                        mat.color.setHex(0x4a4a4a);
-                        mat.needsUpdate = true;
-                    });
-                } else if (child.material) {
-                    child.material.color.setHex(0x4a4a4a);
-                    child.material.needsUpdate = true;
-                }
-            }
-        });
-    }
-
     // Update local availability immediately
     setAvailableTables(prev => {
         if (prev.size === 0 && Array.isArray(localFloorplanData?.objects)) {
@@ -1745,9 +1940,6 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         setUnavailableByTable(data.unavailableByTable || {});
         console.log('4. New available tables set:', new Set(availableTableArray));
 
-        // Update table colors
-        updateTableColors();
-
     } catch (error) {
         console.error('Error checking availability:', error);
         // In case of error, assume all tables are available
@@ -1832,51 +2024,33 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     tableZoneMapRef.current = tableZoneMap;
   }, [tableZoneMap]);
 
-  const updateTableColors = useCallback(() => {
-    if (!sceneRef.current) return;
-
-    const darken = (hex, f = 0.28) => {
-      const r = Math.floor(((hex >> 16) & 0xFF) * f);
-      const g = Math.floor(((hex >> 8)  & 0xFF) * f);
-      const b = Math.floor((hex & 0xFF) * f);
-      return (r << 16) | (g << 8) | b;
-    };
-
-    sceneRef.current.traverse((object) => {
-      if (object.userData?.isTable) {
-        const tableId = object.userData.objectId;
-        const isBooked = availableTables.size > 0 && !availableTables.has(tableId);
-        const zone = tableZoneMap[tableId];
-        const zoneHex = zone?.color ? parseInt(zone.color.replace('#', ''), 16) : null;
-
-        // Zone color = zone identity (always base color).
-        // Booked = darkened zone color, or dark grey if no zone.
-        // Available + no zone = neutral grey (not white, avoids conflict with zone whites).
-        let hexColor;
-        if (isBooked) {
-          hexColor = zoneHex !== null ? darken(zoneHex) : 0x2a2a2a;
-        } else {
-          hexColor = zoneHex !== null ? zoneHex : 0x888888;
-        }
-
-        object.traverse((child) => {
-          if (child.isMesh) {
-            if (Array.isArray(child.material)) {
-              child.material.forEach(mat => { mat.color.setHex(hexColor); mat.needsUpdate = true; });
-            } else if (child.material) {
-              child.material.color.setHex(hexColor);
-              child.material.needsUpdate = true;
-            }
-          }
-        });
-      }
-    });
-  }, [availableTables, tableZoneMap]);
-
-  // Trigger color updates whenever availability OR zones change
+  // Paint each table with its zone color (or leave the asset's default white
+  // if it isn't assigned to a zone). Reserved status is shown via the red
+  // spotlight beam, NOT a darkened table color, so we never darken here.
   useEffect(() => {
-    updateTableColors();
-  }, [updateTableColors, availableTables, zones]);
+    const scene = sceneRef.current;
+    if (!scene) return;
+
+    scene.traverse((object) => {
+      if (!object.userData?.isTable) return;
+      const tableId = object.userData.objectId;
+      const zone = tableZoneMap[tableId];
+      const hexColor = zone?.color
+        ? parseInt(zone.color.replace('#', ''), 16)
+        : 0xFFFFFF; // no zone → white default
+
+      object.traverse((child) => {
+        if (!child.isMesh) return;
+        if (Array.isArray(child.material)) {
+          child.material.forEach(mat => { mat.color.setHex(hexColor); mat.needsUpdate = true; });
+        } else if (child.material) {
+          child.material.color.setHex(hexColor);
+          child.material.needsUpdate = true;
+        }
+      });
+    });
+  }, [tableZoneMap, sceneLoaded, availableTables]);
+
 
   // Add useEffect to monitor state changes
   useEffect(() => {
@@ -2257,15 +2431,15 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           position: relative;
           width: 100%;
           height: calc(100vh - 200px); /* Adjust based on your header/booking panel height */
-          background: #f5f5f5;
+          background: #100A0E;
           border-radius: 8px;
           overflow: hidden;
         }
 
         .booking-panel {
-          background: white;
+          background: #0C0B10;
           padding: 1rem;
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid #1E1D2A;
         }
 
         .booking-columns-container {
@@ -2730,13 +2904,106 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 Click on any <span style={{ color: '#C9A84C', fontWeight: 600 }}>table</span> to make a reservation
               </p>
               <p className="text-sm mt-2" style={{ color: '#9B96A8' }}>
-                Tables are color-coded by zone · <span style={{ color: '#555' }}>Dark Grey</span> = booked
+                Tables are color-coded by zone · <span style={{ color: '#FF6B6B', fontWeight: 600 }}>Red spotlight</span> = reserved
               </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-      
+
+      <AnimatePresence>
+        {showMobileCTA && mobileSelectedTableName && (
+          <motion.div
+            key="book-cta"
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+            className="fixed left-1/2 bottom-6 z-50 pointer-events-none"
+            style={{ transform: 'translateX(-50%)' }}
+          >
+            <div
+              className="pointer-events-auto flex items-center gap-3 pl-4 pr-2 py-2 rounded-full"
+              style={{
+                background: 'rgba(22,21,32,0.85)',
+                backdropFilter: 'blur(14px)',
+                WebkitBackdropFilter: 'blur(14px)',
+                border: '1px solid rgba(201,168,76,0.35)',
+                boxShadow: '0 18px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.08), 0 0 24px rgba(201,168,76,0.18)',
+              }}
+            >
+              <div className="flex flex-col leading-tight pr-1">
+                <span
+                  style={{
+                    fontSize: '0.62rem',
+                    letterSpacing: '0.18em',
+                    color: '#C9A84C',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Selected
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.95rem',
+                    color: '#F5F0E8',
+                    fontWeight: 700,
+                    fontFamily: 'serif',
+                  }}
+                >
+                  Table {mobileSelectedTableName}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const t = selectedTableRef.current;
+                  if (!t || !containerRef.current || !cameraRef.current) return;
+                  // Use containerRef rect so the projected screen coords line
+                  // up with what handleClick converts back to NDC (it also uses
+                  // containerRef.current.getBoundingClientRect()).
+                  const vec = new THREE.Vector3();
+                  t.getWorldPosition(vec);
+                  vec.project(cameraRef.current);
+                  const rect = containerRef.current.getBoundingClientRect();
+                  const fakeEvent = {
+                    clientX: (vec.x * 0.5 + 0.5) * rect.width + rect.left,
+                    clientY: (-vec.y * 0.5 + 0.5) * rect.height + rect.top,
+                    __fromCTA: true,
+                  };
+                  selectedTableRef.current = null;
+                  setShowMobileCTA(false);
+                  setMobileSelectedTableName(null);
+                  if (beamsRef.current) beamsRef.current.setHoverPosition(null);
+                  if (handleClickRef.current) handleClickRef.current(fakeEvent);
+                }}
+                style={{
+                  padding: '12px 22px',
+                  background: 'linear-gradient(135deg, #D9B85C 0%, #C9A84C 50%, #A88A36 100%)',
+                  color: '#0C0B10',
+                  border: 'none',
+                  borderRadius: '999px',
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  boxShadow: '0 6px 16px rgba(201,168,76,0.45), inset 0 1px 0 rgba(255,235,170,0.55)',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  minHeight: '44px',
+                }}
+              >
+                <span aria-hidden="true" style={{ fontSize: '0.7rem' }}>✦</span>
+                Reserve
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

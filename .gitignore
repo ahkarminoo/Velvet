@@ -52,3 +52,6 @@ temp-registration-tokens.json
 
 # 360 prototype (separate repo)
 prototype-360/
+
+/.superpowers
+/.claude
