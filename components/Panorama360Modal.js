@@ -32,7 +32,7 @@ function PanoramaMinimap({ objects, currentTableId, availableTables }) {
     <div
       className="absolute bottom-4 right-4 rounded-xl overflow-hidden"
       style={{
-        background: 'rgba(12,11,16,0.85)',
+        background: 'rgba(10, 9, 8, 0.85)',
         border: '1px solid rgba(255,255,255,0.1)',
         backdropFilter: 'blur(8px)',
         pointerEvents: 'none',
@@ -63,7 +63,7 @@ function PanoramaMinimap({ objects, currentTableId, availableTables }) {
               cx={sx}
               cy={sy}
               r={isCurrent ? 6 : 4}
-              fill={isCurrent ? '#C9A84C' : isAvail ? '#22c55e' : '#ef4444'}
+              fill={isCurrent ? '#c9a961' : isAvail ? '#22c55e' : '#ef4444'}
               opacity={isCurrent ? 1 : 0.75}
               stroke={isCurrent ? '#fff' : 'none'}
               strokeWidth={isCurrent ? 1.5 : 0}
@@ -320,7 +320,7 @@ export default function Panorama360Modal({
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div
                 className="w-12 h-12 border-2 border-t-transparent rounded-full animate-spin"
-                style={{ borderColor: '#C9A84C', borderTopColor: 'transparent' }}
+                style={{ borderColor: '#c9a961', borderTopColor: 'transparent' }}
               />
             </div>
           )}
@@ -331,9 +331,9 @@ export default function Panorama360Modal({
             onClick={handleBack}
             className="absolute top-4 left-4 z-10 flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold"
             style={{
-              background: 'rgba(12,11,16,0.85)',
-              border: '1px solid rgba(201,168,76,0.35)',
-              color: '#C9A84C',
+              background: 'rgba(10, 9, 8, 0.85)',
+              border: '1px solid rgba(201, 169, 97, 0.35)',
+              color: '#c9a961',
               backdropFilter: 'blur(8px)',
               minHeight: '44px',
               minWidth: '44px',
@@ -347,9 +347,9 @@ export default function Panorama360Modal({
           <div
             className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-sm z-10"
             style={{
-              background: 'rgba(12,11,16,0.85)',
+              background: 'rgba(10, 9, 8, 0.85)',
               border: '1px solid rgba(255,255,255,0.1)',
-              color: '#9B96A8',
+              color: '#8b847a',
               backdropFilter: 'blur(8px)',
               whiteSpace: 'nowrap',
               maxWidth: 'calc(100vw - 200px)',
@@ -359,7 +359,7 @@ export default function Panorama360Modal({
           >
             360° View
             {tableName && (
-              <span className="ml-2 font-semibold" style={{ color: '#C9A84C' }}>
+              <span className="ml-2 font-semibold" style={{ color: '#c9a961' }}>
                 · {tableName}
               </span>
             )}
@@ -370,7 +370,7 @@ export default function Panorama360Modal({
             <div
               className="absolute bottom-20 left-1/2 -translate-x-1/2 text-xs px-3 py-1.5 rounded-full pointer-events-none"
               style={{
-                background: 'rgba(12,11,16,0.65)',
+                background: 'rgba(10, 9, 8, 0.65)',
                 color: 'rgba(255,255,255,0.55)',
                 backdropFilter: 'blur(4px)',
               }}
@@ -391,8 +391,8 @@ export default function Panorama360Modal({
                 style={{
                   fontSize: '10px',
                   fontWeight: 700,
-                  color: '#F5F0E8',
-                  background: 'rgba(12,11,16,0.85)',
+                  color: '#f5efe3',
+                  background: 'rgba(10, 9, 8, 0.85)',
                   padding: '2px 6px',
                   borderRadius: '5px',
                   marginBottom: '4px',
@@ -428,10 +428,10 @@ export default function Panorama360Modal({
               onClick={onReserve}
               className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl font-bold text-sm"
               style={{
-                background: '#C9A84C',
-                color: '#0C0B10',
+                background: '#c9a961',
+                color: '#0a0908',
                 minHeight: '48px',
-                boxShadow: '0 4px 14px rgba(201,168,76,0.4)',
+                boxShadow: '0 4px 14px rgba(201, 169, 97, 0.4)',
                 WebkitTapHighlightColor: 'transparent',
               }}
             >

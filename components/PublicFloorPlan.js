@@ -54,17 +54,17 @@ function BookingConfirmationDialog({ bookingDetails, onClose, onConfirm }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         className="w-full max-w-[95vw] sm:max-w-md mx-auto overflow-hidden max-h-[95vh] sm:max-h-[90vh] flex flex-col my-auto rounded-2xl"
-        style={{ background: '#161520', border: '1px solid #1E1D2A', boxShadow: '0 24px 60px rgba(0,0,0,0.6)' }}
+        style={{ background: '#15130f', border: '1px solid #2a241b', boxShadow: '0 24px 60px rgba(0,0,0,0.6)' }}
       >
         {/* Header */}
-        <div className="px-6 py-5 border-b flex items-center justify-between flex-shrink-0" style={{ borderColor: '#1E1D2A' }}>
+        <div className="px-6 py-5 border-b flex items-center justify-between flex-shrink-0" style={{ borderColor: '#2a241b' }}>
           <div>
-            <h3 className="text-lg font-black" style={{ color: '#F5F0E8', fontFamily: 'serif' }}>Confirm Booking</h3>
-            <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>Review your reservation details</p>
+            <h3 className="text-lg font-black" style={{ color: '#f5efe3', fontFamily: 'serif' }}>Confirm Booking</h3>
+            <p className="text-xs mt-0.5" style={{ color: '#8b847a' }}>Review your reservation details</p>
           </div>
           <button onClick={onClose} disabled={isLoading}
             className="w-8 h-8 rounded-full flex items-center justify-center transition-all text-lg font-light"
-            style={{ color: '#9B96A8', background: '#1E1D2A' }}>×</button>
+            style={{ color: '#8b847a', background: '#2a241b' }}>×</button>
         </div>
 
         {/* Content */}
@@ -75,34 +75,34 @@ function BookingConfirmationDialog({ bookingDetails, onClose, onConfirm }) {
             { emoji: '🪑', label: 'Table', value: bookingDetails.tableName || bookingDetails.tableId },
             { emoji: '👥', label: 'Guests', value: bookingDetails.guestCount },
           ].map(({ emoji, label, value, sub }) => (
-            <div key={label} className="flex items-center gap-4 p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+            <div key={label} className="flex items-center gap-4 p-4 rounded-xl" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
               <span className="text-xl">{emoji}</span>
               <div>
-                <p className="text-xs" style={{ color: '#9B96A8' }}>{label}</p>
-                <p className="font-semibold text-sm" style={{ color: '#F5F0E8' }}>{value}</p>
-                {sub && <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>{sub}</p>}
+                <p className="text-xs" style={{ color: '#8b847a' }}>{label}</p>
+                <p className="font-semibold text-sm" style={{ color: '#f5efe3' }}>{value}</p>
+                {sub && <p className="text-xs mt-0.5" style={{ color: '#8b847a' }}>{sub}</p>}
               </div>
             </div>
           ))}
 
-          <div className="p-4 rounded-xl" style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.2)' }}>
-            <p className="text-xs font-semibold mb-1" style={{ color: '#C9A84C' }}>Pending Confirmation</p>
-            <p className="text-xs leading-relaxed" style={{ color: '#9B96A8' }}>Your booking will be submitted and is pending venue confirmation. You'll be notified once approved.</p>
+          <div className="p-4 rounded-xl" style={{ background: 'rgba(201, 169, 97, 0.06)', border: '1px solid rgba(201, 169, 97, 0.2)' }}>
+            <p className="text-xs font-semibold mb-1" style={{ color: '#c9a961' }}>Pending Confirmation</p>
+            <p className="text-xs leading-relaxed" style={{ color: '#8b847a' }}>Your booking will be submitted and is pending venue confirmation. You'll be notified once approved.</p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="px-5 pb-5 pt-4 border-t flex gap-3 flex-shrink-0" style={{ borderColor: '#1E1D2A' }}>
+        <div className="px-5 pb-5 pt-4 border-t flex gap-3 flex-shrink-0" style={{ borderColor: '#2a241b' }}>
           <button onClick={onClose} disabled={isLoading}
             className="flex-1 py-3 rounded-xl font-medium text-sm transition-all"
-            style={{ background: '#1E1D2A', color: '#9B96A8', border: '1px solid #1E1D2A' }}>
+            style={{ background: '#2a241b', color: '#8b847a', border: '1px solid #2a241b' }}>
             Cancel
           </button>
           <button onClick={handleConfirm} disabled={isLoading}
             className="flex-1 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all"
-            style={{ background: '#C9A84C', color: '#0C0B10' }}>
+            style={{ background: '#c9a961', color: '#0a0908' }}>
             {isLoading ? (
-              <><div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(12,11,16,0.2)', borderTopColor: '#0C0B10' }} /><span>Confirming...</span></>
+              <><div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(10, 9, 8, 0.2)', borderTopColor: '#0a0908' }} /><span>Confirming...</span></>
             ) : (
               <span>Confirm Booking</span>
             )}
@@ -917,8 +917,8 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             const zone = tableZoneMapRef.current[tableId];
             const zoneHtml = zone
               ? `<div class="tooltip-zone" style="margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,0.12)">
-                   <span class="zone-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${zone.color || '#C9A84C'};margin-right:5px;vertical-align:middle"></span>
-                   <span style="color:${zone.color || '#C9A84C'};font-weight:600;font-size:11px">${zone.name}</span>
+                   <span class="zone-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${zone.color || '#c9a961'};margin-right:5px;vertical-align:middle"></span>
+                   <span style="color:${zone.color || '#c9a961'};font-weight:600;font-size:11px">${zone.name}</span>
                    ${zone.pricing?.minimumSpend > 0 ? `<span style="color:rgba(255,255,255,0.45);font-size:10px;margin-left:4px">· min ฿${zone.pricing.minimumSpend.toLocaleString()}</span>` : ''}
                    ${zone.pricing?.basePrice > 0 ? `<span style="color:rgba(255,255,255,0.45);font-size:10px;margin-left:4px">· ฿${zone.pricing.basePrice.toLocaleString()} fee</span>` : ''}
                  </div>`
@@ -928,7 +928,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             hoverTooltip = document.createElement('div');
             hoverTooltip.className = 'table-hover-tooltip';
             hoverTooltip.innerHTML = `
-              <div class="tooltip-content" style="background:#161520;border:1px solid rgba(201,168,76,0.25);color:#F5F0E8;padding:8px 12px;border-radius:10px;min-width:120px">
+              <div class="tooltip-content" style="background:#15130f;border:1px solid rgba(201, 169, 97, 0.25);color:#f5efe3;padding:8px 12px;border-radius:10px;min-width:120px">
                 <span class="table-number" style="font-size:12px;font-weight:700">Table ${tableUserData.customName || tableId}</span>
                 ${zoneHtml}
               </div>
@@ -952,6 +952,11 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           };
 
           const handleMouseMove = (event) => {
+            // Touch devices fire synthetic mousemove after tap; suppress hover
+            // tooltip there — mobile users get the bottom CTA instead, and the
+            // floating tooltip would stick around with no mouseleave to clear it.
+            if (isTouchRef.current) return;
+
             const rect = containerRef.current.getBoundingClientRect();
             const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -1308,36 +1313,36 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             const guestCountDialog = document.createElement('div');
             guestCountDialog.className = 'booking-dialog';
             guestCountDialog.innerHTML = `
-              <div class="booking-dialog-content max-h-[90vh] overflow-y-auto" style="background:#161520;border-radius:16px;border:1px solid #1E1D2A;">
-                <div style="padding:20px 20px 16px;border-bottom:1px solid #1E1D2A;margin-bottom:16px;">
-                  <h3 style="font-size:1.2rem;font-weight:900;color:#F5F0E8;font-family:serif;margin:0;">Complete Booking</h3>
+              <div class="booking-dialog-content max-h-[90vh] overflow-y-auto" style="background:#15130f;border-radius:16px;border:1px solid #2a241b;">
+                <div style="padding:20px 20px 16px;border-bottom:1px solid #2a241b;margin-bottom:16px;">
+                  <h3 style="font-size:1.2rem;font-weight:900;color:#f5efe3;font-family:serif;margin:0;">Complete Booking</h3>
                 </div>
 
                 <div style="padding:0 20px;margin-bottom:16px;">
-                  <div style="background:#0C0B10;border:1px solid #1E1D2A;border-radius:12px;padding:14px;">
+                  <div style="background:#0a0908;border:1px solid #2a241b;border-radius:12px;padding:14px;">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.85rem;">
                       <div style="display:flex;align-items:center;gap:8px;">
                         <span>📅</span>
-                        <span style="color:#F5F0E8;">${new Date(dateRef.current).toLocaleDateString()}</span>
+                        <span style="color:#f5efe3;">${new Date(dateRef.current).toLocaleDateString()}</span>
                       </div>
                       <div style="display:flex;align-items:center;gap:8px;">
                         <span>🕐</span>
-                        <span style="color:#F5F0E8;">${timeRef.current}</span>
+                        <span style="color:#f5efe3;">${timeRef.current}</span>
                       </div>
                       <div style="display:flex;align-items:center;gap:8px;">
                         <span>🪑</span>
-                        <span style="color:#F5F0E8;">Table ${tableName}</span>
+                        <span style="color:#f5efe3;">Table ${tableName}</span>
                       </div>
                       <div style="display:flex;align-items:center;gap:8px;">
                         <span>👥</span>
-                        <span style="color:#F5F0E8;">Max: ${table.userData.maxCapacity || 4}</span>
+                        <span style="color:#f5efe3;">Max: ${table.userData.maxCapacity || 4}</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div style="padding:0 20px;margin-bottom:16px;">
-                  <label for="guest-count" style="color:#9B96A8;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:10px;">
+                  <label for="guest-count" style="color:#8b847a;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:10px;">
                     Number of Guests (Max: ${table.userData.maxCapacity || 4})
                   </label>
                   <input
@@ -1346,15 +1351,15 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                     min="1"
                     max="${table.userData.maxCapacity || 4}"
                     required
-                    style="width:100%;padding:14px;border:1px solid #1E1D2A;border-radius:10px;background:#0C0B10;color:#F5F0E8;font-size:1.1rem;font-weight:600;box-sizing:border-box;outline:none;"
+                    style="width:100%;padding:14px;border:1px solid #2a241b;border-radius:10px;background:#0a0908;color:#f5efe3;font-size:1.1rem;font-weight:600;box-sizing:border-box;outline:none;"
                     placeholder="Enter number of guests"
                   >
-                  <p style="font-size:0.75rem;color:#9B96A8;margin-top:6px;">Enter a number between 1 and ${table.userData.maxCapacity || 4}</p>
+                  <p style="font-size:0.75rem;color:#8b847a;margin-top:6px;">Enter a number between 1 and ${table.userData.maxCapacity || 4}</p>
                 </div>
 
-                <div style="padding:16px 20px 20px;border-top:1px solid #1E1D2A;display:flex;gap:10px;flex-direction:row-reverse;">
-                  <button type="button" id="confirm-booking" style="flex:1;padding:12px;background:#C9A84C;color:#0C0B10;border:none;border-radius:10px;font-weight:700;font-size:0.9rem;cursor:pointer;min-height:44px;">Confirm Booking</button>
-                  <button type="button" id="cancel-booking" style="flex:1;padding:12px;background:#1E1D2A;color:#9B96A8;border:1px solid #1E1D2A;border-radius:10px;font-weight:600;font-size:0.9rem;cursor:pointer;min-height:44px;">Cancel</button>
+                <div style="padding:16px 20px 20px;border-top:1px solid #2a241b;display:flex;gap:10px;flex-direction:row-reverse;">
+                  <button type="button" id="confirm-booking" style="flex:1;padding:12px;background:#c9a961;color:#0a0908;border:none;border-radius:10px;font-weight:700;font-size:0.9rem;cursor:pointer;min-height:44px;">Confirm Booking</button>
+                  <button type="button" id="cancel-booking" style="flex:1;padding:12px;background:#2a241b;color:#8b847a;border:1px solid #2a241b;border-radius:10px;font-weight:600;font-size:0.9rem;cursor:pointer;min-height:44px;">Cancel</button>
                 </div>
               </div>
             `;
@@ -1424,9 +1429,16 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           renderer.domElement.addEventListener('pointerup', handlePointerUp);
           handleClickRef.current = handleClick;
 
+          // Clear hover tooltip when the page scrolls — the tooltip is
+          // position:fixed and would otherwise "follow" the user as they
+          // scroll past the floorplan.
+          const handleWindowScroll = () => removeHoverTooltip();
+          window.addEventListener('scroll', handleWindowScroll, { passive: true });
+
           // All scene setup code, event handlers, and input validation must be before this return!
           return () => {
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('scroll', handleWindowScroll);
             removeHoverTooltip(); // Clean up hover tooltip
             if (rendererRef.current) {
                 rendererRef.current.domElement.removeEventListener('webglcontextlost', handleContextLost);
@@ -1842,24 +1854,24 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       const modal = document.createElement('div');
       modal.className = 'fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4';
       modal.innerHTML = `
-        <div style="background:#161520;border:1px solid #1E1D2A;border-radius:20px;max-width:min(95vw,440px);width:100%;margin:auto;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.7);">
-          <div style="padding:28px 24px 20px;text-align:center;border-bottom:1px solid #1E1D2A;">
+        <div style="background:#15130f;border:1px solid #2a241b;border-radius:20px;max-width:min(95vw,440px);width:100%;margin:auto;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.7);">
+          <div style="padding:28px 24px 20px;text-align:center;border-bottom:1px solid #2a241b;">
             <div style="font-size:2.5rem;margin-bottom:10px;">🎉</div>
-            <h3 style="font-size:1.3rem;font-weight:900;color:#F5F0E8;font-family:serif;margin:0 0 4px;">Booking Submitted!</h3>
-            <p style="font-size:0.8rem;color:#9B96A8;margin:0;">Your reservation request has been sent</p>
+            <h3 style="font-size:1.3rem;font-weight:900;color:#f5efe3;font-family:serif;margin:0 0 4px;">Booking Submitted!</h3>
+            <p style="font-size:0.8rem;color:#8b847a;margin:0;">Your reservation request has been sent</p>
           </div>
           <div style="padding:20px 24px 24px;">
-            <div style="background:#0C0B10;border:1px solid #1E1D2A;border-radius:12px;padding:16px;margin-bottom:14px;text-align:center;">
-              <p style="font-size:0.75rem;color:#9B96A8;margin:0 0 6px;">Booking Reference</p>
-              <span style="font-family:monospace;font-size:0.85rem;background:#1E1D2A;color:#C9A84C;padding:4px 10px;border-radius:6px;word-break:break-all;">${result.booking.bookingRef}</span>
-              <p style="font-size:0.8rem;color:#9B96A8;margin:10px 0 0;">Table ${tableName} · ${bookingDetails.guestCount} guests</p>
+            <div style="background:#0a0908;border:1px solid #2a241b;border-radius:12px;padding:16px;margin-bottom:14px;text-align:center;">
+              <p style="font-size:0.75rem;color:#8b847a;margin:0 0 6px;">Booking Reference</p>
+              <span style="font-family:monospace;font-size:0.85rem;background:#2a241b;color:#c9a961;padding:4px 10px;border-radius:6px;word-break:break-all;">${result.booking.bookingRef}</span>
+              <p style="font-size:0.8rem;color:#8b847a;margin:10px 0 0;">Table ${tableName} · ${bookingDetails.guestCount} guests</p>
             </div>
-            <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:14px;margin-bottom:20px;text-align:center;">
-              <p style="font-size:0.8rem;color:#C9A84C;font-weight:600;margin:0 0 4px;">⏳ Pending Confirmation</p>
-              <p style="font-size:0.75rem;color:#9B96A8;margin:0;line-height:1.5;">You'll receive a notification once your booking is approved</p>
+            <div style="background:rgba(201, 169, 97, 0.06);border:1px solid rgba(201, 169, 97, 0.2);border-radius:12px;padding:14px;margin-bottom:20px;text-align:center;">
+              <p style="font-size:0.8rem;color:#c9a961;font-weight:600;margin:0 0 4px;">⏳ Pending Confirmation</p>
+              <p style="font-size:0.75rem;color:#8b847a;margin:0;line-height:1.5;">You'll receive a notification once your booking is approved</p>
             </div>
             <button onclick="this.closest('.fixed').remove()"
-              style="width:100%;padding:14px;background:#C9A84C;color:#0C0B10;border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;min-height:44px;">
+              style="width:100%;padding:14px;background:#c9a961;color:#0a0908;border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;min-height:44px;">
               Got it
             </button>
           </div>
@@ -2081,27 +2093,27 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   // Add or update the CSS styles for the date selection
   const dateSliderStyles = `
     .date-option {
-      background: #161520;
-      color: #9B96A8;
-      border: 1px solid #1E1D2A;
+      background: #15130f;
+      color: #8b847a;
+      border: 1px solid #2a241b;
       transition: all 0.2s ease;
     }
 
     .date-option:hover {
-      background: rgba(201,168,76,0.08);
-      border-color: #C9A84C;
+      background: rgba(201, 169, 97, 0.08);
+      border-color: #c9a961;
       transform: translateY(-2px);
     }
 
     .date-option.selected {
-      background: #C9A84C;
-      color: #0C0B10;
-      border-color: #C9A84C;
-      box-shadow: 0 4px 12px rgba(201,168,76,0.25);
+      background: #c9a961;
+      color: #0a0908;
+      border-color: #c9a961;
+      box-shadow: 0 4px 12px rgba(201, 169, 97, 0.25);
     }
 
     .date-option.today {
-      border-color: rgba(201,168,76,0.5);
+      border-color: rgba(201, 169, 97, 0.5);
       position: relative;
     }
 
@@ -2111,8 +2123,8 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       top: -8px;
       left: 50%;
       transform: translateX(-50%);
-      background: #C9A84C;
-      color: #0C0B10;
+      background: #c9a961;
+      color: #0a0908;
       padding: 2px 8px;
       border-radius: 12px;
       font-size: 0.7rem;
@@ -2154,9 +2166,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 
     .time-slot-btn {
       padding: 0.75rem 1rem;
-      background: #161520;
-      color: #9B96A8;
-      border: 1px solid #1E1D2A;
+      background: #15130f;
+      color: #8b847a;
+      border: 1px solid #2a241b;
       border-radius: 0.5rem;
       white-space: nowrap;
       transition: all 0.2s;
@@ -2171,17 +2183,17 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     }
 
     .time-slot-btn:hover {
-      background: rgba(201,168,76,0.08);
-      border-color: #C9A84C;
-      color: #C9A84C;
+      background: rgba(201, 169, 97, 0.08);
+      border-color: #c9a961;
+      color: #c9a961;
       transform: translateY(-2px);
     }
 
     .time-slot-btn.selected {
-      background: #C9A84C;
-      color: #0C0B10;
-      border-color: #C9A84C;
-      box-shadow: 0 4px 12px rgba(201,168,76,0.25);
+      background: #c9a961;
+      color: #0a0908;
+      border-color: #c9a961;
+      box-shadow: 0 4px 12px rgba(201, 169, 97, 0.25);
     }
 
     /* Add a subtle indicator for available slots */
@@ -2201,9 +2213,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       width: 2rem;
       height: 2rem;
       border-radius: 50%;
-      background-color: #1E1D2A;
-      color: #C9A84C;
-      border: 1px solid #1E1D2A;
+      background-color: #2a241b;
+      color: #c9a961;
+      border: 1px solid #2a241b;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2215,7 +2227,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     }
 
     .slider-arrow:hover {
-      background-color: rgba(201,168,76,0.15);
+      background-color: rgba(201, 169, 97, 0.15);
       transform: scale(1.1);
     }
 
@@ -2246,8 +2258,8 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
     .table-hover-tooltip {
       position: fixed;
       z-index: 10000;
-      background: #161520;
-      color: #F5F0E8;
+      background: #15130f;
+      color: #f5efe3;
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 14px;
@@ -2256,7 +2268,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       pointer-events: none;
       transform: translateY(-5px);
       animation: tooltipFadeIn 0.2s ease-out;
-      border: 1px solid #C9A84C;
+      border: 1px solid #c9a961;
       backdrop-filter: blur(10px);
     }
 
@@ -2266,7 +2278,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
       top: 100%;
       left: 20px;
       border: 6px solid transparent;
-      border-top-color: #C9A84C;
+      border-top-color: #c9a961;
       transform: translateX(-50%);
     }
 
@@ -2360,13 +2372,13 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
         'gap:5px',
         'padding:6px 11px',
         'border-radius:999px',
-        'background:rgba(201,168,76,0.95)',
-        'color:#0C0B10',
+        'background:rgba(201, 169, 97, 0.95)',
+        'color:#0a0908',
         'font-size:11px',
         'font-weight:800',
         'letter-spacing:0.04em',
         'border:2px solid rgba(255,255,255,0.55)',
-        'box-shadow:0 4px 14px rgba(0,0,0,0.35), 0 0 0 4px rgba(201,168,76,0.18)',
+        'box-shadow:0 4px 14px rgba(0,0,0,0.35), 0 0 0 4px rgba(201, 169, 97, 0.18)',
         'cursor:pointer',
         'z-index:25',
         'white-space:nowrap',
@@ -2425,21 +2437,29 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   // The exciting loading experience will be handled within the 3D scene initialization
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-0 w-full">
       <style jsx>{`
         .floorplan-container {
           position: relative;
           width: 100%;
-          height: calc(100vh - 200px); /* Adjust based on your header/booking panel height */
+          height: 70vh;
+          min-height: 380px;
+          max-height: calc(100vh - 200px);
           background: #100A0E;
           border-radius: 8px;
           overflow: hidden;
         }
 
+        @media (min-width: 1024px) {
+          .floorplan-container {
+            height: calc(100vh - 260px);
+          }
+        }
+
         .booking-panel {
-          background: #0C0B10;
+          background: #0a0908;
           padding: 1rem;
-          border-bottom: 1px solid #1E1D2A;
+          border-bottom: 1px solid #2a241b;
         }
 
         .booking-columns-container {
@@ -2504,7 +2524,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(12,11,16,0.85);
+  background: rgba(10, 9, 8, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2521,8 +2541,8 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 3px solid rgba(201,168,76,0.15);
-  border-top: 3px solid #C9A84C;
+  border: 3px solid rgba(201, 169, 97, 0.15);
+  border-top: 3px solid #c9a961;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -2544,7 +2564,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 exit={{ opacity: 0, height: 0, y: -10 }}
                 className="overflow-hidden"
               >
-                <div className="mb-2 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-purple-900 via-[#161520] to-[#0C0B10] border border-purple-500/30 flex items-center gap-3 sm:gap-4 shadow-lg relative overflow-hidden">
+                <div className="mb-2 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-purple-900 via-[#15130f] to-[#0a0908] border border-purple-500/30 flex items-center gap-3 sm:gap-4 shadow-lg relative overflow-hidden">
                   <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-purple-500/10 to-transparent pointer-events-none"></div>
                   
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 border border-purple-500/40 relative z-10">
@@ -2554,18 +2574,18 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
                       <div>
                         <p className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-purple-300 mb-0.5">Special Event</p>
-                        <h3 className="text-sm sm:text-base font-bold text-[#F5F0E8] truncate">{activeEvent.name}</h3>
+                        <h3 className="text-sm sm:text-base font-bold text-[#f5efe3] truncate">{activeEvent.name}</h3>
                       </div>
                       <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
                         {activeEvent.coverCharge > 0 && (
                           <div className="flex flex-col">
                             <span className="text-[10px] sm:text-xs text-purple-300/70">Cover Charge</span>
-                            <span className="text-xs sm:text-sm font-bold text-[#C9A84C]">฿{activeEvent.coverCharge}</span>
+                            <span className="text-xs sm:text-sm font-bold text-[#c9a961]">฿{activeEvent.coverCharge}</span>
                           </div>
                         )}
                         <div className="flex flex-col">
                           <span className="text-[10px] sm:text-xs text-purple-300/70">Time</span>
-                          <span className="text-xs sm:text-sm font-semibold text-[#F5F0E8]">{activeEvent.startTime} - {activeEvent.endTime}</span>
+                          <span className="text-xs sm:text-sm font-semibold text-[#f5efe3]">{activeEvent.startTime} - {activeEvent.endTime}</span>
                         </div>
                       </div>
                     </div>
@@ -2636,8 +2656,8 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           {/* Time Selection with Slider */}
           <div className="booking-column">
             <div className="mb-3">
-              <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>Duration</label>
-              <div className="relative inline-flex w-full md:w-auto rounded-xl p-1 overflow-x-auto" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#8b847a' }}>Duration</label>
+              <div className="relative inline-flex w-full md:w-auto rounded-xl p-1 overflow-x-auto" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
                 {durationOptions.map((option) => {
                   const isSelected = selectedDuration === option.value;
                   return (
@@ -2648,13 +2668,13 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                       whileHover={{ y: -1 }}
                       whileTap={{ scale: 0.98 }}
                       className="relative z-10 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors"
-                      style={{ color: isSelected ? '#0C0B10' : '#9B96A8' }}
+                      style={{ color: isSelected ? '#0a0908' : '#8b847a' }}
                     >
                       {isSelected && (
                         <motion.span
                           layoutId="duration-pill"
                           className="absolute inset-0 rounded-lg shadow-md"
-                          style={{ background: '#C9A84C' }}
+                          style={{ background: '#c9a961' }}
                           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                         />
                       )}
@@ -2664,7 +2684,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 })}
               </div>
             </div>
-            <h4 className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: '#C9A84C' }}>Available Times</h4>
+            <h4 className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: '#c9a961' }}>Available Times</h4>
             <div className="time-slots-slider">
               <button 
                 className="slider-arrow left"
@@ -2728,9 +2748,9 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
               exit={{ opacity: 0 }}
               className="absolute top-3 right-3 z-40"
             >
-              <div className="backdrop-blur-md rounded-xl px-3 py-2" style={{ background: 'rgba(22,21,32,0.9)', border: '1px solid rgba(201,168,76,0.25)' }}>
-                <div className="flex items-center gap-2 text-sm font-medium" style={{ color: '#C9A84C' }}>
-                  <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: '#C9A84C' }}></span>
+              <div className="backdrop-blur-md rounded-xl px-3 py-2" style={{ background: 'rgba(21, 19, 15, 0.9)', border: '1px solid rgba(201, 169, 97, 0.25)' }}>
+                <div className="flex items-center gap-2 text-sm font-medium" style={{ color: '#c9a961' }}>
+                  <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: '#c9a961' }}></span>
                   Syncing table status...
                 </div>
               </div>
@@ -2738,86 +2758,6 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
           )}
         </AnimatePresence>
 
-        {/* ── Zone Legend ─────────────────────────────────────────────────────── */}
-        <AnimatePresence>
-          {sceneLoaded && (
-            <motion.div
-              initial={{ opacity: 0, x: -12 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -12 }}
-              transition={{ delay: 0.6, duration: 0.35 }}
-              className="absolute bottom-4 left-3 z-30 select-none"
-              style={{ maxWidth: '200px' }}
-            >
-              <div
-                className="rounded-xl overflow-hidden shadow-2xl"
-                style={{
-                  background: 'rgba(12, 11, 16, 0.82)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255,255,255,0.1)'
-                }}
-              >
-                {/* Legend header */}
-                <div
-                  className="px-3 py-2 text-xs font-bold uppercase tracking-widest"
-                  style={{ color: 'rgba(255,255,255,0.45)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
-                >
-                  Zone Map
-                </div>
-
-                <div className="px-3 py-2 space-y-2">
-                  {/* Zones */}
-                  {zones.length === 0 ? (
-                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>No zones configured</p>
-                  ) : (
-                    zones.map(zone => {
-                      const basePrice   = zone.pricing?.basePrice   || 0;
-                      const minSpend    = zone.pricing?.minimumSpend || 0;
-                      const showMinSpend = minSpend > 0;
-                      const showFee     = basePrice > 0;
-
-                      return (
-                        <div key={zone._id} className="flex items-start gap-2">
-                          {/* Color swatch */}
-                          <div
-                            className="w-3 h-3 rounded-full flex-shrink-0 mt-0.5"
-                            style={{ backgroundColor: zone.color || '#888', boxShadow: `0 0 6px ${zone.color || '#888'}88` }}
-                          />
-                          <div className="min-w-0">
-                            <p className="text-xs font-semibold truncate" style={{ color: zone.color || '#eee' }}>
-                              {zone.name}
-                            </p>
-                            {(showFee || showMinSpend) ? (
-                              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                                {showFee && <>฿{basePrice.toLocaleString()} fee</>}
-                                {showFee && showMinSpend && <> · </>}
-                                {showMinSpend && <>min ฿{minSpend.toLocaleString()}</>}
-                              </p>
-                            ) : (
-                              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>No charge</p>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-
-                  {/* Divider */}
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: '6px', paddingTop: '6px' }}>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: '#888888' }} />
-                      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>Available (no zone)</p>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: '#2a2a2a', border: '1px solid #444' }} />
-                      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>Booked</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Scene Container */}
         <div className="scene-container relative w-full h-full">
@@ -2835,11 +2775,11 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
               onClick={() => setShow360Badges((v) => !v)}
               className="absolute top-4 right-4 z-30 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all"
               style={{
-                background: show360Badges ? 'rgba(201,168,76,0.95)' : 'rgba(12,11,16,0.85)',
-                border: `1px solid ${show360Badges ? 'rgba(201,168,76,1)' : 'rgba(201,168,76,0.4)'}`,
-                color: show360Badges ? '#0C0B10' : '#C9A84C',
+                background: show360Badges ? 'rgba(201, 169, 97, 0.95)' : 'rgba(10, 9, 8, 0.85)',
+                border: `1px solid ${show360Badges ? 'rgba(201, 169, 97, 1)' : 'rgba(201, 169, 97, 0.4)'}`,
+                color: show360Badges ? '#0a0908' : '#c9a961',
                 backdropFilter: 'blur(8px)',
-                boxShadow: show360Badges ? '0 4px 14px rgba(201,168,76,0.4)' : '0 2px 8px rgba(0,0,0,0.3)',
+                boxShadow: show360Badges ? '0 4px 14px rgba(201, 169, 97, 0.4)' : '0 2px 8px rgba(0,0,0,0.3)',
                 minHeight: '40px',
               }}
             >
@@ -2899,17 +2839,78 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
               >
                 👆
               </motion.div>
-              <h3 className="text-xl font-semibold mb-2" style={{ color: '#F5F0E8' }}>How to Reserve</h3>
-              <p style={{ color: '#9B96A8' }}>
-                Click on any <span style={{ color: '#C9A84C', fontWeight: 600 }}>table</span> to make a reservation
+              <h3 className="text-xl font-semibold mb-2" style={{ color: '#f5efe3' }}>How to Reserve</h3>
+              <p style={{ color: '#8b847a' }}>
+                Click on any <span style={{ color: '#c9a961', fontWeight: 600 }}>table</span> to make a reservation
               </p>
-              <p className="text-sm mt-2" style={{ color: '#9B96A8' }}>
+              <p className="text-sm mt-2" style={{ color: '#8b847a' }}>
                 Tables are color-coded by zone · <span style={{ color: '#FF6B6B', fontWeight: 600 }}>Red spotlight</span> = reserved
               </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Zone Map (contained div below the floorplan, not an overlay) ── */}
+      {sceneLoaded && (
+        <div
+          className="mt-3 rounded-xl overflow-hidden"
+          style={{
+            background: 'rgba(10, 9, 8, 0.85)',
+            border: '1px solid rgba(255,255,255,0.08)'
+          }}
+        >
+          <div
+            className="px-4 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center justify-between"
+            style={{ color: '#c9a961', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <span>Zone Map</span>
+            <span className="text-[10px] font-medium normal-case tracking-normal" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              {zones.length} {zones.length === 1 ? 'zone' : 'zones'}
+            </span>
+          </div>
+          <div className="px-4 py-3 flex flex-wrap gap-x-5 gap-y-2.5">
+            {zones.length === 0 ? (
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>No zones configured</p>
+            ) : (
+              zones.map(zone => {
+                const basePrice = zone.pricing?.basePrice || 0;
+                const minSpend = zone.pricing?.minimumSpend || 0;
+                const showMinSpend = minSpend > 0;
+                const showFee = basePrice > 0;
+                return (
+                  <div key={zone._id} className="flex items-center gap-2 min-w-0">
+                    <div
+                      className="w-3 h-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: zone.color || '#888', boxShadow: `0 0 6px ${zone.color || '#888'}88` }}
+                    />
+                    <div className="min-w-0 leading-tight">
+                      <p className="text-xs font-semibold truncate" style={{ color: zone.color || '#eee' }}>
+                        {zone.name}
+                      </p>
+                      {(showFee || showMinSpend) && (
+                        <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                          {showFee && <>฿{basePrice.toLocaleString()} fee</>}
+                          {showFee && showMinSpend && <> · </>}
+                          {showMinSpend && <>min ฿{minSpend.toLocaleString()}</>}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: '#888888' }} />
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>Available</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: '#2a2a2a', border: '1px solid #444' }} />
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>Booked</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <AnimatePresence>
         {showMobileCTA && mobileSelectedTableName && (
@@ -2919,17 +2920,17 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-            className="fixed left-1/2 bottom-6 z-50 pointer-events-none"
-            style={{ transform: 'translateX(-50%)' }}
+            className="fixed left-0 right-0 bottom-0 z-50 flex justify-center pointer-events-none px-4"
+            style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}
           >
             <div
-              className="pointer-events-auto flex items-center gap-3 pl-4 pr-2 py-2 rounded-full"
+              className="pointer-events-auto flex items-center gap-3 pl-4 pr-2 py-2 rounded-full max-w-full"
               style={{
-                background: 'rgba(22,21,32,0.85)',
+                background: 'rgba(21, 19, 15, 0.85)',
                 backdropFilter: 'blur(14px)',
                 WebkitBackdropFilter: 'blur(14px)',
-                border: '1px solid rgba(201,168,76,0.35)',
-                boxShadow: '0 18px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.08), 0 0 24px rgba(201,168,76,0.18)',
+                border: '1px solid rgba(201, 169, 97, 0.35)',
+                boxShadow: '0 18px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(201, 169, 97, 0.08), 0 0 24px rgba(201, 169, 97, 0.18)',
               }}
             >
               <div className="flex flex-col leading-tight pr-1">
@@ -2937,7 +2938,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                   style={{
                     fontSize: '0.62rem',
                     letterSpacing: '0.18em',
-                    color: '#C9A84C',
+                    color: '#c9a961',
                     fontWeight: 600,
                     textTransform: 'uppercase',
                   }}
@@ -2947,7 +2948,7 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 <span
                   style={{
                     fontSize: '0.95rem',
-                    color: '#F5F0E8',
+                    color: '#f5efe3',
                     fontWeight: 700,
                     fontFamily: 'serif',
                   }}
@@ -2980,15 +2981,15 @@ export default function PublicFloorPlan({ floorplanData, floorplanId, restaurant
                 }}
                 style={{
                   padding: '12px 22px',
-                  background: 'linear-gradient(135deg, #D9B85C 0%, #C9A84C 50%, #A88A36 100%)',
-                  color: '#0C0B10',
+                  background: 'linear-gradient(135deg, #D9B85C 0%, #c9a961 50%, #A88A36 100%)',
+                  color: '#0a0908',
                   border: 'none',
                   borderRadius: '999px',
                   fontWeight: 800,
                   fontSize: '0.85rem',
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  boxShadow: '0 6px 16px rgba(201,168,76,0.45), inset 0 1px 0 rgba(255,235,170,0.55)',
+                  boxShadow: '0 6px 16px rgba(201, 169, 97, 0.45), inset 0 1px 0 rgba(255,235,170,0.55)',
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',

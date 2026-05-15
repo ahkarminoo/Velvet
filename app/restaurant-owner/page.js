@@ -14,13 +14,13 @@ import DemoVideoModal from "@/components/DemoVideoModal";
 import EnhancedSubscriptionPlans from "@/components/EnhancedSubscriptionPlans";
 
 const V = {
-  black: '#0C0B10',
-  surface: '#161520',
-  border: '#1E1D2A',
-  gold: '#C9A84C',
-  goldLight: '#E8C97A',
-  cream: '#F5F0E8',
-  muted: '#9B96A8',
+  black: '#0a0908',
+  surface: '#15130f',
+  border: '#2a241b',
+  gold: '#c9a961',
+  goldLight: '#e2c887',
+  cream: '#f5efe3',
+  muted: '#8b847a',
 };
 
 const FEATURES = [
@@ -77,7 +77,7 @@ export default function RestaurantOwnerHome() {
     <div className="min-h-screen" style={{ background: V.black }}>
 
       {/* Navbar */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b" style={{ background: 'rgba(12,11,16,0.88)', borderColor: V.border, backdropFilter: 'blur(16px)' }}>
+      <header className="fixed top-0 left-0 right-0 z-50 border-b" style={{ background: 'rgba(10, 9, 8, 0.88)', borderColor: V.border, backdropFilter: 'blur(16px)' }}>
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${V.gold}, ${V.goldLight})` }}>
@@ -110,7 +110,7 @@ export default function RestaurantOwnerHome() {
       {/* Hero */}
       <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 z-10" style={{ background: `linear-gradient(to right, ${V.black} 45%, rgba(12,11,16,0.65) 100%)` }} />
+          <div className="absolute inset-0 z-10" style={{ background: `linear-gradient(to right, ${V.black} 45%, rgba(10, 9, 8, 0.65) 100%)` }} />
           <motion.div
             animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 28, repeat: Infinity, repeatType: "reverse" }}

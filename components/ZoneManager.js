@@ -11,25 +11,25 @@ import {
 import { toast } from 'react-hot-toast';
 
 const VELVET = {
-  black: '#0C0B10', surface: '#161520', border: '#1E1D2A',
-  gold: '#C9A84C', goldLight: '#E8C97A', cream: '#F5F0E8', muted: '#9B96A8',
-  purple: '#7C3AED'
+  black: '#0a0908', surface: '#15130f', border: '#2a241b',
+  gold: '#c9a961', goldLight: '#e2c887', cream: '#f5efe3', muted: '#8b847a',
+  purple: '#9b7340'
 };
 
 const ZONE_TYPES = [
-  { value: 'standard',       label: 'Standard',       color: '#9B96A8' },
-  { value: 'vip',            label: 'VIP',            color: '#C9A84C' },
+  { value: 'standard',       label: 'Standard',       color: '#8b847a' },
+  { value: 'vip',            label: 'VIP',            color: '#c9a961' },
   { value: 'bar_counter',    label: 'Bar Counter',    color: '#FF4F18' },
   { value: 'outdoor',        label: 'Outdoor',        color: '#10B981' },
-  { value: 'private',        label: 'Private',        color: '#7C3AED' },
+  { value: 'private',        label: 'Private',        color: '#9b7340' },
   { value: 'dance_floor',    label: 'Dance Floor',    color: '#EC4899' },
   { value: 'stage',          label: 'Stage',          color: '#F59E0B' },
   { value: 'lounge',         label: 'Lounge',         color: '#0EA5E9' },
 ];
 
 const PRESET_COLORS = [
-  '#C9A84C', '#7C3AED', '#10B981', '#FF4F18', '#EC4899',
-  '#0EA5E9', '#F59E0B', '#EF4444', '#9B96A8', '#6366F1'
+  '#c9a961', '#9b7340', '#10B981', '#FF4F18', '#EC4899',
+  '#0EA5E9', '#F59E0B', '#EF4444', '#8b847a', '#6366F1'
 ];
 
 export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
@@ -43,7 +43,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
 
   // Zone form state
   const [form, setForm] = useState({
-    name: '', type: 'standard', color: '#C9A84C',
+    name: '', type: 'standard', color: '#c9a961',
     basePrice: '', minimumSpend: '', depositRequired: false,
     depositAmount: '', peakMultiplier: '1.0', eventMultiplier: '1.0'
   });
@@ -379,7 +379,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
   };
 
   const resetForm = () => setForm({
-    name: '', type: 'standard', color: '#C9A84C',
+    name: '', type: 'standard', color: '#c9a961',
     basePrice: '', minimumSpend: '', depositRequired: false,
     depositAmount: '', peakMultiplier: '1.0', eventMultiplier: '1.0'
   });
@@ -421,7 +421,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
               </button>
               <button onClick={startCreate}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:opacity-90"
-                style={{ background: VELVET.gold, color: '#0C0B10' }}>
+                style={{ background: VELVET.gold, color: '#0a0908' }}>
                 <RiAddLine /> Create Zone
               </button>
             </>
@@ -438,7 +438,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
               onClick={() => { setSelectedFloorplan(fp); setSelectedTableIds(new Set()); }}
               className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
               style={{
-                background: selectedFloorplan?._id === fp._id ? 'rgba(201,168,76,0.15)' : VELVET.surface,
+                background: selectedFloorplan?._id === fp._id ? 'rgba(201, 169, 97, 0.15)' : VELVET.surface,
                 color: selectedFloorplan?._id === fp._id ? VELVET.gold : VELVET.muted,
                 border: `1px solid ${selectedFloorplan?._id === fp._id ? VELVET.gold : VELVET.border}`
               }}
@@ -459,7 +459,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
 
             {/* Table count indicator */}
             <div className="absolute top-3 left-3 px-3 py-1.5 rounded-xl text-xs font-semibold"
-              style={{ background: 'rgba(12,11,16,0.85)', color: selectedTableIds.size > 0 ? VELVET.gold : VELVET.muted, border: `1px solid ${VELVET.border}` }}>
+              style={{ background: 'rgba(10, 9, 8, 0.85)', color: selectedTableIds.size > 0 ? VELVET.gold : VELVET.muted, border: `1px solid ${VELVET.border}` }}>
               {selectedTableIds.size} table{selectedTableIds.size !== 1 ? 's' : ''} selected
             </div>
 
@@ -470,14 +470,14 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
                 { color: '#333344', label: 'Unassigned' },
               ].map(l => (
                 <div key={l.label} className="flex items-center gap-2 px-2 py-1 rounded-lg text-xs"
-                  style={{ background: 'rgba(12,11,16,0.85)', color: VELVET.muted }}>
+                  style={{ background: 'rgba(10, 9, 8, 0.85)', color: VELVET.muted }}>
                   <div className="w-3 h-3 rounded-full" style={{ background: l.color }} />
                   {l.label}
                 </div>
               ))}
               {zones.map(z => (
                 <div key={z._id} className="flex items-center gap-2 px-2 py-1 rounded-lg text-xs"
-                  style={{ background: 'rgba(12,11,16,0.85)', color: VELVET.muted }}>
+                  style={{ background: 'rgba(10, 9, 8, 0.85)', color: VELVET.muted }}>
                   <div className="w-3 h-3 rounded-full" style={{ background: z.color }} />
                   {z.name}
                 </div>
@@ -621,7 +621,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
             <button
               onClick={handleSave}
               className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
-              style={{ background: VELVET.gold, color: '#0C0B10' }}
+              style={{ background: VELVET.gold, color: '#0a0908' }}
             >
               <RiCheckLine size={18} />
               {editingZone ? 'Update Zone' : 'Save Zone'}
@@ -645,7 +645,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
               <p className="text-sm mt-1" style={{ color: VELVET.muted }}>Create zones to set area-specific pricing</p>
               <button onClick={startCreate}
                 className="mt-4 px-6 py-2.5 rounded-xl font-semibold text-sm"
-                style={{ background: VELVET.gold, color: '#0C0B10' }}>
+                style={{ background: VELVET.gold, color: '#0a0908' }}>
                 Create Zone
               </button>
             </div>
@@ -699,7 +699,7 @@ export default function ZoneManager({ restaurantId, token, floorplans = [] }) {
                     <div className="flex items-center gap-2">
                       <button onClick={() => handleEditZone(zone)}
                         className="p-2 rounded-xl transition-opacity hover:opacity-60"
-                        style={{ background: 'rgba(201,168,76,0.1)', color: VELVET.gold }}>
+                        style={{ background: 'rgba(201, 169, 97, 0.1)', color: VELVET.gold }}>
                         <RiEditLine size={16} />
                       </button>
                       <button onClick={() => handleDeleteZone(zone._id)}

@@ -197,21 +197,21 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
 
   const ConfirmDialog = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+      <div className="bg-velvet-surface rounded-lg p-6 max-w-md w-full mx-4">
         <h3 className="text-lg font-bold mb-4">Replace Existing Review?</h3>
-        <p className="text-gray-600 mb-6">
+        <p className="text-velvet-muted mb-6">
           You already have a review for this restaurant. Would you like to delete your existing review and post a new one?
         </p>
         <div className="flex justify-end gap-4">
           <button
             onClick={() => setShowConfirmDialog(false)}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800"
+            className="px-4 py-2 text-velvet-muted hover:text-velvet-cream"
           >
             Cancel
           </button>
           <button
             onClick={handleDeleteAndResubmit}
-            className="px-4 py-2 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90"
+            className="px-4 py-2 bg-[#c9a961] text-white rounded-lg hover:bg-[#c9a961]/90"
           >
             Replace Review
           </button>
@@ -230,25 +230,52 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
   };
 
   const getProfileImageUrl = (user) => {
-    if (!user || !user.profileImage) return '/default-avatar.png';
-    // If it's already a full S3 URL, return it
-    if (user.profileImage.startsWith('https://')) {
-      return user.profileImage;
+    if (!user || !user.profileImage) return null;
+    if (user.profileImage.startsWith('https://')) return user.profileImage;
+    return null;
+  };
+
+  const getInitials = (user) => {
+    if (!user) return '?';
+    if (user.firstName && user.lastName) return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+    if (user.firstName) return user.firstName.charAt(0).toUpperCase();
+    if (user.email) return user.email.charAt(0).toUpperCase();
+    return '?';
+  };
+
+  const Avatar = ({ user, size = 48 }) => {
+    const url = getProfileImageUrl(user);
+    if (url) {
+      return (
+        <Image
+          src={url}
+          alt={`${user?.firstName || 'User'}'s profile`}
+          width={size}
+          height={size}
+          className="w-full h-full object-cover"
+        />
+      );
     }
-    return '/default-avatar.png';
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-velvet-gold to-velvet-gold-light flex items-center justify-center">
+        <span className="text-velvet-black font-bold" style={{ fontSize: size * 0.4 }}>
+          {getInitials(user)}
+        </span>
+      </div>
+    );
   };
 
   const renderReviewForm = () => {
     if (!isAuthenticated) {
       return (
-        <div className="bg-gradient-to-r from-white to-gray-50 rounded-xl p-6 sm:p-8 shadow-lg border border-gray-100">
+        <div className="bg-gradient-to-r from-velvet-surface to-velvet-black rounded-xl p-6 sm:p-8 shadow-lg border border-velvet-border">
           <div className="text-center space-y-3 sm:space-y-4">
-            <FaRegSmile className="text-3xl sm:text-4xl text-[#FF4F18] mx-auto" />
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Share Your Experience</h3>
-            <p className="text-sm sm:text-base text-gray-600">Join our community and let others know about your dining experience</p>
+            <FaRegSmile className="text-3xl sm:text-4xl text-[#c9a961] mx-auto" />
+            <h3 className="text-lg sm:text-xl font-semibold text-velvet-cream">Share Your Experience</h3>
+            <p className="text-sm sm:text-base text-velvet-muted">Join our community and let others know about your dining experience</p>
             <button
               onClick={onLoginClick}
-              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-[#FF4F18] text-white text-sm sm:text-base rounded-full hover:bg-[#FF4F18]/90 transition-all transform hover:scale-105 shadow-md"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-velvet-gold text-velvet-black font-semibold text-sm sm:text-base rounded-full hover:bg-velvet-gold-light transition-all transform hover:scale-105 shadow-md shadow-velvet-gold/20"
             >
               Log In to Write a Review
             </button>
@@ -258,28 +285,22 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
     }
 
     return (
-      <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-100 space-y-4 sm:space-y-6">
-        <div className="flex items-center gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-gray-100">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full overflow-hidden">
-            <Image 
-              src={getProfileImageUrl(userProfile)}
-              alt={`${userProfile?.firstName || 'Anonymous'}'s profile`}
-              width={48}
-              height={48}
-              className="object-cover"
-            />
+      <div className="bg-velvet-surface rounded-xl p-4 sm:p-6 shadow-lg border border-velvet-border space-y-4 sm:space-y-6">
+        <div className="flex items-center gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-velvet-border">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-velvet-surface rounded-full overflow-hidden ring-1 ring-velvet-border">
+            <Avatar user={userProfile} size={48} />
           </div>
           <div>
-            <p className="font-medium text-gray-900 text-sm sm:text-base">
+            <p className="font-medium text-velvet-cream text-sm sm:text-base">
               {userProfile?.firstName} {userProfile?.lastName}
             </p>
-            <p className="text-xs sm:text-sm text-gray-500">Sharing your experience</p>
+            <p className="text-xs sm:text-sm text-velvet-muted">Sharing your experience</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div className="flex flex-col items-center gap-3 sm:gap-4">
-            <p className="text-sm sm:text-base text-gray-600 font-medium">How was your experience?</p>
+            <p className="text-sm sm:text-base text-velvet-muted font-medium">How was your experience?</p>
             <div className="flex gap-4 sm:gap-6">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -287,14 +308,14 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
                   type="button"
                   onClick={() => setNewReview(prev => ({ ...prev, rating: star }))}
                   className={`text-2xl sm:text-3xl transition-all transform hover:scale-110 ${
-                    star <= newReview.rating ? 'text-[#FF4F18]' : 'text-gray-300'
+                    star <= newReview.rating ? 'text-[#c9a961]' : 'text-velvet-muted'
                   }`}
                 >
                   <FaStar />
                 </button>
               ))}
             </div>
-            <div className="text-xs sm:text-sm text-gray-500">
+            <div className="text-xs sm:text-sm text-velvet-muted">
               {newReview.rating === 5 && "Outstanding!"}
               {newReview.rating === 4 && "Very Good"}
               {newReview.rating === 3 && "Good"}
@@ -308,19 +329,19 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
               value={newReview.comment}
               onChange={(e) => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
               placeholder="Tell us more about your experience..."
-              className="w-full p-3 sm:p-4 text-sm sm:text-base border text-black rounded-xl focus:ring-2 focus:ring-[#FF4F18]/20 focus:border-[#FF4F18] transition-all"
+              className="w-full p-3 sm:p-4 text-sm sm:text-base bg-velvet-black border border-velvet-border text-velvet-cream placeholder-velvet-muted rounded-xl focus:ring-2 focus:ring-velvet-gold/30 focus:border-velvet-gold transition-all outline-none resize-none"
               rows={4}
               required
             />
-            <span className="absolute bottom-2 right-2 text-xs sm:text-sm text-gray-400">
+            <span className="absolute bottom-2 right-2 text-xs sm:text-sm text-velvet-muted">
               {newReview.comment.length}/500
             </span>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm sm:text-base text-gray-600">Add Photos</label>
-              <span className="text-xs sm:text-sm text-gray-400">{newReview.images.length}/5 photos</span>
+              <label className="text-sm sm:text-base text-velvet-muted">Add Photos</label>
+              <span className="text-xs sm:text-sm text-velvet-muted">{newReview.images.length}/5 photos</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4">
               {newReview.images.map((url, index) => (
@@ -341,9 +362,9 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
                 </div>
               ))}
               {newReview.images.length < 5 && (
-                <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-[#FF4F18] transition-colors">
-                  <FaCamera className="text-xl sm:text-2xl text-gray-400" />
-                  <span className="text-xs sm:text-sm text-gray-500 mt-1">Add Photo</span>
+                <label className="aspect-square rounded-lg border-2 border-dashed border-velvet-border flex flex-col items-center justify-center cursor-pointer hover:border-[#c9a961] transition-colors">
+                  <FaCamera className="text-xl sm:text-2xl text-velvet-muted" />
+                  <span className="text-xs sm:text-sm text-velvet-muted mt-1">Add Photo</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -363,7 +384,7 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 sm:py-3 text-sm sm:text-base bg-[#FF4F18] text-white rounded-full hover:bg-[#FF4F18]/90 transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-md"
+            className="w-full py-2.5 sm:py-3 text-sm sm:text-base bg-[#c9a961] text-white rounded-full hover:bg-[#c9a961]/90 transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-md"
           >
             {isSubmitting ? 'Posting...' : 'Share Your Review'}
           </button>
@@ -376,30 +397,24 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
     <div className="space-y-4 sm:space-y-6">
       {reviews.map((review) => (
         <div key={review._id} 
-          className="bg-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
+          className="bg-velvet-surface rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow border border-velvet-border"
         >
           <div className="flex justify-between items-start mb-3 sm:mb-4">
             <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full overflow-hidden">
-                <Image 
-                  src={getProfileImageUrl(review.userId)}
-                  alt={`${review.userId?.firstName || 'Anonymous'}'s profile`}
-                  width={48}
-                  height={48}
-                  className="object-cover"
-                />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-velvet-surface rounded-full overflow-hidden ring-1 ring-velvet-border">
+                <Avatar user={review.userId} size={48} />
               </div>
               <div>
-                <p className="font-medium text-gray-900 text-sm sm:text-base">
+                <p className="font-medium text-velvet-cream text-sm sm:text-base">
                   {review.userId?.firstName || 'Anonymous'} {review.userId?.lastName || ''}
                 </p>
                 <div className="flex items-center gap-2">
-                  <div className="flex gap-0.5 text-[#FF4F18]">
+                  <div className="flex gap-0.5 text-[#c9a961]">
                     {[...Array(review.rating)].map((_, i) => (
                       <FaStar key={i} className="text-xs sm:text-sm" />
                     ))}
                   </div>
-                  <span className="text-xs sm:text-sm text-gray-500">
+                  <span className="text-xs sm:text-sm text-velvet-muted">
                     • {new Date(review.createdAt).toLocaleDateString('en-US', { 
                       month: 'short', 
                       day: 'numeric', 
@@ -412,13 +427,13 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
             {isAuthenticated && review.userId?._id === userProfile?._id && (
               <button
                 onClick={() => handleDeleteReview(review._id)}
-                className="text-gray-400 hover:text-red-500 transition-colors p-1.5 sm:p-2 hover:bg-red-50 rounded-full"
+                className="text-velvet-muted hover:text-red-500 transition-colors p-1.5 sm:p-2 hover:bg-red-500/10 rounded-full"
               >
                 <FaTrash className="text-xs sm:text-sm" />
               </button>
             )}
           </div>
-          <p className="text-gray-600 text-sm sm:text-base ml-12 sm:ml-16 mb-3 sm:mb-4">{review.comment}</p>
+          <p className="text-velvet-muted text-sm sm:text-base ml-12 sm:ml-16 mb-3 sm:mb-4">{review.comment}</p>
           
           {review.images && review.images.length > 0 && (
             <div className="ml-12 sm:ml-16 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
@@ -448,18 +463,18 @@ export default function ReviewSection({ restaurantId, onLoginClick }) {
   return (
     <div className="space-y-6 sm:space-y-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Customer Reviews</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-velvet-cream">Customer Reviews</h2>
         <div className="flex items-center gap-2">
-          <div className="text-[#FF4F18] font-medium text-base sm:text-lg">
+          <div className="text-[#c9a961] font-medium text-base sm:text-lg">
             {reviews.length > 0 
               ? (reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length).toFixed(1)
               : '0.0'
             }
           </div>
-          <div className="flex text-[#FF4F18]">
+          <div className="flex text-[#c9a961]">
             <FaStar className="text-base sm:text-lg" />
           </div>
-          <span className="text-sm sm:text-base text-gray-500">({reviews.length})</span>
+          <span className="text-sm sm:text-base text-velvet-muted">({reviews.length})</span>
         </div>
       </div>
       {renderReviewForm()}

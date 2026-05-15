@@ -139,9 +139,9 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
       'font-weight:700',
       'white-space:nowrap',
       'user-select:none',
-      `background:${isSelected ? 'rgba(201,168,76,0.9)' : 'rgba(0,0,0,0.65)'}`,
-      `color:${isSelected ? '#0C0B10' : '#F5F0E8'}`,
-      `border:1px solid ${isSelected ? 'rgba(201,168,76,1)' : 'rgba(255,255,255,0.15)'}`,
+      `background:${isSelected ? 'rgba(201, 169, 97, 0.9)' : 'rgba(0,0,0,0.65)'}`,
+      `color:${isSelected ? '#0a0908' : '#f5efe3'}`,
+      `border:1px solid ${isSelected ? 'rgba(201, 169, 97, 1)' : 'rgba(255,255,255,0.15)'}`,
     ].join(';');
     el.textContent = displayName;
     el.dataset.tableId = objectId;
@@ -365,7 +365,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
         // Update label styles
         labelsRef.current.forEach(({ el, objectId }) => {
           el.style.background = 'rgba(0,0,0,0.65)';
-          el.style.color      = '#F5F0E8';
+          el.style.color      = '#f5efe3';
           el.style.border     = '1px solid rgba(255,255,255,0.15)';
         });
         return;
@@ -381,9 +381,9 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
       // Update label highlight
       labelsRef.current.forEach(({ el, objectId }) => {
         const sel = objectId === tableId;
-        el.style.background = sel ? 'rgba(201,168,76,0.9)' : 'rgba(0,0,0,0.65)';
-        el.style.color      = sel ? '#0C0B10' : '#F5F0E8';
-        el.style.border     = `1px solid ${sel ? 'rgba(201,168,76,1)' : 'rgba(255,255,255,0.15)'}`;
+        el.style.background = sel ? 'rgba(201, 169, 97, 0.9)' : 'rgba(0,0,0,0.65)';
+        el.style.color      = sel ? '#0a0908' : '#f5efe3';
+        el.style.border     = `1px solid ${sel ? 'rgba(201, 169, 97, 1)' : 'rgba(255,255,255,0.15)'}`;
       });
     };
 
@@ -511,7 +511,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
   };
 
   return (
-    <div style={{ color: '#F5F0E8', minHeight: '500px' }}>
+    <div style={{ color: '#f5efe3', minHeight: '500px' }}>
       {/* Toast */}
       {toast && (
         <div
@@ -524,14 +524,14 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
 
       {/* Floorplan selector */}
       <div className="mb-4">
-        <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>
+        <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#8b847a' }}>
           Select Floorplan
         </label>
         <select
           value={selectedFloorplanId}
           onChange={e => setSelectedFloorplanId(e.target.value)}
           className="px-4 py-2.5 rounded-xl text-sm font-medium outline-none"
-          style={{ background: '#1E1D2A', border: '1px solid #2E2D3A', color: '#F5F0E8', minWidth: '220px' }}
+          style={{ background: '#2a241b', border: '1px solid #2E2D3A', color: '#f5efe3', minWidth: '220px' }}
         >
           <option value="">— choose a floorplan —</option>
           {floorplans.map(fp => (
@@ -541,7 +541,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
       </div>
 
       {!selectedFloorplanId && (
-        <div className="text-center py-16" style={{ color: '#9B96A8' }}>
+        <div className="text-center py-16" style={{ color: '#8b847a' }}>
           Select a floorplan above to start labelling tables.
         </div>
       )}
@@ -553,11 +553,11 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
             style={{ background: '#f0efec', minHeight: '520px', border: '1px solid #2E2D3A' }}>
             {loading && (
               <div className="absolute inset-0 flex items-center justify-center z-10"
-                style={{ background: 'rgba(12,11,16,0.6)', backdropFilter: 'blur(4px)' }}>
+                style={{ background: 'rgba(10, 9, 8, 0.6)', backdropFilter: 'blur(4px)' }}>
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"
-                    style={{ borderColor: '#C9A84C', borderTopColor: 'transparent' }} />
-                  <p className="text-sm font-medium" style={{ color: '#F5F0E8' }}>Loading floorplan…</p>
+                    style={{ borderColor: '#c9a961', borderTopColor: 'transparent' }} />
+                  <p className="text-sm font-medium" style={{ color: '#f5efe3' }}>Loading floorplan…</p>
                 </div>
               </div>
             )}
@@ -566,7 +566,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
             {/* Hint overlay when no table selected */}
             {!loading && !selectedTable && (
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-xs font-semibold pointer-events-none"
-                style={{ background: 'rgba(12,11,16,0.75)', color: '#9B96A8', backdropFilter: 'blur(6px)', whiteSpace: 'nowrap' }}>
+                style={{ background: 'rgba(10, 9, 8, 0.75)', color: '#8b847a', backdropFilter: 'blur(6px)', whiteSpace: 'nowrap' }}>
                 Click a table to select it
               </div>
             )}
@@ -576,7 +576,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
           <div className="flex-shrink-0" style={{ width: '260px' }}>
             {!selectedTable ? (
               <div className="flex flex-col items-center justify-center rounded-2xl h-full text-center px-4"
-                style={{ border: '2px dashed #2E2D3A', color: '#9B96A8', minHeight: '200px' }}>
+                style={{ border: '2px dashed #2E2D3A', color: '#8b847a', minHeight: '200px' }}>
                 <span style={{ fontSize: '28px', marginBottom: '10px' }}>🏷️</span>
                 <p className="text-sm font-medium">Click any table<br />in the floorplan</p>
                 <p className="text-xs mt-2" style={{ color: '#555' }}>
@@ -584,16 +584,16 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
                 </p>
               </div>
             ) : (
-              <div className="rounded-2xl p-5 space-y-4" style={{ background: '#161520', border: '1px solid #1E1D2A', height: '100%' }}>
+              <div className="rounded-2xl p-5 space-y-4" style={{ background: '#15130f', border: '1px solid #2a241b', height: '100%' }}>
                 {/* Table header */}
-                <div className="pb-4" style={{ borderBottom: '1px solid #1E1D2A' }}>
-                  <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#9B96A8' }}>
+                <div className="pb-4" style={{ borderBottom: '1px solid #2a241b' }}>
+                  <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#8b847a' }}>
                     Selected Table
                   </p>
-                  <p className="font-black text-lg" style={{ color: '#C9A84C' }}>
+                  <p className="font-black text-lg" style={{ color: '#c9a961' }}>
                     {selectedTable.userData?.customName || selectedTable.objectId}
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>
+                  <p className="text-xs mt-0.5" style={{ color: '#8b847a' }}>
                     ID: {selectedTable.objectId}
                     {selectedTable.userData?.maxCapacity ? ` · ${selectedTable.userData.maxCapacity} seats` : ''}
                   </p>
@@ -601,7 +601,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
 
                 {/* Name input */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#8b847a' }}>
                     Display Name
                   </label>
                   <input
@@ -613,7 +613,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
                     maxLength={40}
                     autoFocus
                     className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-                    style={{ background: '#0C0B10', border: '1px solid #2E2D3A', color: '#F5F0E8' }}
+                    style={{ background: '#0a0908', border: '1px solid #2E2D3A', color: '#f5efe3' }}
                   />
                   <p className="text-xs mt-2 leading-snug" style={{ color: '#555' }}>
                     Shown to customers during booking. Leave blank to use the system ID.
@@ -626,8 +626,8 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
                   disabled={saving}
                   className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
                   style={{
-                    background: '#C9A84C',
-                    color: '#0C0B10',
+                    background: '#c9a961',
+                    color: '#0a0908',
                     opacity: saving ? 0.7 : 1,
                     cursor: saving ? 'wait' : 'pointer',
                   }}
@@ -635,7 +635,7 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
                   {saving ? (
                     <>
                       <div className="w-4 h-4 border-2 rounded-full animate-spin"
-                        style={{ borderColor: 'rgba(12,11,16,0.3)', borderTopColor: '#0C0B10' }} />
+                        style={{ borderColor: 'rgba(10, 9, 8, 0.3)', borderTopColor: '#0a0908' }} />
                       Saving…
                     </>
                   ) : customName.trim() ? 'Save Label' : 'Clear Label'}
@@ -648,12 +648,12 @@ export default function TableLabelManager({ restaurantId, token, floorplans = []
                     setCustomName('');
                     labelsRef.current.forEach(({ el }) => {
                       el.style.background = 'rgba(0,0,0,0.65)';
-                      el.style.color      = '#F5F0E8';
+                      el.style.color      = '#f5efe3';
                       el.style.border     = '1px solid rgba(255,255,255,0.15)';
                     });
                   }}
                   className="w-full py-2 rounded-xl text-xs font-medium transition-all"
-                  style={{ background: 'rgba(255,255,255,0.05)', color: '#9B96A8', border: '1px solid #2E2D3A' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', color: '#8b847a', border: '1px solid #2E2D3A' }}
                 >
                   Deselect
                 </button>

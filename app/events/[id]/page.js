@@ -26,8 +26,8 @@ const ZONE_TYPE_LABELS = {
 };
 
 const V = {
-  black: '#0C0B10', surface: '#161520', border: '#1E1D2A',
-  gold: '#C9A84C', cream: '#F5F0E8', muted: '#9B96A8',
+  black: '#0a0908', surface: '#15130f', border: '#2a241b',
+  gold: '#c9a961', cream: '#f5efe3', muted: '#8b847a',
 };
 
 function TicketModal({ event, onClose, user, getAuthToken }) {
@@ -63,7 +63,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
       const qr = await QRCode.toDataURL(data.ticket.ticketRef, {
         width: 200,
         margin: 2,
-        color: { dark: '#0C0B10', light: '#F5F0E8' },
+        color: { dark: '#0a0908', light: '#f5efe3' },
       });
       setQrDataUrl(qr);
       setTicket(data.ticket);
@@ -81,7 +81,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-      style={{ background: 'rgba(12,11,16,0.85)', backdropFilter: 'blur(6px)' }}
+      style={{ background: 'rgba(10, 9, 8, 0.85)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -100,7 +100,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
           </div>
           {step !== 'confirm' && (
             <button onClick={onClose} className="p-2 rounded-xl hover:opacity-60 transition-opacity"
-              style={{ background: 'rgba(245,240,232,0.05)', color: V.muted }}>
+              style={{ background: 'rgba(245, 239, 227, 0.05)', color: V.muted }}>
               <RiCloseLine size={20} />
             </button>
           )}
@@ -115,11 +115,11 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
               <button
                 onClick={() => { setAttendanceType('ga'); setStep('form'); }}
                 className="w-full p-4 rounded-2xl text-left transition-all hover:opacity-90 group"
-                style={{ background: 'rgba(201,168,76,0.08)', border: `1px solid rgba(201,168,76,0.25)` }}
+                style={{ background: 'rgba(201, 169, 97, 0.08)', border: `1px solid rgba(201, 169, 97, 0.25)` }}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'rgba(201,168,76,0.15)' }}>
+                    style={{ background: 'rgba(201, 169, 97, 0.15)' }}>
                     <RiGroupLine size={20} style={{ color: V.gold }} />
                   </div>
                   <div className="flex-1">
@@ -140,11 +140,11 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
                 router.push(`/restaurants/${event.venueId?._id}/floorplan?date=${eventDate}&time=${event.startTime}&eventId=${event._id}`);
               }}
                 className="w-full p-4 rounded-2xl text-left transition-all hover:opacity-90"
-                style={{ background: '#1E1D2A', border: `1px solid ${V.border}` }}
+                style={{ background: '#2a241b', border: `1px solid ${V.border}` }}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'rgba(245,240,232,0.05)' }}>
+                    style={{ background: 'rgba(245, 239, 227, 0.05)' }}>
                     <RiTableLine size={20} style={{ color: V.cream }} />
                   </div>
                   <div className="flex-1">
@@ -174,7 +174,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
               </button>
 
               <div className="p-3 rounded-xl flex items-center gap-3"
-                style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)' }}>
+                style={{ background: 'rgba(201, 169, 97, 0.08)', border: '1px solid rgba(201, 169, 97, 0.2)' }}>
                 <RiGroupLine style={{ color: V.gold }} />
                 <div>
                   <p className="text-xs font-semibold" style={{ color: V.gold }}>General Admission</p>
@@ -191,7 +191,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
                   onChange={e => setGuestName(e.target.value)}
                   placeholder="Full name"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{ background: '#0C0B10', color: V.cream, border: `1px solid ${V.border}` }}
+                  style={{ background: '#0a0908', color: V.cream, border: `1px solid ${V.border}` }}
                 />
               </div>
 
@@ -203,7 +203,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
                   placeholder="email@example.com"
                   type="email"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{ background: '#0C0B10', color: V.cream, border: `1px solid ${V.border}` }}
+                  style={{ background: '#0a0908', color: V.cream, border: `1px solid ${V.border}` }}
                 />
               </div>
 
@@ -213,14 +213,14 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
                   <button
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
                     className="w-10 h-10 rounded-xl font-bold text-lg flex items-center justify-center transition-opacity hover:opacity-60"
-                    style={{ background: '#0C0B10', color: V.cream, border: `1px solid ${V.border}` }}>
+                    style={{ background: '#0a0908', color: V.cream, border: `1px solid ${V.border}` }}>
                     −
                   </button>
                   <span className="text-xl font-bold w-8 text-center" style={{ color: V.cream }}>{quantity}</span>
                   <button
                     onClick={() => setQuantity(q => Math.min(remaining ?? 10, q + 1))}
                     className="w-10 h-10 rounded-xl font-bold text-lg flex items-center justify-center transition-opacity hover:opacity-60"
-                    style={{ background: '#0C0B10', color: V.cream, border: `1px solid ${V.border}` }}>
+                    style={{ background: '#0a0908', color: V.cream, border: `1px solid ${V.border}` }}>
                     +
                   </button>
                   {event.coverCharge > 0 && (
@@ -237,7 +237,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
                 onClick={handleGetTicket}
                 disabled={loading}
                 className="w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50"
-                style={{ background: V.gold, color: '#0C0B10' }}
+                style={{ background: V.gold, color: '#0a0908' }}
               >
                 {loading ? 'Confirming...' : event.coverCharge > 0 ? `Confirm · ฿${event.coverCharge * quantity}` : 'Confirm Attendance'}
               </button>
@@ -256,7 +256,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
 
               {/* Ticket card */}
               <div className="rounded-2xl overflow-hidden mb-4 text-left"
-                style={{ background: '#0C0B10', border: `1px solid ${V.border}` }}>
+                style={{ background: '#0a0908', border: `1px solid ${V.border}` }}>
                 {/* Ticket top — QR + details side by side */}
                 <div className="flex items-center gap-4 p-4">
                   {qrDataUrl && (
@@ -279,7 +279,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
                 </div>
 
                 {/* Divider with scissors */}
-                <div className="flex items-center gap-2 px-4" style={{ borderTop: '1px dashed #1E1D2A' }}>
+                <div className="flex items-center gap-2 px-4" style={{ borderTop: '1px dashed #2a241b' }}>
                   <span className="text-xs py-1.5" style={{ color: V.border }}>✂</span>
                   <div className="flex-1 h-px" style={{ background: 'transparent' }} />
                 </div>
@@ -308,7 +308,7 @@ function TicketModal({ event, onClose, user, getAuthToken }) {
               <button
                 onClick={onClose}
                 className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90"
-                style={{ background: V.gold, color: '#0C0B10' }}
+                style={{ background: V.gold, color: '#0a0908' }}
               >
                 Done
               </button>
@@ -359,7 +359,7 @@ export default function EventDetailPage() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: V.black }}>
       <div className="w-12 h-12 rounded-full border-2 animate-spin"
-        style={{ borderColor: 'rgba(201,168,76,0.15)', borderTop: '2px solid #C9A84C' }} />
+        style={{ borderColor: 'rgba(201, 169, 97, 0.15)', borderTop: '2px solid #c9a961' }} />
     </div>
   );
 
@@ -380,11 +380,11 @@ export default function EventDetailPage() {
 
       {/* Hero */}
       <section className="relative pt-24 pb-0 overflow-hidden">
-        <div className="absolute inset-0 z-0" style={{ background: 'linear-gradient(180deg, #161520 0%, #0C0B10 100%)' }} />
+        <div className="absolute inset-0 z-0" style={{ background: 'linear-gradient(180deg, #15130f 0%, #0a0908 100%)' }} />
         {event.images?.[0] && (
           <div className="absolute inset-0 z-0">
             <img src={event.images[0]} alt={event.name} className="w-full h-full object-cover opacity-20" />
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(12,11,16,0.7) 0%, #0C0B10 100%)' }} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10, 9, 8, 0.7) 0%, #0a0908 100%)' }} />
           </div>
         )}
 
@@ -412,16 +412,16 @@ export default function EventDetailPage() {
 
           <div className="flex flex-wrap gap-3">
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
-              style={{ background: 'rgba(201,168,76,0.12)', color: V.gold, border: '1px solid rgba(201,168,76,0.25)' }}>
+              style={{ background: 'rgba(201, 169, 97, 0.12)', color: V.gold, border: '1px solid rgba(201, 169, 97, 0.25)' }}>
               <RiCalendarEventLine /> {formatDate(event.date)}
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
-              style={{ background: 'rgba(201,168,76,0.12)', color: V.gold, border: '1px solid rgba(201,168,76,0.25)' }}>
+              style={{ background: 'rgba(201, 169, 97, 0.12)', color: V.gold, border: '1px solid rgba(201, 169, 97, 0.25)' }}>
               <RiTimeLine /> {event.startTime} – {event.endTime}
             </div>
             {event.coverCharge > 0 ? (
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
-                style={{ background: 'rgba(201,168,76,0.12)', color: V.gold, border: '1px solid rgba(201,168,76,0.25)' }}>
+                style={{ background: 'rgba(201, 169, 97, 0.12)', color: V.gold, border: '1px solid rgba(201, 169, 97, 0.25)' }}>
                 <RiTicketLine /> ฿{event.coverCharge} Cover Charge
               </div>
             ) : (
@@ -504,7 +504,7 @@ export default function EventDetailPage() {
               onClick={handleGetTicketsClick}
               disabled={isSoldOut}
               className="w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 disabled:opacity-40 mt-3"
-              style={{ background: isSoldOut ? V.border : V.gold, color: isSoldOut ? V.muted : '#0C0B10' }}
+              style={{ background: isSoldOut ? V.border : V.gold, color: isSoldOut ? V.muted : '#0a0908' }}
             >
               {isSoldOut ? 'Sold Out' : event.coverCharge > 0 ? `Get Tickets · ฿${event.coverCharge}` : 'Get Free Ticket'}
             </button>
@@ -530,7 +530,7 @@ export default function EventDetailPage() {
               )}
               {venue.venueSettings?.dresscode && (
                 <div className="mt-3 p-2 rounded-lg text-xs"
-                  style={{ background: 'rgba(201,168,76,0.08)', color: V.gold }}>
+                  style={{ background: 'rgba(201, 169, 97, 0.08)', color: V.gold }}>
                   Dress code: {venue.venueSettings.dresscode}
                 </div>
               )}

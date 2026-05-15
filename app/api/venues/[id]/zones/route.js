@@ -59,7 +59,7 @@ export async function POST(request, { params }) {
       floorplanId,
       name,
       type: type || 'standard',
-      color: color || '#C9A84C',
+      color: color || '#c9a961',
       tableIds: tableIds || [],
       pricing: pricing || {}
     });

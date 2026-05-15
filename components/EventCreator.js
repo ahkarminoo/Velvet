@@ -21,8 +21,8 @@ const EVENT_TYPES = [
 ];
 
 const VELVET = {
-  black: '#0C0B10', surface: '#161520', border: '#1E1D2A',
-  gold: '#C9A84C', goldLight: '#E8C97A', cream: '#F5F0E8', muted: '#9B96A8'
+  black: '#0a0908', surface: '#15130f', border: '#2a241b',
+  gold: '#c9a961', goldLight: '#e2c887', cream: '#f5efe3', muted: '#8b847a'
 };
 
 export default function EventCreator({ restaurantId, token, floorplans = [], zones = [], editingEvent = null, onSaved, onClose }) {
@@ -161,7 +161,7 @@ export default function EventCreator({ restaurantId, token, floorplans = [], zon
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: VELVET.border }}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(201,168,76,0.15)' }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(201, 169, 97, 0.15)' }}>
             <RiCalendarEventLine style={{ color: VELVET.gold, fontSize: '20px' }} />
           </div>
           <div>
@@ -190,7 +190,7 @@ export default function EventCreator({ restaurantId, token, floorplans = [], zon
                 onClick={() => update('type', et.value)}
                 className="p-3 rounded-xl text-left transition-all"
                 style={{
-                  background: form.type === et.value ? 'rgba(201,168,76,0.15)' : VELVET.surface,
+                  background: form.type === et.value ? 'rgba(201, 169, 97, 0.15)' : VELVET.surface,
                   border: `1px solid ${form.type === et.value ? VELVET.gold : VELVET.border}`,
                   color: form.type === et.value ? VELVET.gold : VELVET.muted
                 }}
@@ -320,7 +320,7 @@ export default function EventCreator({ restaurantId, token, floorplans = [], zon
                     onClick={() => toggleFloorplan(fp._id?.toString?.() || fp._id)}
                     className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all"
                     style={{
-                      background: selected ? 'rgba(201,168,76,0.12)' : VELVET.surface,
+                      background: selected ? 'rgba(201, 169, 97, 0.12)' : VELVET.surface,
                       border: `1px solid ${selected ? VELVET.gold : VELVET.border}`
                     }}
                   >
@@ -356,7 +356,7 @@ export default function EventCreator({ restaurantId, token, floorplans = [], zon
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: zone.color || VELVET.gold }} />
                       <span className="font-semibold text-sm" style={{ color: VELVET.cream }}>{zone.name}</span>
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,168,76,0.15)', color: VELVET.gold }}>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201, 169, 97, 0.15)', color: VELVET.gold }}>
                         {zone.type?.replace(/_/g, ' ')}
                       </span>
                     </div>
@@ -434,7 +434,7 @@ export default function EventCreator({ restaurantId, token, floorplans = [], zon
           onClick={() => handleSave(true)}
           disabled={saving}
           className="flex-1 px-4 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
-          style={{ background: VELVET.gold, color: '#0C0B10' }}
+          style={{ background: VELVET.gold, color: '#0a0908' }}
         >
           {saving ? (
             <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />

@@ -7,8 +7,8 @@ export default function PublicFloorplanSelector({ restaurant, defaultDate, defau
   if (!restaurant.allFloorplans || restaurant.allFloorplans.length === 0) {
     return (
       <div className="h-full flex flex-col items-center justify-center py-12">
-        <RiLayoutLine style={{ fontSize: '40px', color: '#1E1D2A', marginBottom: '12px' }} />
-        <p className="text-sm" style={{ color: '#9B96A8' }}>No floor plan available</p>
+        <RiLayoutLine style={{ fontSize: '40px', color: '#2a241b', marginBottom: '12px' }} />
+        <p className="text-sm" style={{ color: '#8b847a' }}>No floor plan available</p>
       </div>
     );
   }

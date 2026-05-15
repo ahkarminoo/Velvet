@@ -24,7 +24,7 @@ const zoneSchema = new mongoose.Schema({
   },
   color: {
     type: String,
-    default: '#C9A84C'
+    default: '#c9a961'
   },
   tableIds: [{ type: String }],
   pricing: {

@@ -49,30 +49,30 @@ export default function RestaurantOwnerOnboarding() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E76F51]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c9a961]"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-velvet-surface to-velvet-surface/30">
       {/* Side Progress Bar - Adjusted dimensions */}
-      <div className="fixed left-0 top-0 h-screen w-80 bg-white shadow-xl p-8 border-r border-gray-100">
+      <div className="fixed left-0 top-0 h-screen w-80 bg-velvet-surface shadow-xl p-8 border-r border-velvet-border">
         <div className="mb-12">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="inline-block px-6 py-2 bg-gradient-to-r from-[#FF4F18]/10 to-[#FF8F6B]/10 
-                     rounded-full mb-4 border border-[#FF4F18]/20"
+            className="inline-block px-6 py-2 bg-gradient-to-r from-[#c9a961]/10 to-[#e2c887]/10 
+                     rounded-full mb-4 border border-[#c9a961]/20"
           >
-            <span className="text-[#FF4F18] font-medium">Setup Progress</span>
+            <span className="text-[#c9a961] font-medium">Setup Progress</span>
           </motion.div>
-          <h2 className="text-3xl font-bold text-[#3A2E2B] mb-2">Restaurant Setup</h2>
-          <p className="text-gray-500 text-sm">Step {step} of {steps.length}</p>
-          <div className="mt-6 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+          <h2 className="text-3xl font-bold text-[#15130f] mb-2">Restaurant Setup</h2>
+          <p className="text-velvet-muted text-sm">Step {step} of {steps.length}</p>
+          <div className="mt-6 h-1.5 w-full bg-velvet-surface rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-[#FF4F18] to-[#FF8F6B] rounded-full"
+              className="h-full bg-gradient-to-r from-[#c9a961] to-[#e2c887] rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
               transition={{ duration: 0.5, ease: "easeOut" }}
@@ -86,15 +86,15 @@ export default function RestaurantOwnerOnboarding() {
               key={s.id}
               className={`flex flex-col p-4 rounded-xl cursor-pointer transition-all duration-300 ${
                 step === s.id 
-                  ? 'bg-gradient-to-r from-[#FF4F18] to-[#FF8F6B] text-white shadow-lg' 
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#FF4F18]'
+                  ? 'bg-gradient-to-r from-[#c9a961] to-[#e2c887] text-white shadow-lg' 
+                  : 'text-velvet-muted hover:bg-velvet-surface hover:text-[#c9a961]'
               }`}
               onClick={() => setStep(s.id)}
               whileHover={{ scale: 1.02, x: 5 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center">
-                <s.icon className={`w-5 h-5 mr-3 ${step === s.id ? 'text-white' : 'text-[#FF4F18]'}`} />
+                <s.icon className={`w-5 h-5 mr-3 ${step === s.id ? 'text-white' : 'text-[#c9a961]'}`} />
                 <span className="font-medium">{s.title}</span>
                 {step > s.id && (
                   <motion.div
@@ -106,7 +106,7 @@ export default function RestaurantOwnerOnboarding() {
                   </motion.div>
                 )}
               </div>
-              <span className={`text-sm mt-1 ${step === s.id ? 'text-white/90' : 'text-gray-400'}`}>
+              <span className={`text-sm mt-1 ${step === s.id ? 'text-white/90' : 'text-velvet-muted'}`}>
                 {s.description}
               </span>
             </motion.div>
@@ -125,12 +125,12 @@ export default function RestaurantOwnerOnboarding() {
           className="max-w-4xl mx-auto"
         >
           {step === 1 && (
-            <div className="space-y-8 bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+            <div className="space-y-8 bg-velvet-surface p-8 rounded-2xl shadow-lg border border-velvet-border">
               <div className="space-y-4">
-                <h1 className="text-5xl font-bold text-[#3A2E2B] leading-tight">
-                  Welcome to <span className="text-[#E76F51]">FoodLoft</span>
+                <h1 className="text-5xl font-bold text-[#15130f] leading-tight">
+                  Welcome to <span className="text-[#c9a961]">FoodLoft</span>
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
+                <p className="text-xl text-velvet-muted leading-relaxed max-w-2xl">
                   Transform your restaurant management with our innovative platform. 
                   Let&apos;s create a digital presence that matches your restaurant&apos;s excellence.
                 </p>
@@ -144,10 +144,10 @@ export default function RestaurantOwnerOnboarding() {
                   <motion.div
                     whileHover={{ y: -5 }}
                     key={feature.title}
-                    className="p-6 bg-white rounded-2xl hover:shadow-xl transition-all duration-300 border border-gray-100"
+                    className="p-6 bg-velvet-surface rounded-2xl hover:shadow-xl transition-all duration-300 border border-velvet-border"
                   >
-                    <h3 className="text-xl font-semibold mb-2 text-[#3A2E2B]">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.desc}</p>
+                    <h3 className="text-xl font-semibold mb-2 text-[#15130f]">{feature.title}</h3>
+                    <p className="text-velvet-muted">{feature.desc}</p>
                   </motion.div>
                 ))}
               </div>
@@ -155,7 +155,7 @@ export default function RestaurantOwnerOnboarding() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setStep(2)}
-                className="mt-8 px-8 py-4 bg-gradient-to-r from-[#FF4F18] to-[#FF8F6B] text-white rounded-xl 
+                className="mt-8 px-8 py-4 bg-gradient-to-r from-[#c9a961] to-[#e2c887] text-white rounded-xl 
                 font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Start Setup →
@@ -164,7 +164,7 @@ export default function RestaurantOwnerOnboarding() {
           )}
 
           {step === 2 && (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+            <div className="bg-velvet-surface rounded-2xl shadow-lg border border-velvet-border p-8">
               <RestaurantProfileForm 
                 mode="create"
                 initialData={null}
@@ -194,15 +194,15 @@ export default function RestaurantOwnerOnboarding() {
                   // Handle cancel if needed
                   console.log('Form cancelled');
                 }}
-                className="text-[#3A2E2B]"
+                className="text-[#15130f]"
               />
             </div>
           )}
 
           {step === 3 && (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Restaurant Floor Plan</h2>
-              <p className="text-gray-600 mb-6">Design your restaurant&apos;s layout using our interactive 3D floor plan editor.</p>
+            <div className="bg-velvet-surface rounded-2xl shadow-lg border border-velvet-border p-8">
+              <h2 className="text-3xl font-bold text-velvet-cream mb-6">Restaurant Floor Plan</h2>
+              <p className="text-velvet-muted mb-6">Design your restaurant&apos;s layout using our interactive 3D floor plan editor.</p>
               <div className="flex space-x-4">
                 <button
                   onClick={async () => {
@@ -238,15 +238,15 @@ export default function RestaurantOwnerOnboarding() {
                       alert('Failed to load restaurant data');
                     }
                   }}
-                  className="px-6 py-3 bg-gradient-to-r from-[#FF4F18] to-[#FF8F6B] text-white rounded-md 
+                  className="px-6 py-3 bg-gradient-to-r from-[#c9a961] to-[#e2c887] text-white rounded-md 
                   hover:shadow-lg transition-all duration-300"
                 >
                   Open Floor Plan Editor
                 </button>
                 <button
                   onClick={() => setStep(4)}
-                  className="px-6 py-3 bg-white text-[#3A2E2B] border border-gray-200 rounded-md 
-                  hover:bg-gray-50 transition-colors"
+                  className="px-6 py-3 bg-velvet-surface text-[#15130f] border border-velvet-border rounded-md 
+                  hover:bg-velvet-surface transition-colors"
                 >
                   Skip for Now
                 </button>
@@ -255,12 +255,12 @@ export default function RestaurantOwnerOnboarding() {
           )}
 
           {step === 4 && (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-              <h2 className="text-3xl font-bold text-[#3A2E2B] mb-6">Ready to Deploy</h2>
-              <p className="text-gray-600 mb-6">Your restaurant profile is complete and ready to go live.</p>
+            <div className="bg-velvet-surface rounded-2xl shadow-lg border border-velvet-border p-8">
+              <h2 className="text-3xl font-bold text-[#15130f] mb-6">Ready to Deploy</h2>
+              <p className="text-velvet-muted mb-6">Your restaurant profile is complete and ready to go live.</p>
               <button
                 onClick={() => router.push("/restaurant-owner/setup/dashboard")}
-                className="mt-6 px-6 py-3 bg-gradient-to-r from-[#FF4F18] to-[#FF8F6B] text-white rounded-xl 
+                className="mt-6 px-6 py-3 bg-gradient-to-r from-[#c9a961] to-[#e2c887] text-white rounded-xl 
                 hover:shadow-lg transition-all duration-300 flex items-center gap-2"
               >
                 <span>Go to Dashboard</span>

@@ -432,14 +432,14 @@ export default function RestaurantProfileForm({
           </div>
 
           {/* Venue Type & Settings */}
-          <div className="rounded-xl p-6 space-y-5" style={{ background: '#161520', border: '1px solid #1E1D2A' }}>
-            <h3 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>
+          <div className="rounded-xl p-6 space-y-5" style={{ background: '#15130f', border: '1px solid #2a241b' }}>
+            <h3 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>
               Venue Type & Settings
             </h3>
 
             {/* Venue Type */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#9B96A8' }}>
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8b847a' }}>
                 Venue Type
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -450,9 +450,9 @@ export default function RestaurantProfileForm({
                     onClick={() => setFormData(prev => ({ ...prev, venueType: vt.value }))}
                     className="px-3 py-2 rounded-xl text-sm font-medium transition-all"
                     style={{
-                      background: formData.venueType === vt.value ? 'rgba(201,168,76,0.15)' : '#0C0B10',
-                      color: formData.venueType === vt.value ? '#C9A84C' : '#9B96A8',
-                      border: `1px solid ${formData.venueType === vt.value ? '#C9A84C' : '#1E1D2A'}`
+                      background: formData.venueType === vt.value ? 'rgba(201, 169, 97, 0.15)' : '#0a0908',
+                      color: formData.venueType === vt.value ? '#c9a961' : '#8b847a',
+                      border: `1px solid ${formData.venueType === vt.value ? '#c9a961' : '#2a241b'}`
                     }}
                   >
                     {vt.label}
@@ -463,7 +463,7 @@ export default function RestaurantProfileForm({
 
             {/* Dress Code */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#9B96A8' }}>
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8b847a' }}>
                 Dress Code
               </label>
               <input
@@ -472,14 +472,14 @@ export default function RestaurantProfileForm({
                 onChange={e => handleVenueSettingsChange('dresscode', e.target.value)}
                 placeholder="e.g. Smart casual, No sportswear"
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                style={{ background: '#0C0B10', color: '#F5F0E8', border: '1px solid #1E1D2A' }}
+                style={{ background: '#0a0908', color: '#f5efe3', border: '1px solid #2a241b' }}
               />
             </div>
 
             {/* Age Restriction + Minimum Spend */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#9B96A8' }}>
+                <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8b847a' }}>
                   Age Restriction
                 </label>
                 <input
@@ -490,11 +490,11 @@ export default function RestaurantProfileForm({
                   onChange={e => handleVenueSettingsChange('ageRestriction', parseInt(e.target.value) || 0)}
                   placeholder="e.g. 20"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{ background: '#0C0B10', color: '#F5F0E8', border: '1px solid #1E1D2A' }}
+                  style={{ background: '#0a0908', color: '#f5efe3', border: '1px solid #2a241b' }}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#9B96A8' }}>
+                <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8b847a' }}>
                   Min Spend (฿)
                 </label>
                 <input
@@ -504,7 +504,7 @@ export default function RestaurantProfileForm({
                   onChange={e => handleVenueSettingsChange('minimumSpend', parseInt(e.target.value) || 0)}
                   placeholder="0"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{ background: '#0C0B10', color: '#F5F0E8', border: '1px solid #1E1D2A' }}
+                  style={{ background: '#0a0908', color: '#f5efe3', border: '1px solid #2a241b' }}
                 />
               </div>
             </div>
@@ -512,7 +512,7 @@ export default function RestaurantProfileForm({
             {/* Cover Charge + Late Night toggle */}
             <div className="grid grid-cols-2 gap-4 items-end">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#9B96A8' }}>
+                <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8b847a' }}>
                   Default Cover Charge (฿)
                 </label>
                 <input
@@ -522,7 +522,7 @@ export default function RestaurantProfileForm({
                   onChange={e => handleVenueSettingsChange('coverCharge', parseInt(e.target.value) || 0)}
                   placeholder="0"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{ background: '#0C0B10', color: '#F5F0E8', border: '1px solid #1E1D2A' }}
+                  style={{ background: '#0a0908', color: '#f5efe3', border: '1px solid #2a241b' }}
                 />
               </div>
               <div>
@@ -531,9 +531,9 @@ export default function RestaurantProfileForm({
                   onClick={() => handleVenueSettingsChange('lateNight', !formData.venueSettings.lateNight)}
                   className="w-full py-3 rounded-xl text-sm font-medium transition-all"
                   style={{
-                    background: formData.venueSettings.lateNight ? 'rgba(124,58,237,0.15)' : '#0C0B10',
-                    color: formData.venueSettings.lateNight ? '#7C3AED' : '#9B96A8',
-                    border: `1px solid ${formData.venueSettings.lateNight ? '#7C3AED' : '#1E1D2A'}`
+                    background: formData.venueSettings.lateNight ? 'rgba(155, 115, 64, 0.15)' : '#0a0908',
+                    color: formData.venueSettings.lateNight ? '#9b7340' : '#8b847a',
+                    border: `1px solid ${formData.venueSettings.lateNight ? '#9b7340' : '#2a241b'}`
                   }}
                 >
                   {formData.venueSettings.lateNight ? '🌙 Late Night On' : '🌙 Late Night Off'}

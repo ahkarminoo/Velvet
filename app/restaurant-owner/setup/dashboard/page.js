@@ -174,19 +174,19 @@ export default function RestaurantSetupDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#F8F7F5' }}>
+    <div className="flex min-h-screen" style={{ background: '#15130f' }}>
       {/* Sidebar */}
-      <div className="w-64 z-50 fixed left-0 top-0 h-screen flex flex-col" style={{ background: '#0C0B10', borderRight: '1px solid #1E1D2A' }}>
+      <div className="w-64 z-50 fixed left-0 top-0 h-screen flex flex-col" style={{ background: '#0a0908', borderRight: '1px solid #2a241b' }}>
         {/* Brand */}
-        <div className="px-5 py-5 border-b" style={{ borderColor: '#1E1D2A' }}>
+        <div className="px-5 py-5 border-b" style={{ borderColor: '#2a241b' }}>
           <Link href="/restaurant-owner" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #C9A84C, #E8C97A)' }}>
-              <span className="font-black text-sm" style={{ color: '#0C0B10', fontFamily: 'serif' }}>V</span>
+              style={{ background: 'linear-gradient(135deg, #c9a961, #e2c887)' }}>
+              <span className="font-black text-sm" style={{ color: '#0a0908', fontFamily: 'serif' }}>V</span>
             </div>
-            <span className="font-black text-lg tracking-tight" style={{ color: '#F5F0E8', fontFamily: 'serif' }}>Velvet</span>
+            <span className="font-black text-lg tracking-tight" style={{ color: '#f5efe3', fontFamily: 'serif' }}>Velvet</span>
           </Link>
-          <p className="text-xs mt-1 ml-10" style={{ color: '#9B96A8' }}>Venue Management</p>
+          <p className="text-xs mt-1 ml-10" style={{ color: '#8b847a' }}>Venue Management</p>
         </div>
 
         {/* Nav */}
@@ -199,9 +199,9 @@ export default function RestaurantSetupDashboard() {
                 onClick={() => setActiveSection(id)}
                 className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150"
                 style={{
-                  background: active ? 'rgba(201,168,76,0.15)' : 'transparent',
-                  color: active ? '#C9A84C' : '#9B96A8',
-                  border: active ? '1px solid rgba(201,168,76,0.25)' : '1px solid transparent',
+                  background: active ? 'rgba(201, 169, 97, 0.15)' : 'transparent',
+                  color: active ? '#c9a961' : '#8b847a',
+                  border: active ? '1px solid rgba(201, 169, 97, 0.25)' : '1px solid transparent',
                 }}
               >
                 <Icon style={{ fontSize: '16px', flexShrink: 0 }} />
@@ -212,11 +212,11 @@ export default function RestaurantSetupDashboard() {
         </nav>
 
         {/* Bottom actions */}
-        <div className="px-3 py-4 border-t space-y-0.5" style={{ borderColor: '#1E1D2A' }}>
+        <div className="px-3 py-4 border-t space-y-0.5" style={{ borderColor: '#2a241b' }}>
           <Link
             href="/restaurant-owner"
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-            style={{ color: '#9B96A8' }}
+            style={{ color: '#8b847a' }}
           >
             <FaHome style={{ fontSize: '14px' }} />
             <span>Home</span>
@@ -242,8 +242,8 @@ export default function RestaurantSetupDashboard() {
         >
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-800">{SECTION_LABEL[activeSection]}</h1>
-            <p className="text-gray-500 mt-1">Manage your venue settings and information</p>
+            <h1 className="text-2xl font-bold text-velvet-cream">{SECTION_LABEL[activeSection]}</h1>
+            <p className="text-velvet-muted mt-1">Manage your venue settings and information</p>
           </div>
 
           {/* Content Sections */}
@@ -252,7 +252,7 @@ export default function RestaurantSetupDashboard() {
               {restaurant ? (
                 <DashboardOverview restaurantId={restaurant._id} token={token} />
               ) : (
-                <div className="text-center py-12 text-gray-400">
+                <div className="text-center py-12 text-velvet-muted">
                   Create your restaurant profile first to see your overview.
                 </div>
               )}
@@ -262,14 +262,14 @@ export default function RestaurantSetupDashboard() {
           {activeSection === 'profile' && (
             <div className="space-y-6">
               {!restaurant && !isCreatingNew ? (
-                <div className="bg-white rounded-xl shadow-md border border-gray-100 p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                <div className="bg-velvet-surface rounded-xl shadow-md border border-velvet-border p-6">
+                  <h2 className="text-xl font-semibold text-velvet-cream mb-4">
                     Create Your Restaurant Profile
                   </h2>
                   <button
                     onClick={() => setIsCreatingNew(true)}
                     className="px-4 py-2 rounded-lg text-white transition-all duration-200 flex items-center gap-2"
-                    style={{ background: '#C9A84C', color: '#0C0B10' }}
+                    style={{ background: '#c9a961', color: '#0a0908' }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
@@ -278,16 +278,16 @@ export default function RestaurantSetupDashboard() {
                   </button>
                 </div>
               ) : (
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-[#F2F4F7]">
+                <div className="bg-velvet-surface p-6 rounded-xl shadow-sm border border-[#15130f]">
                   {isCreatingNew ? (
                     <div>
                       <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-semibold text-[#141517]">
+                        <h2 className="text-xl font-semibold text-[#15130f]">
                           Create Restaurant Profile
                         </h2>
                         <button 
                           onClick={() => setIsCreatingNew(false)}
-                          className="text-[#64748B] hover:text-[#141517]"
+                          className="text-[#8b847a] hover:text-[#15130f]"
                         >
                           Cancel
                         </button>
@@ -321,7 +321,7 @@ export default function RestaurantSetupDashboard() {
             </div>
           )}
           {activeSection === 'floorplan' && (
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-[#F2F4F7]">
+            <div className="bg-velvet-surface p-6 rounded-xl shadow-sm border border-[#15130f]">
               {restaurant ? (
                 <RestaurantFloorPlan 
                   token={token}
@@ -329,13 +329,13 @@ export default function RestaurantSetupDashboard() {
                 />
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-[#64748B]">No restaurant selected.</p>
+                  <p className="text-[#8b847a]">No restaurant selected.</p>
                 </div>
               )}
             </div>
           )}
           {activeSection === 'reservation' && (
-            <div className="bg-white rounded-xl shadow-sm border border-[#F2F4F7] h-[calc(100vh-120px)]">
+            <div className="bg-velvet-surface rounded-xl shadow-sm border border-[#15130f] h-[calc(100vh-120px)]">
               {restaurant ? (
                 <div className="h-full flex flex-col">
                   {/* Single Tab Content - Only Reservation List */}
@@ -345,29 +345,29 @@ export default function RestaurantSetupDashboard() {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-[#64748B]">Please create a restaurant profile first</p>
+                  <p className="text-[#8b847a]">Please create a restaurant profile first</p>
                 </div>
               )}
             </div>
           )}
           {activeSection === 'subscription-management' && (
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-[#F2F4F7] mt-4">
+            <div className="bg-velvet-surface p-6 rounded-xl shadow-sm border border-[#15130f] mt-4">
               <SubscriptionManagement ownerId={restaurantId} />
             </div>
           )}
           {activeSection === 'owner-profile' && (
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-[#F2F4F7]">
+            <div className="bg-velvet-surface p-6 rounded-xl shadow-sm border border-[#15130f]">
               <OwnerProfile />
             </div>
           )}
           {activeSection === 'staff' && (
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-[#F2F4F7]">
+            <div className="bg-velvet-surface p-6 rounded-xl shadow-sm border border-[#15130f]">
               <StaffManagement restaurantId={restaurant?._id} />
             </div>
           )}
 
           {activeSection === 'zones' && (
-            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
               {restaurant ? (
                 <ZoneManager
                   restaurantId={restaurant._id}
@@ -375,7 +375,7 @@ export default function RestaurantSetupDashboard() {
                   floorplans={allFloorplans}
                 />
               ) : (
-                <p className="text-center py-8" style={{ color: '#9B96A8' }}>
+                <p className="text-center py-8" style={{ color: '#8b847a' }}>
                   Create your venue profile first to manage zones.
                 </p>
               )}
@@ -383,7 +383,7 @@ export default function RestaurantSetupDashboard() {
           )}
 
           {activeSection === 'events' && (
-            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
               {restaurant ? (
                 <EventManager
                   restaurantId={restaurant._id}
@@ -392,7 +392,7 @@ export default function RestaurantSetupDashboard() {
                   zones={allZones}
                 />
               ) : (
-                <p className="text-center py-8" style={{ color: '#9B96A8' }}>
+                <p className="text-center py-8" style={{ color: '#8b847a' }}>
                   Create your venue profile first to manage events.
                 </p>
               )}
@@ -400,7 +400,7 @@ export default function RestaurantSetupDashboard() {
           )}
 
           {activeSection === 'realview' && (
-            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
               {restaurant ? (
                 <RealViewManager
                   restaurantId={restaurant._id}
@@ -408,7 +408,7 @@ export default function RestaurantSetupDashboard() {
                   floorplans={allFloorplans}
                 />
               ) : (
-                <p className="text-center py-8" style={{ color: '#9B96A8' }}>
+                <p className="text-center py-8" style={{ color: '#8b847a' }}>
                   Create your venue profile first to manage 360° views.
                 </p>
               )}
@@ -416,7 +416,7 @@ export default function RestaurantSetupDashboard() {
           )}
 
           {activeSection === 'table-labels' && (
-            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+            <div className="p-6 rounded-xl shadow-sm" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
               {restaurant ? (
                 <TableLabelManager
                   restaurantId={restaurant._id}
@@ -424,7 +424,7 @@ export default function RestaurantSetupDashboard() {
                   floorplans={allFloorplans}
                 />
               ) : (
-                <p className="text-center py-8" style={{ color: '#9B96A8' }}>
+                <p className="text-center py-8" style={{ color: '#8b847a' }}>
                   Create your venue profile first to manage table labels.
                 </p>
               )}

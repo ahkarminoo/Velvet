@@ -8,13 +8,13 @@ import {
 } from 'react-icons/ri';
 
 const V = {
-  black: '#0C0B10', surface: '#161520', border: '#1E1D2A',
-  gold: '#C9A84C', cream: '#F5F0E8', muted: '#9B96A8',
+  black: '#0a0908', surface: '#15130f', border: '#2a241b',
+  gold: '#c9a961', cream: '#f5efe3', muted: '#8b847a',
 };
 
 const STATUS_COLOR = {
   confirmed: '#10B981', pending: '#F59E0B',
-  cancelled: '#EF4444', completed: '#9B96A8',
+  cancelled: '#EF4444', completed: '#8b847a',
 };
 
 function StatCard({ icon: Icon, label, value, sub, color, delay = 0 }) {
@@ -137,7 +137,7 @@ export default function DashboardOverview({ restaurantId, token }) {
   if (loading) return (
     <div className="flex items-center justify-center py-20">
       <div className="w-8 h-8 border-2 rounded-full animate-spin"
-        style={{ borderColor: 'rgba(201,168,76,0.2)', borderTop: '2px solid #C9A84C' }} />
+        style={{ borderColor: 'rgba(201, 169, 97, 0.2)', borderTop: '2px solid #c9a961' }} />
     </div>
   );
 
@@ -166,7 +166,7 @@ export default function DashboardOverview({ restaurantId, token }) {
           label="Tickets Issued"
           value={totalTickets}
           sub={tickets.length > 0 ? `${tickets.length} orders` : 'No tickets yet'}
-          color="#7C3AED"
+          color="#9b7340"
           delay={0.1}
         />
         <StatCard
@@ -218,7 +218,7 @@ export default function DashboardOverview({ restaurantId, token }) {
         <div className="p-5 rounded-2xl" style={{ background: V.surface, border: `1px solid ${V.border}` }}>
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-xs font-bold uppercase tracking-widest" style={{ color: V.muted }}>Conversion</h4>
-            <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: '#7C3AED20', color: '#7C3AED' }}>Direct Bookings</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: '#9B734020', color: '#E2C887' }}>Direct Bookings</span>
           </div>
           <div className="flex items-end gap-3">
             <p className="text-3xl font-black" style={{ color: V.cream }}>{bookings.length > 0 ? 'High' : 'Low'}</p>
@@ -226,11 +226,11 @@ export default function DashboardOverview({ restaurantId, token }) {
           </div>
           <div className="mt-4 flex gap-4">
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#C9A84C' }} />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#c9a961' }} />
               <span className="text-[10px]" style={{ color: V.muted }}>Confirmed: {bookings.filter(b => b.status === 'confirmed').length}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#9B96A8' }} />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#8b847a' }} />
               <span className="text-[10px]" style={{ color: V.muted }}>Pending: {bookings.filter(b => b.status === 'pending').length}</span>
             </div>
           </div>

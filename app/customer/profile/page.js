@@ -389,7 +389,7 @@ export default function CustomerProfile() {
   // Profile Image Component
   const ProfileImage = () => (
     <div className="relative group">
-      <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-lg">
+      <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-velvet-gold shadow-lg shadow-velvet-gold/20">
         {userProfile?.profileImage ? (
           <img
             src={userProfile.profileImage}
@@ -397,16 +397,16 @@ export default function CustomerProfile() {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
-            <span className="text-white font-semibold text-xl">
-              {userProfile?.firstName?.charAt(0)}{userProfile?.lastName?.charAt(0)}
+          <div className="w-full h-full bg-gradient-to-br from-velvet-gold to-velvet-gold-light flex items-center justify-center">
+            <span className="text-velvet-black font-bold text-2xl">
+              {userProfile?.firstName?.charAt(0)?.toUpperCase() || userProfile?.email?.charAt(0)?.toUpperCase() || '?'}{userProfile?.lastName?.charAt(0)?.toUpperCase() || ''}
             </span>
           </div>
         )}
       </div>
-      
-      <label className="absolute bottom-0 right-0 w-8 h-8 bg-[#FF4F18] rounded-full shadow-lg cursor-pointer hover:bg-[#FF4F18]/90 transition-colors flex items-center justify-center">
-        <FaCamera className="text-white text-sm" />
+
+      <label className="absolute bottom-0 right-0 w-8 h-8 bg-velvet-gold rounded-full shadow-lg cursor-pointer hover:bg-velvet-gold-light transition-colors flex items-center justify-center">
+        <FaCamera className="text-velvet-black text-sm" />
         <input
           type="file"
           accept="image/*"
@@ -429,8 +429,8 @@ export default function CustomerProfile() {
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="animate-pulse flex flex-col items-center space-y-4">
-            <div className="w-24 h-24 bg-gray-200 rounded-full"></div>
-            <div className="h-4 w-48 bg-gray-200 rounded"></div>
+            <div className="w-24 h-24 bg-velvet-border rounded-full"></div>
+            <div className="h-4 w-48 bg-velvet-border rounded"></div>
           </div>
         </div>
       );
@@ -440,90 +440,92 @@ export default function CustomerProfile() {
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <h2 className="text-2xl font-semibold text-gray-800">Please log in to view your profile</h2>
-            <p className="mt-2 text-gray-600">You need to be logged in to access this page</p>
+            <h2 className="text-2xl font-semibold text-velvet-cream">Please log in to view your profile</h2>
+            <p className="mt-2 text-velvet-muted">You need to be logged in to access this page</p>
           </div>
         </div>
       );
     }
     
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-velvet-black pt-16 sm:pt-20">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-velvet-surface/60 backdrop-blur-md shadow-sm border-b border-velvet-border sticky top-16 sm:top-20 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
-              <div className="flex items-center space-x-4">
+            <div className="flex justify-between items-center py-3 sm:py-4">
+              <h1 className="text-xl sm:text-2xl font-bold text-velvet-cream">My Profile</h1>
+              <div className="flex items-center gap-1 sm:gap-2">
                 <button
                   onClick={() => router.push("/")}
-                  className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-[#FF4F18] transition-colors"
+                  aria-label="Home"
+                  className="flex items-center justify-center gap-2 w-11 h-11 sm:w-auto sm:h-auto sm:px-4 sm:py-2 text-velvet-muted hover:text-velvet-gold hover:bg-velvet-gold/10 rounded-lg transition"
                 >
                   <FaHome />
-                  <span>Home</span>
+                  <span className="hidden sm:inline">Home</span>
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-[#FF4F18] transition-colors"
+                  aria-label="Logout"
+                  className="flex items-center justify-center gap-2 w-11 h-11 sm:w-auto sm:h-auto sm:px-4 sm:py-2 text-velvet-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
                 >
                   <FaSignOutAlt />
-                  <span>Logout</span>
+                  <span className="hidden sm:inline">Logout</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 sm:gap-8">
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-velvet-surface border border-velvet-border rounded-2xl shadow-lg p-5 sm:p-6">
                 {/* Profile Section */}
-                <div className="text-center mb-6">
+                <div className="text-center mb-5 sm:mb-6">
                   <ProfileImage />
-                  <h2 className="mt-4 text-xl font-semibold text-gray-900">
+                  <h2 className="mt-3 sm:mt-4 text-lg sm:text-xl font-semibold text-velvet-cream truncate">
                     {userProfile.firstName} {userProfile.lastName}
                   </h2>
-                  <p className="text-gray-500">{userProfile.email}</p>
+                  <p className="text-sm text-velvet-muted truncate">{userProfile.email}</p>
                 </div>
 
-                {/* Navigation */}
-                <nav className="space-y-2">
+                {/* Navigation - horizontal scroll on mobile, vertical on lg */}
+                <nav className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible -mx-1 px-1 lg:mx-0 lg:px-0">
                   <button
                     onClick={() => setActiveTab("profile")}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                    className={`flex-shrink-0 lg:flex-shrink flex items-center gap-2 lg:gap-3 px-4 py-2.5 lg:py-3 rounded-lg transition text-sm sm:text-base whitespace-nowrap lg:w-full ${
                       activeTab === "profile"
-                        ? "bg-[#FF4F18] text-white"
-                        : "text-gray-600 hover:bg-gray-100"
+                        ? "bg-velvet-gold text-velvet-black font-semibold"
+                        : "text-velvet-muted hover:bg-velvet-gold/10 hover:text-velvet-cream"
                     }`}
                   >
-                    <FaUser />
-                    <span>Profile Information</span>
+                    <FaUser className="text-sm" />
+                    <span>Profile</span>
                   </button>
-                  
+
                   <button
                     onClick={() => setActiveTab("activities")}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                    className={`flex-shrink-0 lg:flex-shrink flex items-center gap-2 lg:gap-3 px-4 py-2.5 lg:py-3 rounded-lg transition text-sm sm:text-base whitespace-nowrap lg:w-full ${
                       activeTab === "activities"
-                        ? "bg-[#FF4F18] text-white"
-                        : "text-gray-600 hover:bg-gray-100"
+                        ? "bg-velvet-gold text-velvet-black font-semibold"
+                        : "text-velvet-muted hover:bg-velvet-gold/10 hover:text-velvet-cream"
                     }`}
                   >
-                    <FaHeart />
-                    <span>My Activities</span>
+                    <FaHeart className="text-sm" />
+                    <span>Activities</span>
                   </button>
 
                   <button
                     onClick={() => setActiveTab("tickets")}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                    className={`flex-shrink-0 lg:flex-shrink flex items-center gap-2 lg:gap-3 px-4 py-2.5 lg:py-3 rounded-lg transition text-sm sm:text-base whitespace-nowrap lg:w-full ${
                       activeTab === "tickets"
-                        ? "bg-[#FF4F18] text-white"
-                        : "text-gray-600 hover:bg-gray-100"
+                        ? "bg-velvet-gold text-velvet-black font-semibold"
+                        : "text-velvet-muted hover:bg-velvet-gold/10 hover:text-velvet-cream"
                     }`}
                   >
-                    <FaTicketAlt />
-                    <span>My Tickets</span>
+                    <FaTicketAlt className="text-sm" />
+                    <span>Tickets</span>
                   </button>
                 </nav>
               </div>
@@ -532,33 +534,35 @@ export default function CustomerProfile() {
             {/* Main Content */}
             <div className="lg:col-span-3">
               {activeTab === "profile" && (
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900">Profile Information</h3>
+                <div className="bg-velvet-surface border border-velvet-border rounded-2xl shadow-lg p-5 sm:p-6">
+                  <div className="flex justify-between items-center mb-5 sm:mb-6 gap-3">
+                    <h3 className="text-base sm:text-lg font-semibold text-velvet-cream">Profile Information</h3>
                     {!isEditing ? (
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center space-x-2 px-4 py-2 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90 transition-colors"
+                        aria-label="Edit profile"
+                        className="flex items-center justify-center gap-2 w-11 h-11 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-velvet-gold text-velvet-black rounded-lg hover:bg-velvet-gold-light transition font-semibold text-sm"
                       >
                         <FaUserEdit />
-                        <span>Edit Profile</span>
+                        <span className="hidden sm:inline">Edit Profile</span>
                       </button>
                     ) : (
                       <button
                         onClick={() => setIsEditing(false)}
-                        className="flex items-center space-x-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                        aria-label="Cancel"
+                        className="flex items-center justify-center gap-2 w-11 h-11 sm:w-auto sm:h-auto sm:px-4 sm:py-2 border border-velvet-border text-velvet-cream rounded-lg hover:bg-velvet-gold/10 transition text-sm"
                       >
                         <FaTimes />
-                        <span>Cancel</span>
+                        <span className="hidden sm:inline">Cancel</span>
                       </button>
                     )}
                   </div>
 
                   {isEditing ? (
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-velvet-cream mb-2">
                             <FaUser className="inline mr-2" />
                             First Name
                           </label>
@@ -567,13 +571,13 @@ export default function CustomerProfile() {
                              name="firstName"
                              value={formData.firstName}
                              onChange={handleFormChange}
-                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
+                             className="w-full px-4 py-3 bg-velvet-black border border-velvet-border rounded-lg focus:ring-2 focus:ring-velvet-gold focus:border-velvet-gold text-velvet-cream text-base outline-none transition placeholder-velvet-muted"
                              placeholder="Enter your first name"
                            />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-velvet-cream mb-2">
                             <FaUser className="inline mr-2" />
                             Last Name
                           </label>
@@ -582,13 +586,13 @@ export default function CustomerProfile() {
                              name="lastName"
                              value={formData.lastName}
                              onChange={handleFormChange}
-                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
+                             className="w-full px-4 py-3 bg-velvet-black border border-velvet-border rounded-lg focus:ring-2 focus:ring-velvet-gold focus:border-velvet-gold text-velvet-cream text-base outline-none transition placeholder-velvet-muted"
                              placeholder="Enter your last name"
                            />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-velvet-cream mb-2">
                             <FaEnvelope className="inline mr-2" />
                             Email Address
                           </label>
@@ -598,13 +602,13 @@ export default function CustomerProfile() {
                             value={formData.email}
                             onChange={handleFormChange}
                             disabled
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                            className="w-full px-4 py-3 border border-velvet-border rounded-lg bg-velvet-black/60 text-velvet-muted cursor-not-allowed text-base"
                           />
-                          <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                          <p className="text-xs text-velvet-muted mt-1">Email cannot be changed</p>
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-velvet-cream mb-2">
                             <FaPhone className="inline mr-2" />
                             Contact Number
                           </label>
@@ -613,14 +617,14 @@ export default function CustomerProfile() {
                              name="contactNumber"
                              value={formData.contactNumber}
                              onChange={handleFormChange}
-                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
+                             className="w-full px-4 py-3 bg-velvet-black border border-velvet-border rounded-lg focus:ring-2 focus:ring-velvet-gold focus:border-velvet-gold text-velvet-cream text-base outline-none transition placeholder-velvet-muted"
                              placeholder="Enter your contact number"
                            />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-velvet-cream mb-2">
                           <FaLock className="inline mr-2" />
                           New Password (Optional)
                         </label>
@@ -629,10 +633,10 @@ export default function CustomerProfile() {
                            name="newPassword"
                            value={formData.newPassword}
                            onChange={handleFormChange}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
+                           className="w-full px-4 py-3 bg-velvet-black border border-velvet-border rounded-lg focus:ring-2 focus:ring-velvet-gold focus:border-velvet-gold text-velvet-cream text-base outline-none transition placeholder-velvet-muted"
                            placeholder="Leave blank to keep current password"
                          />
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-velvet-muted mt-1">
                           Minimum 6 characters. This will update your login password.
                         </p>
                       </div>
@@ -640,7 +644,7 @@ export default function CustomerProfile() {
                       <div className="flex justify-end">
                         <button
                           type="submit"
-                          className="flex items-center space-x-2 px-6 py-3 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90 transition-colors"
+                          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-velvet-gold text-velvet-black font-semibold rounded-lg hover:bg-velvet-gold-light transition shadow-lg shadow-velvet-gold/20 min-h-[48px]"
                         >
                           <FaSave />
                           <span>Save Changes</span>
@@ -648,31 +652,31 @@ export default function CustomerProfile() {
                       </div>
                     </form>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <label className="text-sm font-medium text-gray-500">First Name</label>
-                        <p className="text-lg font-semibold text-gray-900 mt-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                      <div className="bg-velvet-black/50 border border-velvet-border rounded-lg p-3 sm:p-4">
+                        <label className="text-xs sm:text-sm font-medium text-velvet-muted">First Name</label>
+                        <p className="text-base sm:text-lg font-semibold text-velvet-cream mt-1 break-words">
                           {userProfile.firstName || "Not set"}
                         </p>
                       </div>
 
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <label className="text-sm font-medium text-gray-500">Last Name</label>
-                        <p className="text-lg font-semibold text-gray-900 mt-1">
+                      <div className="bg-velvet-black/50 border border-velvet-border rounded-lg p-3 sm:p-4">
+                        <label className="text-xs sm:text-sm font-medium text-velvet-muted">Last Name</label>
+                        <p className="text-base sm:text-lg font-semibold text-velvet-cream mt-1 break-words">
                           {userProfile.lastName || "Not set"}
                         </p>
                       </div>
 
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <label className="text-sm font-medium text-gray-500">Email Address</label>
-                        <p className="text-lg font-semibold text-gray-900 mt-1">
+                      <div className="bg-velvet-black/50 border border-velvet-border rounded-lg p-3 sm:p-4">
+                        <label className="text-xs sm:text-sm font-medium text-velvet-muted">Email Address</label>
+                        <p className="text-base sm:text-lg font-semibold text-velvet-cream mt-1 break-all">
                           {userProfile.email || "Not set"}
                         </p>
                       </div>
 
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <label className="text-sm font-medium text-gray-500">Contact Number</label>
-                        <p className="text-lg font-semibold text-gray-900 mt-1">
+                      <div className="bg-velvet-black/50 border border-velvet-border rounded-lg p-3 sm:p-4">
+                        <label className="text-xs sm:text-sm font-medium text-velvet-muted">Contact Number</label>
+                        <p className="text-base sm:text-lg font-semibold text-velvet-cream mt-1 break-words">
                           {userProfile.contactNumber || "Not set"}
                         </p>
                       </div>
@@ -684,8 +688,8 @@ export default function CustomerProfile() {
               {activeTab === "activities" && (
                 <div className="space-y-6">
                   {/* Saved Restaurants */}
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Saved Restaurants</h3>
+                  <div className="bg-velvet-surface rounded-lg shadow-sm p-6">
+                    <h3 className="text-lg font-semibold text-velvet-cream mb-4">Saved Restaurants</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {savedRestaurants.length > 0 ? (
                         savedRestaurants.map((restaurant) => (
@@ -699,17 +703,17 @@ export default function CustomerProfile() {
                                   className="object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                  <FaUtensils className="text-4xl text-gray-400" />
+                                <div className="w-full h-full bg-velvet-border flex items-center justify-center">
+                                  <FaUtensils className="text-4xl text-velvet-muted" />
                                 </div>
                               )}
                             </div>
                             <div className="p-4">
-                              <h4 className="font-semibold text-gray-900">{restaurant.name}</h4>
-                              <p className="text-gray-600 text-sm">{restaurant.cuisine}</p>
+                              <h4 className="font-semibold text-velvet-cream">{restaurant.name}</h4>
+                              <p className="text-velvet-muted text-sm">{restaurant.cuisine}</p>
                               <button
                                 onClick={() => router.push(`/restaurants/${restaurant._id}/floorplan`)}
-                                className="mt-3 w-full py-2 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90 transition-colors"
+                                className="mt-3 w-full py-2 bg-[#c9a961] text-white rounded-lg hover:bg-[#c9a961]/90 transition-colors"
                               >
                                 View Details
                               </button>
@@ -717,7 +721,7 @@ export default function CustomerProfile() {
                           </div>
                         ))
                       ) : (
-                        <div className="col-span-2 text-center py-8 text-gray-500">
+                        <div className="col-span-2 text-center py-8 text-velvet-muted">
                           No saved restaurants found
                         </div>
                       )}
@@ -725,11 +729,11 @@ export default function CustomerProfile() {
                   </div>
 
                   {/* Reservations */}
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Reservations</h3>
+                  <div className="bg-velvet-surface rounded-lg shadow-sm p-6">
+                    <h3 className="text-lg font-semibold text-velvet-cream mb-4">Your Reservations</h3>
                     {bookingsLoading ? (
                       <div className="flex justify-center py-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4F18]"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c9a961]"></div>
                       </div>
                     ) : bookings.length > 0 ? (
                       <div className="space-y-4">
@@ -737,8 +741,8 @@ export default function CustomerProfile() {
                           <div key={booking._id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
                             <div className="flex justify-between items-start">
                               <div>
-                                <h4 className="font-semibold text-gray-900">{booking.restaurantName}</h4>
-                                <div className="mt-2 space-y-1 text-sm text-gray-600">
+                                <h4 className="font-semibold text-velvet-cream">{booking.restaurantName}</h4>
+                                <div className="mt-2 space-y-1 text-sm text-velvet-muted">
                                   <div className="flex items-center">
                                     <FaCalendarAlt className="mr-2" />
                                     {new Date(booking.date).toLocaleDateString()}
@@ -757,10 +761,10 @@ export default function CustomerProfile() {
                                   </div>
                                 </div>
                                 <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${
-                                  booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                                  booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                  booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                                  'bg-gray-100 text-gray-800'
+                                  booking.status === 'confirmed' ? 'bg-emerald-500/15 text-emerald-300' :
+                                  booking.status === 'pending' ? 'bg-amber-500/15 text-amber-300' :
+                                  booking.status === 'cancelled' ? 'bg-red-500/15 text-red-300' :
+                                  'bg-velvet-surface text-velvet-cream'
                                 }`}>
                                   {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                                 </span>
@@ -768,20 +772,20 @@ export default function CustomerProfile() {
                               <div className="flex flex-col gap-2">
                                 <button
                                   onClick={() => router.push(`/restaurants/${booking.restaurantId}/floorplan`)}
-                                  className="px-4 py-2 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90 transition-colors"
+                                  className="px-4 py-2 bg-[#c9a961] text-white rounded-lg hover:bg-[#c9a961]/90 transition-colors"
                                 >
                                   View Restaurant
                                 </button>
                                 {canCancelBooking(booking) && (
                                   <button
                                     onClick={() => cancelBooking(booking._id)}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
                                   >
                                     Cancel Booking
                                   </button>
                                 )}
                                 {!canCancelBooking(booking) && booking.status !== 'cancelled' && booking.status !== 'completed' && (
-                                  <div className="text-xs text-gray-500 text-center">
+                                  <div className="text-xs text-velvet-muted text-center">
                                     Cannot cancel within 2 hours of booking time
                                   </div>
                                 )}
@@ -791,7 +795,7 @@ export default function CustomerProfile() {
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-velvet-muted">
                         No reservations found
                       </div>
                     )}
@@ -802,19 +806,19 @@ export default function CustomerProfile() {
               {/* My Tickets Tab */}
               {activeTab === "tickets" && (
                 <div className="space-y-4">
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">My Event Tickets</h3>
+                  <div className="bg-velvet-surface rounded-lg shadow-sm p-6">
+                    <h3 className="text-lg font-semibold text-velvet-cream mb-4">My Event Tickets</h3>
                     {ticketsLoading ? (
                       <div className="flex justify-center py-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4F18]" />
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c9a961]" />
                       </div>
                     ) : tickets.length === 0 ? (
-                      <div className="text-center py-12 text-gray-500">
-                        <FaTicketAlt className="text-4xl mx-auto mb-3 text-gray-300" />
+                      <div className="text-center py-12 text-velvet-muted">
+                        <FaTicketAlt className="text-4xl mx-auto mb-3 text-velvet-muted" />
                         <p>No tickets yet</p>
                         <button
                           onClick={() => router.push('/events')}
-                          className="mt-4 px-6 py-2 bg-[#FF4F18] text-white rounded-lg hover:bg-[#FF4F18]/90 transition-colors text-sm"
+                          className="mt-4 px-6 py-2 bg-[#c9a961] text-white rounded-lg hover:bg-[#c9a961]/90 transition-colors text-sm"
                         >
                           Browse Events
                         </button>
@@ -831,19 +835,19 @@ export default function CustomerProfile() {
                           return (
                             <div key={ticket._id}
                               className="border rounded-xl overflow-hidden"
-                              style={{ borderColor: isPast ? '#E5E7EB' : '#FF4F18' }}
+                              style={{ borderColor: isPast ? '#2a241b' : '#c9a961' }}
                             >
                               {/* Ticket header */}
                               <div className="px-5 py-3 flex items-center justify-between"
-                                style={{ background: isPast ? '#F9FAFB' : '#FFF5F2' }}>
+                                style={{ background: isPast ? '#0a0908' : '#15130f' }}>
                                 <div className="flex items-center gap-2">
-                                  <FaTicketAlt style={{ color: isPast ? '#9CA3AF' : '#FF4F18' }} />
-                                  <span className="font-bold text-sm" style={{ color: isPast ? '#6B7280' : '#FF4F18' }}>
+                                  <FaTicketAlt style={{ color: isPast ? '#8b847a' : '#c9a961' }} />
+                                  <span className="font-bold text-sm" style={{ color: isPast ? '#8b847a' : '#c9a961' }}>
                                     {ticket.ticketRef}
                                   </span>
                                 </div>
                                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                                  isPast ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-700'
+                                  isPast ? 'bg-velvet-surface text-velvet-muted' : 'bg-emerald-500/15 text-emerald-400'
                                 }`}>
                                   {isPast ? 'Past' : 'Upcoming'}
                                 </span>
@@ -851,30 +855,30 @@ export default function CustomerProfile() {
 
                               {/* Ticket body */}
                               <div className="px-5 py-4">
-                                <h4 className="font-bold text-gray-900 text-base">{ev?.name || 'Event'}</h4>
+                                <h4 className="font-bold text-velvet-cream text-base">{ev?.name || 'Event'}</h4>
                                 {venue?.restaurantName && (
-                                  <p className="text-sm text-gray-500 mt-0.5">{venue.restaurantName}</p>
+                                  <p className="text-sm text-velvet-muted mt-0.5">{venue.restaurantName}</p>
                                 )}
                                 <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-                                  <div className="flex items-center gap-2 text-gray-600">
-                                    <FaCalendarAlt className="text-[#FF4F18] flex-shrink-0" />
+                                  <div className="flex items-center gap-2 text-velvet-muted">
+                                    <FaCalendarAlt className="text-[#c9a961] flex-shrink-0" />
                                     {eventDate}
                                   </div>
-                                  <div className="flex items-center gap-2 text-gray-600">
-                                    <FaClock className="text-[#FF4F18] flex-shrink-0" />
+                                  <div className="flex items-center gap-2 text-velvet-muted">
+                                    <FaClock className="text-[#c9a961] flex-shrink-0" />
                                     {ev?.startTime || '—'}
                                   </div>
-                                  <div className="flex items-center gap-2 text-gray-600">
-                                    <FaUsers className="text-[#FF4F18] flex-shrink-0" />
+                                  <div className="flex items-center gap-2 text-velvet-muted">
+                                    <FaUsers className="text-[#c9a961] flex-shrink-0" />
                                     {ticket.quantity} guest{ticket.quantity !== 1 ? 's' : ''}
                                   </div>
-                                  <div className="flex items-center gap-2 text-gray-600">
-                                    <FaTicketAlt className="text-[#FF4F18] flex-shrink-0" />
+                                  <div className="flex items-center gap-2 text-velvet-muted">
+                                    <FaTicketAlt className="text-[#c9a961] flex-shrink-0" />
                                     {ticket.attendanceType === 'ga' ? 'General Admission' : 'Table'}
                                   </div>
                                 </div>
                                 {ticket.coverCharge > 0 && (
-                                  <p className="mt-2 text-sm font-semibold" style={{ color: '#FF4F18' }}>
+                                  <p className="mt-2 text-sm font-semibold" style={{ color: '#c9a961' }}>
                                     ฿{ticket.coverCharge * ticket.quantity} cover at door
                                   </p>
                                 )}

@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import RestaurantFloorPlan from '@/components/RestaurantFloorPlan';
-import { FaMapMarkerAlt, FaClock, FaPhone, FaStar, FaHome, FaShare, FaBookmark, FaUtensils, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaClock, FaPhone, FaStar, FaHome, FaShare, FaBookmark, FaUtensils, FaChevronLeft, FaChevronRight, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Image from 'next/image';
 import PublicFloorPlan from '@/components/PublicFloorPlan';
 import PublicFloorplanSelector from '@/components/PublicFloorplanSelector';
@@ -45,6 +45,8 @@ function RestaurantFloorplanContent() {
   const [isSaved, setIsSaved] = useState(false);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
   const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
+  const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+  const [isReviewsExpanded, setIsReviewsExpanded] = useState(false);
   const router = useRouter();
 
   const prefilledDate = searchParams.get('date') || null;
@@ -234,20 +236,20 @@ function RestaurantFloorplanContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0C0B10' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0908' }}>
         <div className="w-12 h-12 rounded-full border-2 animate-spin"
-          style={{ borderColor: 'rgba(201,168,76,0.15)', borderTopColor: '#C9A84C' }} />
+          style={{ borderColor: 'rgba(201, 169, 97, 0.15)', borderTopColor: '#c9a961' }} />
       </div>
     );
   }
 
   if (!restaurant) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-6" style={{ background: '#0C0B10' }}>
-        <p className="text-2xl font-bold" style={{ color: '#F5F0E8' }}>Venue not found</p>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-6" style={{ background: '#0a0908' }}>
+        <p className="text-2xl font-bold" style={{ color: '#f5efe3' }}>Venue not found</p>
         <button onClick={() => router.back()}
           className="px-8 py-3 rounded-xl font-semibold text-sm"
-          style={{ background: '#C9A84C', color: '#0C0B10' }}>
+          style={{ background: '#c9a961', color: '#0a0908' }}>
           Go Back
         </button>
       </div>
@@ -255,34 +257,34 @@ function RestaurantFloorplanContent() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#0C0B10' }}>
+    <div className="min-h-screen" style={{ background: '#0a0908' }}>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b" style={{ background: 'rgba(12,11,16,0.92)', borderColor: '#1E1D2A', backdropFilter: 'blur(12px)' }}>
+      <nav className="sticky top-0 z-50 border-b" style={{ background: 'rgba(10, 9, 8, 0.92)', borderColor: '#2a241b', backdropFilter: 'blur(12px)' }}>
         <div className="max-w-full mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="flex items-center gap-2 transition-opacity hover:opacity-70" style={{ color: '#9B96A8' }}>
+          <button onClick={() => router.push('/')} className="flex items-center gap-2 transition-opacity hover:opacity-70" style={{ color: '#8b847a' }}>
             <FaHome />
             <span className="text-sm font-medium">Home</span>
           </button>
 
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: '#C9A84C' }}>
-              <span className="font-black text-sm" style={{ color: '#0C0B10' }}>V</span>
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: '#c9a961' }}>
+              <span className="font-black text-sm" style={{ color: '#0a0908' }}>V</span>
             </div>
-            <span className="font-bold tracking-wide hidden sm:block" style={{ color: '#F5F0E8', fontFamily: 'serif' }}>Velvet</span>
+            <span className="font-bold tracking-wide hidden sm:block" style={{ color: '#f5efe3', fontFamily: 'serif' }}>Velvet</span>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-sm" style={{ color: '#9B96A8' }}>
-              <FaStar style={{ color: '#C9A84C', fontSize: '12px' }} />
+            <div className="flex items-center gap-1.5 text-sm" style={{ color: '#8b847a' }}>
+              <FaStar style={{ color: '#c9a961', fontSize: '12px' }} />
               <span>{restaurant.rating ? restaurant.rating.toFixed(1) : '—'}</span>
             </div>
-            <button onClick={handleShare} className="p-2 rounded-xl transition-opacity hover:opacity-60" style={{ color: '#9B96A8' }}>
+            <button onClick={handleShare} className="p-2 rounded-xl transition-opacity hover:opacity-60" style={{ color: '#8b847a' }}>
               <FaShare size={14} />
             </button>
             <button onClick={handleSave}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
-              style={{ background: isSaved ? 'rgba(201,168,76,0.15)' : '#C9A84C', color: isSaved ? '#C9A84C' : '#0C0B10', border: isSaved ? '1px solid #C9A84C' : 'none' }}>
+              style={{ background: isSaved ? 'rgba(201, 169, 97, 0.15)' : '#c9a961', color: isSaved ? '#c9a961' : '#0a0908', border: isSaved ? '1px solid #c9a961' : 'none' }}>
               <FaBookmark size={12} />
               <span>{isSaved ? 'Saved' : 'Save'}</span>
             </button>
@@ -295,23 +297,23 @@ function RestaurantFloorplanContent() {
 
         {/* Left sidebar */}
         <div className="w-full lg:w-[340px] flex-shrink-0 border-b lg:border-b-0 lg:border-r overflow-y-auto"
-          style={{ background: '#161520', borderColor: '#1E1D2A' }}>
+          style={{ background: '#15130f', borderColor: '#2a241b' }}>
 
           {/* Venue header */}
-          <div className="p-5 border-b" style={{ borderColor: '#1E1D2A' }}>
+          <div className="p-5 border-b" style={{ borderColor: '#2a241b' }}>
             {restaurant.images?.main && (
               <div className="relative w-full h-36 rounded-xl overflow-hidden mb-4">
                 <Image src={restaurant.images.main} alt={restaurant.restaurantName} fill className="object-cover" />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(12,11,16,0.7), transparent)' }} />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10, 9, 8, 0.7), transparent)' }} />
               </div>
             )}
-            <h1 className="text-xl font-black tracking-tight mb-1" style={{ color: '#F5F0E8', fontFamily: 'serif' }}>{restaurant.restaurantName}</h1>
-            <div className="flex items-center gap-2 text-sm" style={{ color: '#9B96A8' }}>
-              <FaMapMarkerAlt style={{ color: '#C9A84C', fontSize: '12px' }} />
+            <h1 className="text-xl font-black tracking-tight mb-1" style={{ color: '#f5efe3', fontFamily: 'serif' }}>{restaurant.restaurantName}</h1>
+            <div className="flex items-center gap-2 text-sm" style={{ color: '#8b847a' }}>
+              <FaMapMarkerAlt style={{ color: '#c9a961', fontSize: '12px' }} />
               <span className="truncate">{restaurant.location?.address || 'Location not set'}</span>
             </div>
             {restaurant.venueSettings?.dresscode && (
-              <div className="mt-2 px-2 py-1 rounded-lg text-xs inline-block" style={{ background: 'rgba(201,168,76,0.08)', color: '#C9A84C' }}>
+              <div className="mt-2 px-2 py-1 rounded-lg text-xs inline-block" style={{ background: 'rgba(201, 169, 97, 0.08)', color: '#c9a961' }}>
                 Dress code: {restaurant.venueSettings.dresscode}
               </div>
             )}
@@ -320,27 +322,27 @@ function RestaurantFloorplanContent() {
           <div className="p-4 space-y-3">
             {/* About */}
             {restaurant.description && (
-              <div className="p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              <div className="p-4 rounded-xl" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
                 <div className="flex items-center gap-2 mb-2">
-                  <FaUtensils style={{ color: '#C9A84C', fontSize: '12px' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>About</span>
+                  <FaUtensils style={{ color: '#c9a961', fontSize: '12px' }} />
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>About</span>
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: '#9B96A8' }}>{restaurant.description}</p>
+                <p className="text-sm leading-relaxed" style={{ color: '#8b847a' }}>{restaurant.description}</p>
               </div>
             )}
 
             {/* Hours */}
             {restaurant.openingHours && (
-              <div className="p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              <div className="p-4 rounded-xl" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
                 <div className="flex items-center gap-2 mb-3">
-                  <FaClock style={{ color: '#C9A84C', fontSize: '12px' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>Hours</span>
+                  <FaClock style={{ color: '#c9a961', fontSize: '12px' }} />
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>Hours</span>
                 </div>
                 <div className="space-y-1">
                   {Object.entries(restaurant.openingHours).map(([day, hours]) => (
                     <div key={day} className="flex justify-between text-xs">
-                      <span style={{ color: '#9B96A8' }}>{day.charAt(0).toUpperCase() + day.slice(1)}</span>
-                      <span style={{ color: hours.isClosed ? '#EF4444' : '#F5F0E8' }}>
+                      <span style={{ color: '#8b847a' }}>{day.charAt(0).toUpperCase() + day.slice(1)}</span>
+                      <span style={{ color: hours.isClosed ? '#EF4444' : '#f5efe3' }}>
                         {hours.isClosed ? 'Closed' : `${hours.open} – ${hours.close}`}
                       </span>
                     </div>
@@ -351,68 +353,84 @@ function RestaurantFloorplanContent() {
 
             {/* Contact */}
             {restaurant.contactNumber && (
-              <div className="p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              <div className="p-4 rounded-xl" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
                 <div className="flex items-center gap-2 mb-1">
-                  <FaPhone style={{ color: '#C9A84C', fontSize: '12px' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>Contact</span>
+                  <FaPhone style={{ color: '#c9a961', fontSize: '12px' }} />
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>Contact</span>
                 </div>
-                <p className="text-sm" style={{ color: '#F5F0E8' }}>{restaurant.contactNumber}</p>
+                <p className="text-sm" style={{ color: '#f5efe3' }}>{restaurant.contactNumber}</p>
               </div>
             )}
 
-            {/* Menu */}
+            {/* Menu (collapsible, closed by default) */}
             {restaurant.images?.menu?.length > 0 && (
-              <div className="p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <MdRestaurantMenu style={{ color: '#C9A84C', fontSize: '14px' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>Menu</span>
-                </div>
-                <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-2">
-                  <Image src={restaurant.images.menu[currentMenuIndex]} alt="Menu" fill className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 340px" />
-                  <div className="absolute inset-0 flex items-center justify-between p-2">
-                    <button onClick={() => setCurrentMenuIndex(p => p === 0 ? restaurant.images.menu.length - 1 : p - 1)}
-                      className="p-1.5 rounded-full" style={{ background: 'rgba(12,11,16,0.7)' }}>
-                      <FaChevronLeft style={{ color: '#F5F0E8', fontSize: '12px' }} />
-                    </button>
-                    <button onClick={() => setCurrentMenuIndex(p => p === restaurant.images.menu.length - 1 ? 0 : p + 1)}
-                      className="p-1.5 rounded-full" style={{ background: 'rgba(12,11,16,0.7)' }}>
-                      <FaChevronRight style={{ color: '#F5F0E8', fontSize: '12px' }} />
-                    </button>
+              <div className="rounded-xl overflow-hidden" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
+                <button
+                  type="button"
+                  onClick={() => setIsMenuExpanded(v => !v)}
+                  aria-expanded={isMenuExpanded}
+                  className="w-full p-4 flex items-center justify-between hover:bg-velvet-gold/5 transition"
+                >
+                  <span className="flex items-center gap-2">
+                    <MdRestaurantMenu style={{ color: '#c9a961', fontSize: '14px' }} />
+                    <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>Menu</span>
+                    <span className="text-xs" style={{ color: '#8b847a' }}>({restaurant.images.menu.length})</span>
+                  </span>
+                  {isMenuExpanded
+                    ? <FaChevronUp style={{ color: '#8b847a', fontSize: '12px' }} />
+                    : <FaChevronDown style={{ color: '#8b847a', fontSize: '12px' }} />}
+                </button>
+
+                {isMenuExpanded && (
+                  <div className="px-4 pb-4">
+                    <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-2">
+                      <Image src={restaurant.images.menu[currentMenuIndex]} alt="Menu" fill className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 340px" />
+                      <div className="absolute inset-0 flex items-center justify-between p-2">
+                        <button onClick={() => setCurrentMenuIndex(p => p === 0 ? restaurant.images.menu.length - 1 : p - 1)}
+                          className="p-1.5 rounded-full" style={{ background: 'rgba(10, 9, 8, 0.7)' }}>
+                          <FaChevronLeft style={{ color: '#f5efe3', fontSize: '12px' }} />
+                        </button>
+                        <button onClick={() => setCurrentMenuIndex(p => p === restaurant.images.menu.length - 1 ? 0 : p + 1)}
+                          className="p-1.5 rounded-full" style={{ background: 'rgba(10, 9, 8, 0.7)' }}>
+                          <FaChevronRight style={{ color: '#f5efe3', fontSize: '12px' }} />
+                        </button>
+                      </div>
+                      <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-xs"
+                        style={{ background: 'rgba(10, 9, 8, 0.7)', color: '#8b847a' }}>
+                        {currentMenuIndex + 1}/{restaurant.images.menu.length}
+                      </div>
+                    </div>
+                    <div className="flex gap-1.5 overflow-x-auto pb-1">
+                      {restaurant.images.menu.map((url, i) => (
+                        <button key={i} onClick={() => setCurrentMenuIndex(i)}
+                          className="relative w-12 h-16 flex-shrink-0 rounded-lg overflow-hidden"
+                          style={{ outline: currentMenuIndex === i ? '2px solid #c9a961' : 'none', outlineOffset: '1px' }}>
+                          <Image src={url} alt="" fill className="object-cover" sizes="48px" />
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-xs"
-                    style={{ background: 'rgba(12,11,16,0.7)', color: '#9B96A8' }}>
-                    {currentMenuIndex + 1}/{restaurant.images.menu.length}
-                  </div>
-                </div>
-                <div className="flex gap-1.5 overflow-x-auto pb-1">
-                  {restaurant.images.menu.map((url, i) => (
-                    <button key={i} onClick={() => setCurrentMenuIndex(i)}
-                      className="relative w-12 h-16 flex-shrink-0 rounded-lg overflow-hidden"
-                      style={{ outline: currentMenuIndex === i ? '2px solid #C9A84C' : 'none', outlineOffset: '1px' }}>
-                      <Image src={url} alt="" fill className="object-cover" sizes="48px" />
-                    </button>
-                  ))}
-                </div>
+                )}
               </div>
             )}
 
             {/* Gallery */}
             {restaurant.images?.gallery?.length > 0 && (
-              <div className="p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              <div className="p-4 rounded-xl" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
                 <div className="flex items-center gap-2 mb-3">
-                  <RiImageAddLine style={{ color: '#C9A84C', fontSize: '14px' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>Gallery</span>
+                  <RiImageAddLine style={{ color: '#c9a961', fontSize: '14px' }} />
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>Gallery</span>
                 </div>
                 <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
                   <Image src={restaurant.images.gallery[currentGalleryIndex]} alt="Gallery" fill className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 340px" />
                   <div className="absolute inset-0 flex items-center justify-between p-2">
-                    <button onClick={() => handleGalleryNav('prev')} className="p-1.5 rounded-full" style={{ background: 'rgba(12,11,16,0.7)' }}>
-                      <FaChevronLeft style={{ color: '#F5F0E8', fontSize: '12px' }} />
+                    <button onClick={() => handleGalleryNav('prev')} className="p-1.5 rounded-full" style={{ background: 'rgba(10, 9, 8, 0.7)' }}>
+                      <FaChevronLeft style={{ color: '#f5efe3', fontSize: '12px' }} />
                     </button>
-                    <button onClick={() => handleGalleryNav('next')} className="p-1.5 rounded-full" style={{ background: 'rgba(12,11,16,0.7)' }}>
-                      <FaChevronRight style={{ color: '#F5F0E8', fontSize: '12px' }} />
+                    <button onClick={() => handleGalleryNav('next')} className="p-1.5 rounded-full" style={{ background: 'rgba(10, 9, 8, 0.7)' }}>
+                      <FaChevronRight style={{ color: '#f5efe3', fontSize: '12px' }} />
                     </button>
                   </div>
                 </div>
@@ -420,7 +438,7 @@ function RestaurantFloorplanContent() {
                   {restaurant.images.gallery.map((url, i) => (
                     <button key={i} onClick={() => setCurrentGalleryIndex(i)}
                       className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden"
-                      style={{ outline: currentGalleryIndex === i ? '2px solid #C9A84C' : 'none', outlineOffset: '1px' }}>
+                      style={{ outline: currentGalleryIndex === i ? '2px solid #c9a961' : 'none', outlineOffset: '1px' }}>
                       <Image src={url} alt="" fill className="object-cover" sizes="48px" />
                     </button>
                   ))}
@@ -430,12 +448,12 @@ function RestaurantFloorplanContent() {
 
             {/* Map */}
             {restaurantCoordinates && (
-              <div className="p-4 rounded-xl" style={{ background: '#0C0B10', border: '1px solid #1E1D2A' }}>
+              <div className="p-4 rounded-xl" style={{ background: '#0a0908', border: '1px solid #2a241b' }}>
                 <div className="flex items-center gap-2 mb-3">
-                  <FaMapMarkerAlt style={{ color: '#C9A84C', fontSize: '12px' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>Location</span>
+                  <FaMapMarkerAlt style={{ color: '#c9a961', fontSize: '12px' }} />
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>Location</span>
                 </div>
-                <p className="text-xs mb-3" style={{ color: '#9B96A8' }}>{restaurant.location.address}</p>
+                <p className="text-xs mb-3" style={{ color: '#8b847a' }}>{restaurant.location.address}</p>
                 <div className="h-40 rounded-xl overflow-hidden">
                   <GoogleMap mapContainerStyle={{ width: '100%', height: '100%' }} center={restaurantCoordinates} zoom={15}>
                     <Marker position={restaurantCoordinates} />
@@ -447,22 +465,22 @@ function RestaurantFloorplanContent() {
         </div>
 
         {/* Main panel — floorplan + reviews */}
-        <div className="flex-1 overflow-y-auto" style={{ background: '#0C0B10' }}>
+        <div className="flex-1 overflow-y-auto" style={{ background: '#0a0908' }}>
           {/* Event banner — only shown when arriving from an event page */}
           {prefilledDate && prefilledTime && (
             <div className="mx-4 lg:mx-6 mt-4 px-4 py-3 rounded-xl flex items-center gap-3"
-              style={{ background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)' }}>
-              <span style={{ color: '#C9A84C', fontSize: 18 }}>🎟</span>
+              style={{ background: 'rgba(201, 169, 97, 0.1)', border: '1px solid rgba(201, 169, 97, 0.3)' }}>
+              <span style={{ color: '#c9a961', fontSize: 18 }}>🎟</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold" style={{ color: '#C9A84C' }}>Booking for Event Night</p>
-                <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>
+                <p className="text-xs font-semibold" style={{ color: '#c9a961' }}>Booking for Event Night</p>
+                <p className="text-xs mt-0.5" style={{ color: '#8b847a' }}>
                   Date and time pre-selected from the event. Pick your table below.
                 </p>
               </div>
               <button
                 onClick={() => window.history.back()}
                 className="text-xs flex-shrink-0 hover:opacity-70 transition-opacity"
-                style={{ color: '#9B96A8' }}
+                style={{ color: '#8b847a' }}
               >
                 ← Back to event
               </button>
@@ -470,14 +488,14 @@ function RestaurantFloorplanContent() {
           )}
 
           {/* Floorplan */}
-          <div className="m-4 lg:m-6 rounded-2xl overflow-hidden" style={{ border: '1px solid #1E1D2A' }}>
-            <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: '#1E1D2A', background: '#161520' }}>
-              <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#C9A84C' }}>Floor Plan</h2>
-              <span className="text-xs" style={{ color: '#9B96A8' }}>
+          <div className="m-4 lg:m-6 rounded-2xl overflow-hidden" style={{ border: '1px solid #2a241b' }}>
+            <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: '#2a241b', background: '#15130f' }}>
+              <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>Floor Plan</h2>
+              <span className="text-xs" style={{ color: '#8b847a' }}>
                 {prefilledDate ? `${prefilledDate} · ${prefilledTime}` : 'Click a table to book'}
               </span>
             </div>
-            <div style={{ background: '#0C0B10' }}>
+            <div style={{ background: '#0a0908' }}>
               <PublicFloorplanSelector
                 restaurant={restaurant}
                 defaultDate={prefilledDate}
@@ -487,9 +505,31 @@ function RestaurantFloorplanContent() {
             </div>
           </div>
 
-          {/* Reviews */}
-          <div className="mx-4 lg:mx-6 mb-6 p-5 rounded-2xl" style={{ background: '#161520', border: '1px solid #1E1D2A' }}>
-            <ReviewSection restaurantId={restaurantId} />
+          {/* Reviews (collapsible, closed by default) */}
+          <div className="mx-4 lg:mx-6 mb-6 rounded-2xl overflow-hidden" style={{ background: '#15130f', border: '1px solid #2a241b' }}>
+            <button
+              type="button"
+              onClick={() => setIsReviewsExpanded(v => !v)}
+              aria-expanded={isReviewsExpanded}
+              className="w-full px-5 py-4 flex items-center justify-between hover:bg-velvet-gold/5 transition"
+            >
+              <span className="flex items-center gap-2">
+                <FaStar style={{ color: '#c9a961', fontSize: '13px' }} />
+                <span className="text-sm font-bold uppercase tracking-widest" style={{ color: '#c9a961' }}>
+                  Customer Reviews
+                </span>
+              </span>
+              {isReviewsExpanded
+                ? <FaChevronUp style={{ color: '#8b847a', fontSize: '13px' }} />
+                : <FaChevronDown style={{ color: '#8b847a', fontSize: '13px' }} />}
+            </button>
+            {isReviewsExpanded && (
+              <div className="px-5 pb-5 border-t" style={{ borderColor: '#2a241b' }}>
+                <div className="pt-5">
+                  <ReviewSection restaurantId={restaurantId} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -500,9 +540,9 @@ function RestaurantFloorplanContent() {
 export default function RestaurantFloorplanPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0C0B10' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0908' }}>
         <div className="w-10 h-10 rounded-full border-2 animate-spin"
-          style={{ borderColor: 'rgba(201,168,76,0.2)', borderTop: '2px solid #C9A84C' }} />
+          style={{ borderColor: 'rgba(201, 169, 97, 0.2)', borderTop: '2px solid #c9a961' }} />
       </div>
     }>
       <RestaurantFloorplanContent />

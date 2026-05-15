@@ -2,8 +2,8 @@
 
 const VENUE_CONFIG = {
   restaurant: { label: 'Restaurant', color: '#FF4F18', bg: 'rgba(255,79,24,0.15)' },
-  bar:         { label: 'Bar',        color: '#C9A84C', bg: 'rgba(201,168,76,0.15)' },
-  club:        { label: 'Club',       color: '#7C3AED', bg: 'rgba(124,58,237,0.15)' },
+  bar:         { label: 'Bar',        color: '#c9a961', bg: 'rgba(201, 169, 97, 0.15)' },
+  club:        { label: 'Club',       color: '#9b7340', bg: 'rgba(155, 115, 64, 0.15)' },
   hotel_restaurant: { label: 'Hotel', color: '#0EA5E9', bg: 'rgba(14,165,233,0.15)' },
   rooftop_bar: { label: 'Rooftop',   color: '#10B981', bg: 'rgba(16,185,129,0.15)' },
   lounge:      { label: 'Lounge',    color: '#F59E0B', bg: 'rgba(245,158,11,0.15)' },

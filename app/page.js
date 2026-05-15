@@ -214,24 +214,24 @@ export default function HomePage() {
       {/* Loading Screen */}
       {isLoading && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center"
-          style={{ background: '#0C0B10' }}>
+          style={{ background: '#0a0908' }}>
           <div className="relative mb-8">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               className="w-20 h-20 rounded-full"
-              style={{ border: '2px solid rgba(201,168,76,0.15)', borderTop: '2px solid #C9A84C' }}
+              style={{ border: '2px solid rgba(201, 169, 97, 0.15)', borderTop: '2px solid #c9a961' }}
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="font-black text-2xl" style={{ color: '#C9A84C', fontFamily: 'serif' }}>V</span>
+              <span className="font-black text-2xl" style={{ color: '#c9a961', fontFamily: 'serif' }}>V</span>
             </div>
           </div>
-          <p className="font-black text-3xl tracking-tight" style={{ color: '#F5F0E8', fontFamily: 'serif' }}>Velvet</p>
+          <p className="font-black text-3xl tracking-tight" style={{ color: '#f5efe3', fontFamily: 'serif' }}>Velvet</p>
           <motion.p
             animate={{ opacity: [0.4, 1, 0.4] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="mt-2 text-sm tracking-widest uppercase"
-            style={{ color: '#C9A84C' }}
+            style={{ color: '#c9a961' }}
           >
             Curating your experience
           </motion.p>
@@ -242,9 +242,9 @@ export default function HomePage() {
         scrollPosition > 100 ? 'bg-white/80 backdrop-blur-lg shadow-lg' : 'bg-transparent'
       }`} />
 
-      <main className="min-h-screen" style={{ background: '#0C0B10' }}>
+      <main className="min-h-screen" style={{ background: '#0a0908' }}>
         {/* Hero Section */}
-        <section className="relative h-[90vh] overflow-hidden">
+        <section className="relative min-h-[88vh] sm:h-[90vh] overflow-hidden">
           <div className="absolute inset-0">
             <div
               className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent z-10"
@@ -267,7 +267,7 @@ export default function HomePage() {
             </motion.div>
           </div>
 
-          <div className="relative z-20 h-full container mx-auto px-4 sm:px-6 flex flex-col justify-end pb-20 sm:pb-36">
+          <div className="relative z-20 h-full container mx-auto px-4 sm:px-6 flex flex-col justify-end pb-12 sm:pb-24 md:pb-36 pt-24 sm:pt-32">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -279,16 +279,16 @@ export default function HomePage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-sm font-semibold tracking-[0.3em] uppercase"
-                  style={{ color: '#C9A84C' }}
+                  className="text-[11px] sm:text-sm font-semibold tracking-[0.25em] sm:tracking-[0.3em] uppercase"
+                  style={{ color: '#c9a961' }}
                 >
                   Bars · Clubs · Hotel Restaurants
                 </motion.p>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight" style={{ fontFamily: 'serif', lineHeight: 1.05 }}>
+                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight" style={{ fontFamily: 'serif', lineHeight: 1.05 }}>
                   <span className="text-white block">Reserve Your</span>
-                  <span style={{ color: '#C9A84C' }}>Perfect Seat</span>
+                  <span style={{ color: '#c9a961' }}>Perfect Seat</span>
                 </h1>
-                <p className="text-lg sm:text-xl text-white/70 font-light max-w-lg">
+                <p className="text-base sm:text-lg md:text-xl text-white/70 font-light max-w-lg">
                   Explore 3D interactive floorplans, choose your table, and book instantly at the finest venues.
                 </p>
               </div>
@@ -298,7 +298,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
-                className="flex gap-2 flex-wrap"
+                className="flex gap-1.5 sm:gap-2 overflow-x-auto sm:flex-wrap -mx-4 sm:mx-0 px-4 sm:px-0 pb-1 scrollbar-none"
               >
                 {[
                   { value: 'all',              label: 'All Venues' },
@@ -312,14 +312,14 @@ export default function HomePage() {
                   <button
                     key={vt.value}
                     onClick={() => setSelectedVenueType(vt.value)}
-                    className="px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300"
+                    className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap flex-shrink-0"
                     style={{
                       background: selectedVenueType === vt.value
-                        ? '#C9A84C'
+                        ? '#c9a961'
                         : 'rgba(255,255,255,0.1)',
-                      color: selectedVenueType === vt.value ? '#0C0B10' : 'rgba(255,255,255,0.85)',
+                      color: selectedVenueType === vt.value ? '#0a0908' : 'rgba(255,255,255,0.85)',
                       backdropFilter: 'blur(8px)',
-                      border: `1px solid ${selectedVenueType === vt.value ? '#C9A84C' : 'rgba(255,255,255,0.15)'}`
+                      border: `1px solid ${selectedVenueType === vt.value ? '#c9a961' : 'rgba(255,255,255,0.15)'}`
                     }}
                   >
                     {vt.label}
@@ -332,35 +332,35 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
-                className="p-2 rounded-2xl shadow-2xl"
-                style={{ background: 'rgba(22,21,32,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(201,168,76,0.2)' }}
+                className="p-1.5 sm:p-2 rounded-2xl shadow-2xl"
+                style={{ background: 'rgba(21, 19, 15, 0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(201, 169, 97, 0.2)' }}
               >
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
                   <div className="flex-1 relative w-full">
                     <FontAwesomeIcon
                       icon={faSearch}
                       className="absolute left-4 top-1/2 transform -translate-y-1/2"
-                      style={{ color: '#C9A84C' }}
+                      style={{ color: '#c9a961' }}
                     />
                     <input
                       type="text"
                       placeholder="Search venues..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 rounded-xl text-sm outline-none"
+                      className="w-full pl-11 pr-4 py-3 sm:py-4 rounded-xl text-base outline-none"
                       style={{
-                        background: 'rgba(12,11,16,0.6)',
-                        color: '#F5F0E8',
-                        border: '1px solid rgba(201,168,76,0.15)'
+                        background: 'rgba(10, 9, 8, 0.6)',
+                        color: '#f5efe3',
+                        border: '1px solid rgba(201, 169, 97, 0.15)'
                       }}
                     />
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full sm:w-auto py-4 px-8 font-semibold rounded-xl
+                    className="w-full sm:w-auto py-3 sm:py-4 px-6 sm:px-8 font-semibold rounded-xl text-sm sm:text-base
                              shadow-lg transition-all duration-300 whitespace-nowrap hover:shadow-xl"
-                    style={{ background: '#C9A84C', color: '#0C0B10', boxShadow: '0 4px 20px rgba(201,168,76,0.25)' }}
+                    style={{ background: '#c9a961', color: '#0a0908', boxShadow: '0 4px 20px rgba(201, 169, 97, 0.25)' }}
                   >
                     Find Table
                   </motion.button>
@@ -372,13 +372,13 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="flex flex-wrap gap-4 mt-8"
+                className="hidden sm:flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8"
               >
                 {['Interactive 3D View', 'Real-time Availability', 'Instant Booking'].map((feature) => (
                   <div
                     key={feature}
-                    className="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10
-                             text-white/80 text-sm font-medium"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10
+                             text-white/80 text-xs sm:text-sm font-medium"
                   >
                     {feature}
                   </div>
@@ -388,27 +388,27 @@ export default function HomePage() {
           </div>
 
           <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-[100px]"
-            style={{ background: 'rgba(201,168,76,0.12)' }} />
+            style={{ background: 'rgba(201, 169, 97, 0.12)' }} />
           <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-[100px]"
-            style={{ background: 'rgba(201,168,76,0.06)' }} />
+            style={{ background: 'rgba(201, 169, 97, 0.06)' }} />
         </section>
 
         {/* Cuisines Section */}
-        <section className="py-20 px-6 relative" style={{ background: '#0C0B10' }}>
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative" style={{ background: '#0a0908' }}>
           <div className="container mx-auto relative">
-            <div className="flex justify-between items-end mb-12">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 sm:mb-12">
               <div className="space-y-2">
                 <motion.h2
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="text-4xl font-bold"
-                  style={{ color: '#F5F0E8' }}
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
+                  style={{ color: '#f5efe3' }}
                 >
                   Explore Cuisines
                 </motion.h2>
-                <div className="h-1 w-20 rounded-full" style={{ background: '#C9A84C' }} />
-                <p className="mt-4" style={{ color: '#9B96A8' }}>Discover restaurants by cuisine type</p>
+                <div className="h-1 w-16 sm:w-20 rounded-full" style={{ background: '#c9a961' }} />
+                <p className="mt-2 sm:mt-4 text-sm sm:text-base" style={{ color: '#8b847a' }}>Discover restaurants by cuisine type</p>
               </div>
               {selectedCategory && (
                 <motion.button
@@ -416,7 +416,7 @@ export default function HomePage() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedCategory("")}
                   className="transition-colors flex items-center gap-2"
-                  style={{ color: '#C9A84C' }}
+                  style={{ color: '#c9a961' }}
                 >
                   Clear Filter
                   <span className="text-sm">×</span>
@@ -424,7 +424,7 @@ export default function HomePage() {
               )}
             </div>
 
-            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3">
               {cuisineTypes.map((cuisine, index) => (
                 <motion.button
                   key={cuisine}
@@ -432,28 +432,28 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="relative group p-4 rounded-xl transition-all duration-300"
+                  className="relative group p-3 sm:p-4 rounded-xl transition-all duration-300"
                   style={{
-                    background: selectedCategory === cuisine ? '#C9A84C' : '#161520',
-                    border: `1px solid ${selectedCategory === cuisine ? '#C9A84C' : '#1E1D2A'}`
+                    background: selectedCategory === cuisine ? '#c9a961' : '#15130f',
+                    border: `1px solid ${selectedCategory === cuisine ? '#c9a961' : '#2a241b'}`
                   }}
                 >
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="p-3 rounded-lg transition-all duration-300"
-                      style={{ background: selectedCategory === cuisine ? 'rgba(12,11,16,0.2)' : '#1E1D2A' }}>
+                  <div className="flex flex-col items-center gap-2 sm:gap-3">
+                    <div className="p-2 sm:p-3 rounded-lg transition-all duration-300"
+                      style={{ background: selectedCategory === cuisine ? 'rgba(10, 9, 8, 0.2)' : '#2a241b' }}>
                       <FontAwesomeIcon
                         icon={getCuisineIcon(cuisine)}
-                        className="text-lg transition-all duration-300"
-                        style={{ color: selectedCategory === cuisine ? '#0C0B10' : '#C9A84C' }}
+                        className="text-base sm:text-lg transition-all duration-300"
+                        style={{ color: selectedCategory === cuisine ? '#0a0908' : '#c9a961' }}
                       />
                     </div>
                     <div className="text-center">
-                      <span className="font-medium text-sm transition-all duration-300"
-                        style={{ color: selectedCategory === cuisine ? '#0C0B10' : '#F5F0E8' }}>
+                      <span className="font-medium text-xs sm:text-sm transition-all duration-300 line-clamp-1"
+                        style={{ color: selectedCategory === cuisine ? '#0a0908' : '#f5efe3' }}>
                         {cuisine}
                       </span>
-                      <p className="text-xs mt-0.5 transition-all duration-300"
-                        style={{ color: selectedCategory === cuisine ? 'rgba(12,11,16,0.65)' : '#9B96A8' }}>
+                      <p className="text-[10px] sm:text-xs mt-0.5 transition-all duration-300"
+                        style={{ color: selectedCategory === cuisine ? 'rgba(10, 9, 8, 0.65)' : '#8b847a' }}>
                         {restaurants.filter(r => r.cuisineType === cuisine).length} Places
                       </p>
                     </div>
@@ -463,7 +463,7 @@ export default function HomePage() {
                     <motion.div
                       layoutId="activeIndicator"
                       className="absolute inset-0 rounded-xl -z-10"
-                      style={{ background: 'linear-gradient(135deg, rgba(201,168,76,0.15), transparent)' }}
+                      style={{ background: 'linear-gradient(135deg, rgba(201, 169, 97, 0.15), transparent)' }}
                     />
                   )}
                 </motion.button>
@@ -472,29 +472,29 @@ export default function HomePage() {
           </div>
 
           <div className="absolute -top-32 -right-32 w-64 h-64 rounded-full blur-3xl"
-            style={{ background: 'rgba(201,168,76,0.04)' }} />
+            style={{ background: 'rgba(201, 169, 97, 0.04)' }} />
           <div className="absolute -bottom-32 -left-32 w-64 h-64 rounded-full blur-3xl"
-            style={{ background: 'rgba(201,168,76,0.04)' }} />
+            style={{ background: 'rgba(201, 169, 97, 0.04)' }} />
         </section>
 
         {/* Restaurants Section */}
-        <section className="py-20 px-6 relative overflow-hidden" style={{ background: '#161520' }}>
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative overflow-hidden" style={{ background: '#15130f' }}>
           <div className="container mx-auto relative">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center justify-between mb-12"
+              className="flex items-center justify-between mb-8 sm:mb-12"
             >
               <div className="relative">
-                <h2 className="text-4xl font-bold" style={{ color: '#F5F0E8' }}>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold" style={{ color: '#f5efe3' }}>
                   Featured Restaurants
                   {selectedCategory && (
                     <motion.span
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="ml-3"
-                      style={{ color: '#C9A84C' }}
+                      className="ml-2 sm:ml-3 block sm:inline text-base sm:text-2xl md:text-3xl"
+                      style={{ color: '#c9a961' }}
                     >
                       • {selectedCategory}
                     </motion.span>
@@ -504,27 +504,27 @@ export default function HomePage() {
                   initial={{ width: 0 }}
                   whileInView={{ width: "33%" }}
                   viewport={{ once: true }}
-                  className="absolute -bottom-4 left-0 h-1 rounded-full"
-                  style={{ background: '#C9A84C' }}
+                  className="absolute -bottom-3 sm:-bottom-4 left-0 h-1 rounded-full"
+                  style={{ background: '#c9a961' }}
                 />
-                <p className="mt-6 text-lg" style={{ color: '#9B96A8' }}>
+                <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg" style={{ color: '#8b847a' }}>
                   {filteredRestaurants.length} restaurants available
                 </p>
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
               {filteredRestaurants.length === 0 && !isLoading && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="col-span-full py-16 flex flex-col items-center justify-center text-center"
                 >
-                  <div className="w-24 h-24 mb-6" style={{ color: '#9B96A8' }}>
+                  <div className="w-24 h-24 mb-6" style={{ color: '#8b847a' }}>
                     <FontAwesomeIcon icon={faUtensils} className="text-5xl" />
                   </div>
-                  <h3 className="text-xl font-medium mb-2" style={{ color: '#F5F0E8' }}>No restaurants found</h3>
-                  <p className="max-w-md mb-6" style={{ color: '#9B96A8' }}>
+                  <h3 className="text-xl font-medium mb-2" style={{ color: '#f5efe3' }}>No restaurants found</h3>
+                  <p className="max-w-md mb-6" style={{ color: '#8b847a' }}>
                     We couldn't find any restaurants matching your search criteria. Try adjusting your filters or search term.
                   </p>
                   <button
@@ -534,7 +534,7 @@ export default function HomePage() {
                       setSelectedLocation("");
                     }}
                     className="px-6 py-2 rounded-lg font-semibold transition-colors"
-                    style={{ background: '#C9A84C', color: '#0C0B10' }}
+                    style={{ background: '#c9a961', color: '#0a0908' }}
                   >
                     Clear All Filters
                   </button>
@@ -549,9 +549,9 @@ export default function HomePage() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ y: -10 }}
                   className="group relative rounded-2xl overflow-hidden transition-all duration-500"
-                  style={{ background: '#0C0B10', border: '1px solid #1E1D2A', boxShadow: '0 4px 24px rgba(0,0,0,0.3)' }}
+                  style={{ background: '#0a0908', border: '1px solid #2a241b', boxShadow: '0 4px 24px rgba(0,0,0,0.3)' }}
                 >
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-32 sm:h-36 md:h-40 lg:h-44 overflow-hidden">
                     <motion.div
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.6 }}
@@ -569,11 +569,11 @@ export default function HomePage() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center"
-                          style={{ background: '#1E1D2A' }}>
+                          style={{ background: '#2a241b' }}>
                           <FontAwesomeIcon
                             icon={faUtensils}
                             className="text-4xl"
-                            style={{ color: '#9B96A8' }}
+                            style={{ color: '#8b847a' }}
                           />
                         </div>
                       )}
@@ -587,45 +587,41 @@ export default function HomePage() {
                         handleFavorite(restaurant);
                       }}
                       aria-label={isFavorite(restaurant._id) ? "Remove from favorites" : "Add to favorites"}
-                      className="absolute top-4 right-4 z-20 p-3 rounded-full shadow-lg"
-                      style={{ background: 'rgba(12,11,16,0.75)', backdropFilter: 'blur(8px)' }}
+                      className="absolute top-2 right-2 sm:top-3 sm:right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full shadow-lg"
+                      style={{ background: 'rgba(10, 9, 8, 0.75)', backdropFilter: 'blur(8px)' }}
                     >
                       <FontAwesomeIcon
                         icon={isFavorite(restaurant._id) ? faSolidHeart : faRegularHeart}
-                        className="text-xl"
-                        style={{ color: isFavorite(restaurant._id) ? '#C9A84C' : '#9B96A8' }}
+                        className="text-sm sm:text-base"
+                        style={{ color: isFavorite(restaurant._id) ? '#c9a961' : '#8b847a' }}
                       />
                     </motion.button>
                   </div>
 
-                  {/* Restaurant Details */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-4" style={{ color: '#F5F0E8' }}>{restaurant.name}</h3>
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center" style={{ color: '#9B96A8' }}>
-                        <FontAwesomeIcon icon={faMapMarkerAlt} className="w-4 mr-3" style={{ color: '#C9A84C' }} />
-                        <span className="text-sm">{restaurant.location}</span>
+                  {/* Restaurant Details — compact */}
+                  <div className="p-3 sm:p-4">
+                    <h3 className="text-sm sm:text-base font-semibold mb-2 line-clamp-1" style={{ color: '#f5efe3' }}>{restaurant.name}</h3>
+                    <div className="space-y-1.5 mb-3">
+                      <div className="flex items-center gap-2" style={{ color: '#8b847a' }}>
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[10px] sm:text-xs flex-shrink-0" style={{ color: '#c9a961' }} />
+                        <span className="text-xs truncate">{restaurant.location}</span>
                       </div>
-                      <div className="flex items-center" style={{ color: '#9B96A8' }}>
-                        <FontAwesomeIcon icon={faClock} className="w-4 mr-3" style={{ color: '#C9A84C' }} />
-                        <span className="text-sm">{restaurant["opening-hours"]}</span>
-                      </div>
-                      <div className="flex items-center" style={{ color: '#9B96A8' }}>
-                        <FontAwesomeIcon icon={faChair} className="w-4 mr-3" style={{ color: '#C9A84C' }} />
-                        <span className="text-sm">{restaurant.availableSeats || "N/A"} seats available</span>
+                      <div className="hidden sm:flex items-center gap-2" style={{ color: '#8b847a' }}>
+                        <FontAwesomeIcon icon={faClock} className="text-[10px] sm:text-xs flex-shrink-0" style={{ color: '#c9a961' }} />
+                        <span className="text-xs truncate">{restaurant["opening-hours"]}</span>
                       </div>
                     </div>
 
                     <button
                       onClick={() => router.push(`/restaurants/${restaurant._id}/floorplan`)}
-                      className="w-full py-3 rounded-xl font-semibold transition-all duration-300"
+                      className="w-full py-2 sm:py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300"
                       style={{
-                        background: '#C9A84C',
-                        color: '#0C0B10',
-                        boxShadow: '0 4px 16px rgba(201,168,76,0.2)'
+                        background: '#c9a961',
+                        color: '#0a0908',
+                        boxShadow: '0 2px 10px rgba(201, 169, 97, 0.18)'
                       }}
                     >
-                      View Floor Plan & Reserve
+                      Book
                     </button>
                   </div>
                 </motion.div>
@@ -634,9 +630,9 @@ export default function HomePage() {
           </div>
 
           <div className="absolute -bottom-32 -left-32 w-64 h-64 rounded-full blur-3xl"
-            style={{ background: 'rgba(201,168,76,0.05)' }} />
+            style={{ background: 'rgba(201, 169, 97, 0.05)' }} />
           <div className="absolute -top-32 -right-32 w-64 h-64 rounded-full blur-3xl"
-            style={{ background: 'rgba(201,168,76,0.05)' }} />
+            style={{ background: 'rgba(201, 169, 97, 0.05)' }} />
         </section>
       </main>
 
@@ -648,8 +644,9 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-8 right-8 p-4 rounded-full shadow-lg z-40 transition-opacity hover:opacity-80"
-          style={{ background: '#C9A84C', color: '#0C0B10', boxShadow: '0 4px 20px rgba(201,168,76,0.35)' }}
+          aria-label="Back to top"
+          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full shadow-lg z-40 transition-opacity hover:opacity-80"
+          style={{ background: '#c9a961', color: '#0a0908', boxShadow: '0 4px 20px rgba(201, 169, 97, 0.35)', marginBottom: 'env(safe-area-inset-bottom)' }}
         >
           <FontAwesomeIcon icon={faArrowUp} />
         </motion.button>

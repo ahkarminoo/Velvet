@@ -10,16 +10,16 @@ import { toast } from 'react-hot-toast';
 import EventCreator from './EventCreator';
 
 const VELVET = {
-  black: '#0C0B10', surface: '#161520', border: '#1E1D2A',
-  gold: '#C9A84C', goldLight: '#E8C97A', cream: '#F5F0E8', muted: '#9B96A8',
-  purple: '#7C3AED'
+  black: '#0a0908', surface: '#15130f', border: '#2a241b',
+  gold: '#c9a961', goldLight: '#e2c887', cream: '#f5efe3', muted: '#8b847a',
+  purple: '#9b7340'
 };
 
 const STATUS_STYLES = {
-  draft:     { label: 'Draft',     bg: 'rgba(155,150,168,0.15)', color: '#9B96A8' },
+  draft:     { label: 'Draft',     bg: 'rgba(139, 132, 122, 0.15)', color: '#8b847a' },
   published: { label: 'Published', bg: 'rgba(16,185,129,0.15)',  color: '#10B981' },
   cancelled: { label: 'Cancelled', bg: 'rgba(239,68,68,0.15)',   color: '#EF4444' },
-  completed: { label: 'Completed', bg: 'rgba(201,168,76,0.15)',  color: '#C9A84C' },
+  completed: { label: 'Completed', bg: 'rgba(201, 169, 97, 0.15)',  color: '#c9a961' },
 };
 
 const EVENT_TYPE_EMOJI = {
@@ -140,7 +140,7 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
           <button
             onClick={() => setShowCreator(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:opacity-90"
-            style={{ background: VELVET.gold, color: '#0C0B10' }}
+            style={{ background: VELVET.gold, color: '#0a0908' }}
           >
             <RiAddLine /> Create Event
           </button>
@@ -170,7 +170,7 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
             onClick={() => setFilter(f)}
             className="px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all"
             style={{
-              background: filter === f ? 'rgba(201,168,76,0.15)' : VELVET.surface,
+              background: filter === f ? 'rgba(201, 169, 97, 0.15)' : VELVET.surface,
               color: filter === f ? VELVET.gold : VELVET.muted,
               border: `1px solid ${filter === f ? VELVET.gold : VELVET.border}`
             }}
@@ -194,7 +194,7 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
           <button
             onClick={() => setShowCreator(true)}
             className="mt-4 px-6 py-2.5 rounded-xl font-semibold text-sm"
-            style={{ background: VELVET.gold, color: '#0C0B10' }}
+            style={{ background: VELVET.gold, color: '#0a0908' }}
           >
             Create Event
           </button>
@@ -217,7 +217,7 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
                   <div className="flex items-start gap-4">
                     {/* Emoji + type */}
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl"
-                      style={{ background: 'rgba(201,168,76,0.1)' }}>
+                      style={{ background: 'rgba(201, 169, 97, 0.1)' }}>
                       {EVENT_TYPE_EMOJI[ev.type] || '📅'}
                     </div>
 
@@ -277,7 +277,7 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
                         <button
                           onClick={() => handlePublish(ev._id)}
                           className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:opacity-90"
-                          style={{ background: VELVET.gold, color: '#0C0B10' }}
+                          style={{ background: VELVET.gold, color: '#0a0908' }}
                         >
                           <RiFlashlightLine /> Publish
                         </button>
@@ -285,7 +285,7 @@ export default function EventManager({ restaurantId, token, floorplans = [], zon
                       <button
                         onClick={() => setEditingEvent(ev)}
                         className="p-2 rounded-xl transition-opacity hover:opacity-60"
-                        style={{ background: 'rgba(201,168,76,0.1)', color: VELVET.gold }}
+                        style={{ background: 'rgba(201, 169, 97, 0.1)', color: VELVET.gold }}
                         title="Edit event"
                       >
                         <RiEditLine size={16} />

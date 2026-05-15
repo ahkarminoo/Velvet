@@ -171,16 +171,16 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
     ].join(';');
 
     const setStyle = (sel, h360) => {
-      el.style.background = sel ? 'rgba(201,168,76,0.92)' : 'rgba(12,11,16,0.8)';
-      el.style.color      = sel ? '#0C0B10' : (h360 ? '#22c55e' : '#9B96A8');
-      el.style.border     = `1px solid ${sel ? 'rgba(201,168,76,1)' : h360 ? 'rgba(34,197,94,0.4)' : 'rgba(255,255,255,0.1)'}`;
+      el.style.background = sel ? 'rgba(201, 169, 97, 0.92)' : 'rgba(10, 9, 8, 0.8)';
+      el.style.color      = sel ? '#0a0908' : (h360 ? '#22c55e' : '#8b847a');
+      el.style.border     = `1px solid ${sel ? 'rgba(201, 169, 97, 1)' : h360 ? 'rgba(34,197,94,0.4)' : 'rgba(255,255,255,0.1)'}`;
     };
     setStyle(isSelected, has360);
 
     if (has360) {
       const dot = document.createElement('span');
       dot.textContent = '●';
-      dot.style.cssText = `font-size:7px;color:${isSelected ? '#0C0B10' : '#22c55e'}`;
+      dot.style.cssText = `font-size:7px;color:${isSelected ? '#0a0908' : '#22c55e'}`;
       dot.dataset.dot = '1';
       el.appendChild(dot);
     }
@@ -385,7 +385,7 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
         el._setStyle?.(sel, h360);
         // update dot color
         const dot = el.querySelector('[data-dot]');
-        if (dot) dot.style.color = sel ? '#0C0B10' : '#22c55e';
+        if (dot) dot.style.color = sel ? '#0a0908' : '#22c55e';
       });
     };
 
@@ -645,7 +645,7 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
           if (objectId === selectedTable.objectId) {
             el._setStyle?.(true, !!previewUrl);
             const dot = el.querySelector('[data-dot]');
-            if (dot) dot.style.color = '#0C0B10';
+            if (dot) dot.style.color = '#0a0908';
           }
         });
       }
@@ -667,30 +667,30 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
   };
 
   return (
-    <div style={{ color: '#F5F0E8', minHeight: '500px' }}>
+    <div style={{ color: '#f5efe3', minHeight: '500px' }}>
       {/* Phone capture modal */}
       {phoneModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-6"
-          style={{ background: 'rgba(12,11,16,0.85)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(10, 9, 8, 0.85)', backdropFilter: 'blur(8px)' }}
         >
           <div
             className="rounded-2xl p-7 w-full max-w-md"
-            style={{ background: '#161520', border: '1px solid #2E2D3A' }}
+            style={{ background: '#15130f', border: '1px solid #2E2D3A' }}
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-base font-black" style={{ color: '#F5F0E8' }}>
+                <h3 className="text-base font-black" style={{ color: '#f5efe3' }}>
                   Capture with Phone
                 </h3>
-                <p className="text-xs mt-0.5" style={{ color: '#9B96A8' }}>
+                <p className="text-xs mt-0.5" style={{ color: '#8b847a' }}>
                   {selectedTable?.userData?.customName || selectedTable?.objectId}
                 </p>
               </div>
               <button
                 onClick={closePhoneModal}
                 className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: 'rgba(255,255,255,0.05)', color: '#9B96A8' }}
+                style={{ background: 'rgba(255,255,255,0.05)', color: '#8b847a' }}
               >
                 ✕
               </button>
@@ -709,18 +709,18 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                     <div style={{ width: 240, height: 240 }} />
                   )}
                 </div>
-                <ol className="text-sm space-y-1.5 mb-4" style={{ color: '#9B96A8' }}>
+                <ol className="text-sm space-y-1.5 mb-4" style={{ color: '#8b847a' }}>
                   <li>1. Scan with your phone camera</li>
                   <li>2. Aim at the floating rings — auto-snaps when aligned</li>
-                  <li>3. Tap <span style={{ color: '#C9A84C', fontWeight: 700 }}>Stitch</span> when you have ≥2 shots</li>
+                  <li>3. Tap <span style={{ color: '#c9a961', fontWeight: 700 }}>Stitch</span> when you have ≥2 shots</li>
                 </ol>
                 <div
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs"
-                  style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)', color: '#C9A84C' }}
+                  style={{ background: 'rgba(201, 169, 97, 0.08)', border: '1px solid rgba(201, 169, 97, 0.2)', color: '#c9a961' }}
                 >
                   <div
                     className="w-2 h-2 rounded-full animate-pulse"
-                    style={{ background: '#C9A84C' }}
+                    style={{ background: '#c9a961' }}
                   />
                   <span>{STAGE_LABELS[phoneStage] || 'Waiting…'}</span>
                 </div>
@@ -734,9 +734,9 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
               <div className="py-12 flex flex-col items-center gap-3">
                 <div
                   className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin"
-                  style={{ borderColor: '#C9A84C', borderTopColor: 'transparent' }}
+                  style={{ borderColor: '#c9a961', borderTopColor: 'transparent' }}
                 />
-                <p className="text-sm font-medium" style={{ color: '#F5F0E8' }}>
+                <p className="text-sm font-medium" style={{ color: '#f5efe3' }}>
                   Saving panorama to permanent storage…
                 </p>
               </div>
@@ -751,7 +751,7 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                 <button
                   onClick={closePhoneModal}
                   className="block mt-3 px-3 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: 'rgba(255,255,255,0.05)', color: '#F5F0E8', border: '1px solid #2E2D3A' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', color: '#f5efe3', border: '1px solid #2E2D3A' }}
                 >
                   Close
                 </button>
@@ -771,14 +771,14 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
 
       {/* Floorplan selector */}
       <div className="mb-4">
-        <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>
+        <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#8b847a' }}>
           Select Floorplan
         </label>
         <select
           value={selectedFloorplanId}
           onChange={e => setSelectedFloorplanId(e.target.value)}
           className="px-4 py-2.5 rounded-xl text-sm font-medium outline-none"
-          style={{ background: '#1E1D2A', border: '1px solid #2E2D3A', color: '#F5F0E8', minWidth: '220px' }}
+          style={{ background: '#2a241b', border: '1px solid #2E2D3A', color: '#f5efe3', minWidth: '220px' }}
         >
           <option value="">— choose a floorplan —</option>
           {floorplans.map(fp => (
@@ -788,7 +788,7 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
       </div>
 
       {!selectedFloorplanId && (
-        <div className="text-center py-16" style={{ color: '#9B96A8' }}>
+        <div className="text-center py-16" style={{ color: '#8b847a' }}>
           Select a floorplan above to manage 360° photos for its tables.
         </div>
       )}
@@ -801,11 +801,11 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
             style={{ background: '#f0efec', minHeight: '520px', border: '1px solid #2E2D3A' }}>
             {loading && (
               <div className="absolute inset-0 flex items-center justify-center z-10"
-                style={{ background: 'rgba(12,11,16,0.6)', backdropFilter: 'blur(4px)' }}>
+                style={{ background: 'rgba(10, 9, 8, 0.6)', backdropFilter: 'blur(4px)' }}>
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"
-                    style={{ borderColor: '#C9A84C', borderTopColor: 'transparent' }} />
-                  <p className="text-sm font-medium" style={{ color: '#F5F0E8' }}>Loading floorplan…</p>
+                    style={{ borderColor: '#c9a961', borderTopColor: 'transparent' }} />
+                  <p className="text-sm font-medium" style={{ color: '#f5efe3' }}>Loading floorplan…</p>
                 </div>
               </div>
             )}
@@ -813,7 +813,7 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
 
             {!loading && !selectedTable && (
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-xs font-semibold pointer-events-none"
-                style={{ background: 'rgba(12,11,16,0.75)', color: '#9B96A8', backdropFilter: 'blur(6px)', whiteSpace: 'nowrap' }}>
+                style={{ background: 'rgba(10, 9, 8, 0.75)', color: '#8b847a', backdropFilter: 'blur(6px)', whiteSpace: 'nowrap' }}>
                 Click a table to manage its 360° photo
               </div>
             )}
@@ -821,11 +821,11 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
             {/* Legend */}
             {!loading && (
               <div className="absolute top-3 left-3 flex items-center gap-3 px-3 py-1.5 rounded-xl pointer-events-none"
-                style={{ background: 'rgba(12,11,16,0.7)', backdropFilter: 'blur(6px)' }}>
+                style={{ background: 'rgba(10, 9, 8, 0.7)', backdropFilter: 'blur(6px)' }}>
                 <span className="flex items-center gap-1.5 text-xs" style={{ color: '#22c55e' }}>
                   <span style={{ fontSize: '7px' }}>●</span> Has 360°
                 </span>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: '#9B96A8' }}>
+                <span className="flex items-center gap-1.5 text-xs" style={{ color: '#8b847a' }}>
                   <span style={{ fontSize: '7px' }}>●</span> No photo
                 </span>
               </div>
@@ -836,26 +836,26 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
           <div className="flex-shrink-0" style={{ width: '280px' }}>
             {!selectedTable ? (
               <div className="flex flex-col items-center justify-center rounded-2xl h-full text-center px-4"
-                style={{ border: '2px dashed #2E2D3A', color: '#9B96A8', minHeight: '200px' }}>
+                style={{ border: '2px dashed #2E2D3A', color: '#8b847a', minHeight: '200px' }}>
                 <span style={{ fontSize: '32px', marginBottom: '10px' }}>📷</span>
                 <p className="text-sm font-medium">Click any table<br />in the floorplan</p>
                 <p className="text-xs mt-2" style={{ color: '#555' }}>Gold ring = selected</p>
               </div>
             ) : (
               <div className="rounded-2xl p-5 space-y-4 overflow-y-auto"
-                style={{ background: '#161520', border: '1px solid #1E1D2A', maxHeight: '520px' }}>
+                style={{ background: '#15130f', border: '1px solid #2a241b', maxHeight: '520px' }}>
 
                 {/* Table header */}
-                <div className="flex items-center gap-3 pb-4" style={{ borderBottom: '1px solid #1E1D2A' }}>
+                <div className="flex items-center gap-3 pb-4" style={{ borderBottom: '1px solid #2a241b' }}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.25)' }}>
+                    style={{ background: 'rgba(201, 169, 97, 0.12)', border: '1px solid rgba(201, 169, 97, 0.25)' }}>
                     <span style={{ fontSize: '18px' }}>🔮</span>
                   </div>
                   <div className="min-w-0">
-                    <p className="font-black truncate" style={{ color: '#C9A84C' }}>
+                    <p className="font-black truncate" style={{ color: '#c9a961' }}>
                       {selectedTable.userData?.customName || selectedTable.objectId}
                     </p>
-                    <p className="text-xs" style={{ color: '#9B96A8' }}>
+                    <p className="text-xs" style={{ color: '#8b847a' }}>
                       {selectedTable.userData?.maxCapacity ? `${selectedTable.userData.maxCapacity} seats · ` : ''}
                       {selectedTable.userData?.realView?.photoUrl ? '360° attached' : 'No 360° yet'}
                     </p>
@@ -864,16 +864,16 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
 
                 {/* Capture with phone */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#8b847a' }}>
                     Capture On-Site
                   </label>
                   <button
                     onClick={openPhoneCapture}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all"
                     style={{
-                      background: 'rgba(201,168,76,0.12)',
-                      border: '1px solid rgba(201,168,76,0.4)',
-                      color: '#C9A84C',
+                      background: 'rgba(201, 169, 97, 0.12)',
+                      border: '1px solid rgba(201, 169, 97, 0.4)',
+                      color: '#c9a961',
                     }}
                   >
                     📱 Capture with Phone
@@ -885,7 +885,7 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
 
                 {/* Photo upload zone */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#9B96A8' }}>
+                  <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#8b847a' }}>
                     Or Upload Existing 360° Photo
                   </label>
 
@@ -894,11 +894,11 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={previewUrl} alt="360 preview" className="w-full h-full object-cover" />
                       <div className="absolute inset-0 flex items-end p-2 gap-2"
-                        style={{ background: 'linear-gradient(to top, rgba(12,11,16,0.9) 0%, transparent 60%)' }}>
+                        style={{ background: 'linear-gradient(to top, rgba(10, 9, 8, 0.9) 0%, transparent 60%)' }}>
                         <button
                           onClick={() => fileInputRef.current?.click()}
                           className="px-3 py-1.5 rounded-lg text-xs font-semibold"
-                          style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#F5F0E8' }}
+                          style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#f5efe3' }}
                         >
                           Replace
                         </button>
@@ -920,14 +920,14 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                         height: '160px',
                         border: '2px dashed #2E2D3A',
                         background: 'rgba(255,255,255,0.02)',
-                        color: '#9B96A8',
+                        color: '#8b847a',
                         cursor: uploading ? 'wait' : 'pointer',
                       }}
                     >
                       {uploading ? (
                         <>
                           <div className="w-6 h-6 border-2 rounded-full animate-spin"
-                            style={{ borderColor: '#C9A84C', borderTopColor: 'transparent' }} />
+                            style={{ borderColor: '#c9a961', borderTopColor: 'transparent' }} />
                           <span className="text-sm">Uploading…</span>
                         </>
                       ) : (
@@ -954,16 +954,16 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                 {/* Heading slider */}
                 <div>
                   <label className="flex items-center justify-between text-xs font-bold uppercase tracking-widest mb-2"
-                    style={{ color: '#9B96A8' }}>
+                    style={{ color: '#8b847a' }}>
                     <span>Camera Heading</span>
-                    <span style={{ color: '#C9A84C', fontFamily: 'monospace' }}>{heading}°</span>
+                    <span style={{ color: '#c9a961', fontFamily: 'monospace' }}>{heading}°</span>
                   </label>
                   <input
                     type="range" min={0} max={359}
                     value={heading}
                     onChange={e => setHeading(Number(e.target.value))}
                     className="w-full"
-                    style={{ accentColor: '#C9A84C' }}
+                    style={{ accentColor: '#c9a961' }}
                   />
                   <p className="text-xs mt-1 leading-snug" style={{ color: '#555' }}>
                     Rotate until the photo centre faces the restaurant entrance.
@@ -976,12 +976,12 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                   onClick={handleSave}
                   disabled={saving}
                   className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
-                  style={{ background: '#C9A84C', color: '#0C0B10', opacity: saving ? 0.7 : 1, cursor: saving ? 'wait' : 'pointer' }}
+                  style={{ background: '#c9a961', color: '#0a0908', opacity: saving ? 0.7 : 1, cursor: saving ? 'wait' : 'pointer' }}
                 >
                   {saving ? (
                     <>
                       <div className="w-4 h-4 border-2 rounded-full animate-spin"
-                        style={{ borderColor: 'rgba(12,11,16,0.3)', borderTopColor: '#0C0B10' }} />
+                        style={{ borderColor: 'rgba(10, 9, 8, 0.3)', borderTopColor: '#0a0908' }} />
                       Saving…
                     </>
                   ) : previewUrl ? 'Save 360° Photo' : 'Save (remove photo)'}
@@ -1004,7 +1004,7 @@ export default function RealViewManager({ restaurantId, token, floorplans = [] }
                     });
                   }}
                   className="w-full py-2 rounded-xl text-xs font-medium"
-                  style={{ background: 'rgba(255,255,255,0.05)', color: '#9B96A8', border: '1px solid #2E2D3A' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', color: '#8b847a', border: '1px solid #2E2D3A' }}
                 >
                   Deselect
                 </button>

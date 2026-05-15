@@ -128,11 +128,11 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl my-8 overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
+          className="bg-velvet-surface rounded-3xl shadow-2xl w-full max-w-4xl my-8 overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
         >
           {/* Left Side - Content Image */}
           <div className="w-full md:w-2/5 relative overflow-hidden hidden md:block">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#141517]/80 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#15130f]/80 to-transparent z-10" />
             <Image
               src="/images/body-images/alexander-fae-TivEEYzzhik-unsplash (1).jpg"
               alt="Restaurant ambiance"
@@ -152,7 +152,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                   {[1, 2, 3].map((dot) => (
                     <motion.div 
                       key={dot}
-                      className="w-2 h-2 rounded-full bg-white/30"
+                      className="w-2 h-2 rounded-full bg-velvet-surface/30"
                       animate={{ 
                         backgroundColor: dot === 2 ? 'rgba(255, 79, 24, 0.8)' : 'rgba(255, 255, 255, 0.3)'
                       }}
@@ -172,16 +172,16 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                 animate={{ opacity: 1, x: 0 }}
                 className="flex items-center"
               >
-                <div className="w-8 h-8 bg-gradient-to-r from-[#FF4F18] to-[#FF8F6B] rounded-xl flex items-center justify-center mr-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-[#c9a961] to-[#e2c887] rounded-xl flex items-center justify-center mr-3">
                   <FontAwesomeIcon icon={faUtensils} className="text-white text-sm" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">Restaurant Portal</h2>
+                <h2 className="text-xl font-bold text-velvet-cream">Restaurant Portal</h2>
               </motion.div>
               <motion.button
                 initial={{ opacity: 0, rotate: -90 }}
                 animate={{ opacity: 1, rotate: 0 }}
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-velvet-muted hover:text-velvet-muted transition-colors"
                 whileHover={{ rotate: 90 }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -196,8 +196,8 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
               transition={{ delay: 0.1 }}
               className="mb-6"
             >
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">Create Account</h3>
-              <p className="text-gray-500 text-sm">Start managing your restaurant today</p>
+              <h3 className="text-2xl font-bold text-velvet-cream mb-1">Create Account</h3>
+              <p className="text-velvet-muted text-sm">Start managing your restaurant today</p>
             </motion.div>
 
             <form onSubmit={handleSignup} className="space-y-4">
@@ -211,7 +211,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                   <div className="relative group">
                     <FontAwesomeIcon 
                       icon={faUser} 
-                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#FF4F18] transition-colors" 
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-velvet-muted text-sm group-focus-within:text-[#c9a961] transition-colors" 
                     />
                     <input 
                       type="text" 
@@ -220,13 +220,13 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                       onChange={handleInputChange}
                       placeholder="First Name" 
                       required 
-                      className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-[#FF4F18]/20 focus:border-[#FF4F18] transition-all outline-none" 
+                      className="w-full pl-10 pr-3 py-3 text-sm bg-velvet-surface border border-velvet-border rounded-xl text-velvet-cream placeholder-velvet-muted focus:ring-2 focus:ring-[#c9a961]/20 focus:border-[#c9a961] transition-all outline-none" 
                     />
                   </div>
                   <div className="relative group">
                     <FontAwesomeIcon 
                       icon={faUser} 
-                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#FF4F18] transition-colors" 
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-velvet-muted text-sm group-focus-within:text-[#c9a961] transition-colors" 
                     />
                     <input 
                       type="text" 
@@ -235,7 +235,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                       onChange={handleInputChange}
                       placeholder="Last Name" 
                       required 
-                      className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-[#FF4F18]/20 focus:border-[#FF4F18] transition-all outline-none" 
+                      className="w-full pl-10 pr-3 py-3 text-sm bg-velvet-surface border border-velvet-border rounded-xl text-velvet-cream placeholder-velvet-muted focus:ring-2 focus:ring-[#c9a961]/20 focus:border-[#c9a961] transition-all outline-none" 
                     />
                   </div>
                 </div>
@@ -243,7 +243,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                 <div className="relative group">
                   <FontAwesomeIcon 
                     icon={faEnvelope} 
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#FF4F18] transition-colors" 
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-velvet-muted text-sm group-focus-within:text-[#c9a961] transition-colors" 
                   />
                   <input 
                     type="email" 
@@ -252,14 +252,14 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                     onChange={handleInputChange}
                     placeholder="Email" 
                     required 
-                    className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-[#FF4F18]/20 focus:border-[#FF4F18] transition-all outline-none" 
+                    className="w-full pl-10 pr-3 py-3 text-sm bg-velvet-surface border border-velvet-border rounded-xl text-velvet-cream placeholder-velvet-muted focus:ring-2 focus:ring-[#c9a961]/20 focus:border-[#c9a961] transition-all outline-none" 
                   />
                 </div>
 
                 <div className="relative group">
                   <FontAwesomeIcon 
                     icon={faPhone} 
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#FF4F18] transition-colors" 
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-velvet-muted text-sm group-focus-within:text-[#c9a961] transition-colors" 
                   />
                   <input 
                     type="tel" 
@@ -268,14 +268,14 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                     onChange={handleInputChange}
                     placeholder="Contact Number" 
                     required 
-                    className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-[#FF4F18]/20 focus:border-[#FF4F18] transition-all outline-none" 
+                    className="w-full pl-10 pr-3 py-3 text-sm bg-velvet-surface border border-velvet-border rounded-xl text-velvet-cream placeholder-velvet-muted focus:ring-2 focus:ring-[#c9a961]/20 focus:border-[#c9a961] transition-all outline-none" 
                   />
                 </div>
 
                 <div className="relative group">
                   <FontAwesomeIcon 
                     icon={faLock} 
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#FF4F18] transition-colors" 
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-velvet-muted text-sm group-focus-within:text-[#c9a961] transition-colors" 
                   />
                   <input 
                     type="password" 
@@ -284,14 +284,14 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                     onChange={handleInputChange}
                     placeholder="Password" 
                     required 
-                    className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-[#FF4F18]/20 focus:border-[#FF4F18] transition-all outline-none" 
+                    className="w-full pl-10 pr-3 py-3 text-sm bg-velvet-surface border border-velvet-border rounded-xl text-velvet-cream placeholder-velvet-muted focus:ring-2 focus:ring-[#c9a961]/20 focus:border-[#c9a961] transition-all outline-none" 
                   />
                 </div>
 
                 <div className="relative group">
                   <FontAwesomeIcon 
                     icon={faLock} 
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#FF4F18] transition-colors" 
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-velvet-muted text-sm group-focus-within:text-[#c9a961] transition-colors" 
                   />
                   <input 
                     type="password" 
@@ -300,7 +300,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                     onChange={handleInputChange}
                     placeholder="Confirm Password" 
                     required 
-                    className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-[#FF4F18]/20 focus:border-[#FF4F18] transition-all outline-none" 
+                    className="w-full pl-10 pr-3 py-3 text-sm bg-velvet-surface border border-velvet-border rounded-xl text-velvet-cream placeholder-velvet-muted focus:ring-2 focus:ring-[#c9a961]/20 focus:border-[#c9a961] transition-all outline-none" 
                   />
                 </div>
               </motion.div>
@@ -309,9 +309,9 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }} 
                   animate={{ opacity: 1, y: 0 }} 
-                  className="p-3 rounded-xl bg-red-50 border border-red-100 flex items-center text-sm"
+                  className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center text-sm"
                 >
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-500/15 flex items-center justify-center mr-3">
                     <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
@@ -323,7 +323,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
               <motion.button 
                 type="submit" 
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-[#FF4F18] to-[#FF8F6B] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#FF4F18]/20 transition-all transform disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center text-sm"
+                className="w-full py-3 bg-gradient-to-r from-[#c9a961] to-[#e2c887] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#c9a961]/20 transition-all transform disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center text-sm"
                 whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(255, 79, 24, 0.3)" }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -352,16 +352,16 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <div className="flex-grow border-t border-gray-200"></div>
-                <span className="flex-shrink mx-4 text-gray-400 text-xs">or</span>
-                <div className="flex-grow border-t border-gray-200"></div>
+                <div className="flex-grow border-t border-velvet-border"></div>
+                <span className="flex-shrink mx-4 text-velvet-muted text-xs">or</span>
+                <div className="flex-grow border-t border-velvet-border"></div>
               </motion.div>
 
               <motion.button
                 type="button"
                 onClick={handleGoogleSignup}
                 disabled={loading}
-                className="w-full py-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:shadow-lg hover:shadow-gray-200/50 transition-all transform disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center text-sm"
+                className="w-full py-3 bg-velvet-surface border border-velvet-border text-velvet-cream font-semibold rounded-xl hover:shadow-lg hover:shadow-black/40/50 transition-all transform disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center text-sm"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -373,7 +373,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
               </motion.button>
 
               <motion.p 
-                className="text-center text-gray-600 text-xs"
+                className="text-center text-velvet-muted text-xs"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
@@ -385,7 +385,7 @@ export default function RestaurantOwnerSignupModal({ isOpen, onClose, onOpenLogi
                     onClose();
                     if (onOpenLoginModal) onOpenLoginModal();
                   }}
-                  className="text-[#FF4F18] hover:text-[#FF4F18]/80 font-semibold transition-colors"
+                  className="text-[#c9a961] hover:text-[#c9a961]/80 font-semibold transition-colors"
                 >
                   Sign in here
                 </button>

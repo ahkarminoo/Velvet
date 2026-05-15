@@ -66,17 +66,17 @@ function EventsContent() {
   });
 
   return (
-    <div className="min-h-screen" style={{ background: '#0C0B10' }}>
+    <div className="min-h-screen" style={{ background: '#0a0908' }}>
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-28 pb-12 px-4" style={{ background: 'linear-gradient(180deg, #161520 0%, #0C0B10 100%)' }}>
+      <section className="pt-20 sm:pt-28 pb-8 sm:pb-12 px-4" style={{ background: 'linear-gradient(180deg, #15130f 0%, #0a0908 100%)' }}>
         <div className="max-w-5xl mx-auto text-center">
           <motion.p
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-xs font-semibold tracking-[0.3em] uppercase mb-3"
-            style={{ color: '#C9A84C' }}
+            style={{ color: '#c9a961' }}
           >
             Velvet Events
           </motion.p>
@@ -84,17 +84,17 @@ function EventsContent() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-6xl font-black tracking-tight"
-            style={{ color: '#F5F0E8', fontFamily: 'serif', lineHeight: 1.05 }}
+            className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight"
+            style={{ color: '#f5efe3', fontFamily: 'serif', lineHeight: 1.05 }}
           >
-            Upcoming <span style={{ color: '#C9A84C' }}>Events</span>
+            Upcoming <span style={{ color: '#c9a961' }}>Events</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="mt-4 text-lg max-w-xl mx-auto"
-            style={{ color: '#9B96A8' }}
+            className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg max-w-xl mx-auto px-2"
+            style={{ color: '#8b847a' }}
           >
             Discover DJ nights, live music, galas and more at the finest venues.
           </motion.p>
@@ -106,30 +106,30 @@ function EventsContent() {
             transition={{ delay: 0.3 }}
             className="mt-8 max-w-lg mx-auto relative"
           >
-            <RiSearchLine className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#C9A84C' }} />
+            <RiSearchLine className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#c9a961' }} />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search events or venues..."
-              className="w-full pl-11 pr-4 py-4 rounded-2xl text-sm outline-none"
-              style={{ background: '#161520', color: '#F5F0E8', border: '1px solid rgba(201,168,76,0.25)' }}
+              className="w-full pl-11 pr-4 py-3 sm:py-4 rounded-2xl text-base outline-none"
+              style={{ background: '#15130f', color: '#f5efe3', border: '1px solid rgba(201, 169, 97, 0.25)' }}
             />
           </motion.div>
         </div>
       </section>
 
       {/* Type filter */}
-      <div className="max-w-5xl mx-auto px-4 py-6">
-        <div className="flex gap-2 flex-wrap">
+      <div className="max-w-5xl mx-auto px-4 py-4 sm:py-6">
+        <div className="flex gap-1.5 sm:gap-2 overflow-x-auto sm:flex-wrap -mx-4 px-4 sm:mx-0 sm:px-0 pb-1 scrollbar-none">
           {EVENT_TYPES.map(et => (
             <button
               key={et.value}
               onClick={() => setTypeFilter(et.value)}
-              className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
+              className="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap flex-shrink-0"
               style={{
-                background: typeFilter === et.value ? 'rgba(201,168,76,0.15)' : '#161520',
-                color: typeFilter === et.value ? '#C9A84C' : '#9B96A8',
-                border: `1px solid ${typeFilter === et.value ? '#C9A84C' : '#1E1D2A'}`
+                background: typeFilter === et.value ? 'rgba(201, 169, 97, 0.15)' : '#15130f',
+                color: typeFilter === et.value ? '#c9a961' : '#8b847a',
+                border: `1px solid ${typeFilter === et.value ? '#c9a961' : '#2a241b'}`
               }}
             >
               {et.label}
@@ -139,17 +139,17 @@ function EventsContent() {
       </div>
 
       {/* Events grid */}
-      <div className="max-w-5xl mx-auto px-4 pb-20">
+      <div className="max-w-5xl mx-auto px-4 pb-12 sm:pb-20">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-10 h-10 rounded-full border-2 animate-spin"
-              style={{ borderColor: 'rgba(201,168,76,0.2)', borderTop: '2px solid #C9A84C' }} />
+              style={{ borderColor: 'rgba(201, 169, 97, 0.2)', borderTop: '2px solid #c9a961' }} />
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
-            <RiCalendarEventLine style={{ fontSize: '64px', color: '#1E1D2A', margin: '0 auto 16px' }} />
-            <p style={{ color: '#F5F0E8' }} className="text-xl font-semibold">No events found</p>
-            <p style={{ color: '#9B96A8' }} className="mt-2">Check back soon for upcoming events</p>
+            <RiCalendarEventLine style={{ fontSize: '64px', color: '#2a241b', margin: '0 auto 16px' }} />
+            <p style={{ color: '#f5efe3' }} className="text-xl font-semibold">No events found</p>
+            <p style={{ color: '#8b847a' }} className="mt-2">Check back soon for upcoming events</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -164,11 +164,11 @@ function EventsContent() {
                 transition={{ delay: i * 0.04 }}
                 onClick={() => router.push(`/events/${ev._id}`)}
                 className="rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                style={{ background: '#161520', border: '1px solid #1E1D2A' }}
+                style={{ background: '#15130f', border: '1px solid #2a241b' }}
               >
                 {/* Image / header */}
-                <div className="h-44 relative overflow-hidden flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #1E1D2A 0%, #0C0B10 100%)' }}>
+                <div className="h-36 sm:h-44 relative overflow-hidden flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #2a241b 0%, #0a0908 100%)' }}>
                   {ev.images?.[0] ? (
                     <img src={ev.images[0]} alt={ev.name}
                       className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500" />
@@ -178,17 +178,17 @@ function EventsContent() {
                     </span>
                   )}
                   {/* Gradient overlay */}
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(12,11,16,0.9) 0%, transparent 60%)' }} />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10, 9, 8, 0.9) 0%, transparent 60%)' }} />
 
                   {/* Badges */}
                   <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
                     <span className="text-xs px-2.5 py-1 rounded-lg font-semibold capitalize"
-                      style={{ background: 'rgba(12,11,16,0.75)', color: '#C9A84C', backdropFilter: 'blur(4px)' }}>
+                      style={{ background: 'rgba(10, 9, 8, 0.75)', color: '#c9a961', backdropFilter: 'blur(4px)' }}>
                       {ev.type?.replace(/_/g, ' ')}
                     </span>
                     {ev.coverCharge > 0 ? (
                       <span className="text-xs px-2.5 py-1 rounded-lg font-bold"
-                        style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C', border: '1px solid rgba(201,168,76,0.4)', backdropFilter: 'blur(4px)' }}>
+                        style={{ background: 'rgba(201, 169, 97, 0.2)', color: '#c9a961', border: '1px solid rgba(201, 169, 97, 0.4)', backdropFilter: 'blur(4px)' }}>
                         ฿{ev.coverCharge}
                       </span>
                     ) : (
@@ -210,27 +210,27 @@ function EventsContent() {
                 </div>
 
                 <div className="p-4">
-                  <h3 className="font-black text-base leading-tight mb-1 line-clamp-1" style={{ color: '#F5F0E8' }}>{ev.name}</h3>
+                  <h3 className="font-black text-base leading-tight mb-1 line-clamp-1" style={{ color: '#f5efe3' }}>{ev.name}</h3>
 
                   {ev.venueId && (
                     <div className="flex items-center gap-1.5 mb-3">
-                      <RiMapPinLine style={{ color: '#9B96A8', fontSize: '12px', flexShrink: 0 }} />
-                      <span className="text-xs truncate" style={{ color: '#9B96A8' }}>{ev.venueId.restaurantName}</span>
+                      <RiMapPinLine style={{ color: '#8b847a', fontSize: '12px', flexShrink: 0 }} />
+                      <span className="text-xs truncate" style={{ color: '#8b847a' }}>{ev.venueId.restaurantName}</span>
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between pt-3" style={{ borderTop: '1px solid #1E1D2A' }}>
+                  <div className="flex items-center justify-between pt-3" style={{ borderTop: '1px solid #2a241b' }}>
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1.5">
-                        <RiCalendarEventLine style={{ color: '#C9A84C', fontSize: '12px' }} />
-                        <span className="text-xs font-medium" style={{ color: '#9B96A8' }}>{formatDate(ev.date)}</span>
+                        <RiCalendarEventLine style={{ color: '#c9a961', fontSize: '12px' }} />
+                        <span className="text-xs font-medium" style={{ color: '#8b847a' }}>{formatDate(ev.date)}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <RiTimeLine style={{ color: '#C9A84C', fontSize: '12px' }} />
-                        <span className="text-xs font-medium" style={{ color: '#9B96A8' }}>{ev.startTime}</span>
+                        <RiTimeLine style={{ color: '#c9a961', fontSize: '12px' }} />
+                        <span className="text-xs font-medium" style={{ color: '#8b847a' }}>{ev.startTime}</span>
                       </div>
                     </div>
-                    <span className="text-xs font-bold" style={{ color: '#C9A84C' }}>→</span>
+                    <span className="text-xs font-bold" style={{ color: '#c9a961' }}>→</span>
                   </div>
                 </div>
               </motion.div>
@@ -246,9 +246,9 @@ function EventsContent() {
 export default function EventsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0C0B10' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0908' }}>
         <div className="w-10 h-10 rounded-full border-2 animate-spin"
-          style={{ borderColor: 'rgba(201,168,76,0.2)', borderTop: '2px solid #C9A84C' }} />
+          style={{ borderColor: 'rgba(201, 169, 97, 0.2)', borderTop: '2px solid #c9a961' }} />
       </div>
     }>
       <EventsContent />

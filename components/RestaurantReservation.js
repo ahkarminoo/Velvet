@@ -145,7 +145,7 @@ export default function RestaurantReservation({ restaurantId }) {
       case 'completed':
         return 'bg-blue-100 text-blue-800 border border-blue-300';
       default:
-        return 'bg-gray-100 text-gray-800 border border-gray-300';
+        return 'bg-velvet-surface text-velvet-cream border border-velvet-border';
     }
   };
 
@@ -264,28 +264,28 @@ export default function RestaurantReservation({ restaurantId }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 max-h-[calc(100vh-200px)] flex flex-col">
+    <div className="bg-velvet-surface rounded-xl shadow-md p-6 max-h-[calc(100vh-200px)] flex flex-col">
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <div className="bg-[#FF4F18]/10 rounded-lg p-4">
-          <h3 className="text-[#FF4F18] font-semibold">Total Bookings</h3>
-          <p className="text-2xl font-bold text-[#FF4F18]">{stats.total}</p>
+        <div className="bg-[#c9a961]/10 rounded-lg p-4">
+          <h3 className="text-[#c9a961] font-semibold">Total Bookings</h3>
+          <p className="text-2xl font-bold text-[#c9a961]">{stats.total}</p>
         </div>
-        <div className="bg-[#FF4F18]/10 rounded-lg p-4">
-          <h3 className="text-[#FF4F18] font-semibold">Confirmed</h3>
-          <p className="text-2xl font-bold text-[#FF4F18]">{stats.confirmed}</p>
+        <div className="bg-[#c9a961]/10 rounded-lg p-4">
+          <h3 className="text-[#c9a961] font-semibold">Confirmed</h3>
+          <p className="text-2xl font-bold text-[#c9a961]">{stats.confirmed}</p>
         </div>
-        <div className="bg-[#FF4F18]/10 rounded-lg p-4">
-          <h3 className="text-[#FF4F18] font-semibold">Pending</h3>
-          <p className="text-2xl font-bold text-[#FF4F18]">{stats.pending}</p>
+        <div className="bg-[#c9a961]/10 rounded-lg p-4">
+          <h3 className="text-[#c9a961] font-semibold">Pending</h3>
+          <p className="text-2xl font-bold text-[#c9a961]">{stats.pending}</p>
         </div>
-        <div className="bg-[#FF4F18]/10 rounded-lg p-4">
-          <h3 className="text-[#FF4F18] font-semibold">Cancelled</h3>
-          <p className="text-2xl font-bold text-[#FF4F18]">{stats.cancelled}</p>
+        <div className="bg-[#c9a961]/10 rounded-lg p-4">
+          <h3 className="text-[#c9a961] font-semibold">Cancelled</h3>
+          <p className="text-2xl font-bold text-[#c9a961]">{stats.cancelled}</p>
         </div>
-        <div className="bg-[#FF4F18]/10 rounded-lg p-4">
-          <h3 className="text-[#FF4F18] font-semibold">Completed</h3>
-          <p className="text-2xl font-bold text-[#FF4F18]">{stats.completed}</p>
+        <div className="bg-[#c9a961]/10 rounded-lg p-4">
+          <h3 className="text-[#c9a961] font-semibold">Completed</h3>
+          <p className="text-2xl font-bold text-[#c9a961]">{stats.completed}</p>
         </div>
       </div>
 
@@ -295,12 +295,12 @@ export default function RestaurantReservation({ restaurantId }) {
           type="date"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF4F18] focus:border-transparent"
+          className="px-4 py-2 border border-velvet-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c9a961] focus:border-transparent"
         />
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF4F18] focus:border-transparent"
+          className="px-4 py-2 border border-velvet-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c9a961] focus:border-transparent"
         >
           <option value="all">All Status</option>
           <option value="pending">Pending</option>
@@ -311,7 +311,7 @@ export default function RestaurantReservation({ restaurantId }) {
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF4F18] focus:border-transparent"
+          className="px-4 py-2 border border-velvet-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c9a961] focus:border-transparent"
         >
           <option value="today">Today</option>
           <option value="week">This Week</option>
@@ -342,7 +342,7 @@ export default function RestaurantReservation({ restaurantId }) {
               <button
                 onClick={handleBulkAction}
                 disabled={!bulkAction}
-                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
+                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-velvet-muted disabled:cursor-not-allowed transition-all"
               >
                 Apply Action
               </button>
@@ -351,7 +351,7 @@ export default function RestaurantReservation({ restaurantId }) {
                   setSelectedBookings(new Set());
                   setBulkAction('');
                 }}
-                className="px-4 py-2 bg-gray-500 text-white text-sm font-medium rounded-lg hover:bg-gray-600 transition-all"
+                className="px-4 py-2 bg-velvet-muted text-white text-sm font-medium rounded-lg hover:bg-velvet-border transition-all"
               >
                 Clear Selection
               </button>
@@ -363,77 +363,77 @@ export default function RestaurantReservation({ restaurantId }) {
       {/* Table Layout - Added overflow handling */}
       <div className="flex-1 overflow-y-auto">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-velvet-border">
+            <thead className="bg-velvet-surface">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#111827] uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#0a0908] uppercase tracking-wider">
                   <input
                     type="checkbox"
                     checked={selectedBookings.size === bookings.length && bookings.length > 0}
                     onChange={selectAllBookings}
-                    className="rounded border-gray-300 text-[#FF4F18] focus:ring-[#FF4F18]"
+                    className="rounded border-velvet-border text-[#c9a961] focus:ring-[#c9a961]"
                   />
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#111827] uppercase tracking-wider">Customer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#111827] uppercase tracking-wider">Contact</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#111827] uppercase tracking-wider">Table</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#111827] uppercase tracking-wider">Date & Time</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#111827] uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#111827] uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#0a0908] uppercase tracking-wider">Customer</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#0a0908] uppercase tracking-wider">Contact</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#0a0908] uppercase tracking-wider">Table</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#0a0908] uppercase tracking-wider">Date & Time</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#0a0908] uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#0a0908] uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-velvet-surface divide-y divide-velvet-border">
               {filteredBookings.map((booking) => (
                 <motion.tr
                   key={booking._id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="hover:bg-gray-50"
+                  className="hover:bg-velvet-surface"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <input
                       type="checkbox"
                       checked={selectedBookings.has(booking._id)}
                       onChange={() => toggleBookingSelection(booking._id)}
-                      className="rounded border-gray-300 text-[#FF4F18] focus:ring-[#FF4F18]"
+                      className="rounded border-velvet-border text-[#c9a961] focus:ring-[#c9a961]"
                     />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <RiUserLine className="text-[#FF4F18] mr-2" />
-                      <div className="text-sm font-medium text-[#111827]">{booking.customerName}</div>
+                      <RiUserLine className="text-[#c9a961] mr-2" />
+                      <div className="text-sm font-medium text-[#0a0908]">{booking.customerName}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-[#111827]">
+                    <div className="text-sm text-[#0a0908]">
                       <div className="flex items-center mb-1">
-                        <RiPhoneLine className="text-[#FF4F18] mr-2" />
+                        <RiPhoneLine className="text-[#c9a961] mr-2" />
                         {booking.customerPhone}
                       </div>
                       <div className="flex items-center">
-                        <RiMailLine className="text-[#FF4F18] mr-2" />
+                        <RiMailLine className="text-[#c9a961] mr-2" />
                         {booking.customerEmail}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2">
-                      <div className="bg-[#FF4F18] text-white px-3 py-1 rounded-lg text-sm font-bold">
+                      <div className="bg-[#c9a961] text-white px-3 py-1 rounded-lg text-sm font-bold">
                         {booking.tableId || 'N/A'}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-velvet-muted">
                         {booking.guestCount} {booking.guestCount === 1 ? 'guest' : 'guests'}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-[#111827]">
+                    <div className="text-sm text-[#0a0908]">
                       <div className="flex items-center mb-1">
-                        <RiCalendarLine className="text-[#FF4F18] mr-2" />
+                        <RiCalendarLine className="text-[#c9a961] mr-2" />
                         {format(parseISO(booking.date), 'MMM dd, yyyy')}
                       </div>
                       <div className="flex items-center">
-                        <RiTimeLine className="text-[#FF4F18] mr-2" />
+                        <RiTimeLine className="text-[#c9a961] mr-2" />
                         {`${booking.startTime} - ${booking.endTime}`}
                       </div>
                     </div>
@@ -457,7 +457,7 @@ export default function RestaurantReservation({ restaurantId }) {
                             e.target.value = ''; // Reset selection
                           }
                         }}
-                        className="px-2 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF4F18] focus:border-transparent text-xs text-black bg-white"
+                        className="px-2 py-1.5 border border-velvet-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c9a961] focus:border-transparent text-xs text-black bg-velvet-surface"
                       >
                         <option value="">Quick Actions</option>
                         {booking.status === 'pending' && (
@@ -506,7 +506,7 @@ export default function RestaurantReservation({ restaurantId }) {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleBookingAction(booking._id, 'complete')}
-                            className="px-2 py-1 bg-[#FF4F18] text-white text-xs font-medium rounded hover:bg-[#FF4F18]/90 transition-all flex items-center gap-1"
+                            className="px-2 py-1 bg-[#c9a961] text-white text-xs font-medium rounded hover:bg-[#c9a961]/90 transition-all flex items-center gap-1"
                             title="Mark as Completed"
                           >
                             <FaCheckCircle className="w-3 h-3" />
@@ -527,7 +527,7 @@ export default function RestaurantReservation({ restaurantId }) {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleDeleteBooking(booking._id)}
-                          className="px-2 py-1 bg-gray-600 text-white text-xs font-medium rounded hover:bg-gray-700 transition-all flex items-center gap-1"
+                          className="px-2 py-1 bg-velvet-border text-white text-xs font-medium rounded hover:bg-velvet-border transition-all flex items-center gap-1"
                           title="Delete Booking"
                         >
                           <FaTrash className="w-3 h-3" />
@@ -545,8 +545,8 @@ export default function RestaurantReservation({ restaurantId }) {
       {/* Loading Indicator */}
       {loading && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center">
-          <div className="p-4 rounded-lg bg-white shadow-lg">
-            <FaSpinner className="w-8 h-8 text-[#FF4F18] animate-spin" />
+          <div className="p-4 rounded-lg bg-velvet-surface shadow-lg">
+            <FaSpinner className="w-8 h-8 text-[#c9a961] animate-spin" />
           </div>
         </div>
       )}

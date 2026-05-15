@@ -119,7 +119,7 @@ export default function OwnerProfile() {
 
   if (loading) {
     return (
-      <div className="min-h-[500px] bg-gradient-to-br from-[#2D3436] to-[#1A1C1E] rounded-3xl shadow-xl p-8 flex items-center justify-center">
+      <div className="min-h-[500px] bg-gradient-to-br from-[#2a241b] to-[#15130f] rounded-3xl shadow-xl p-8 flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     )
@@ -127,7 +127,7 @@ export default function OwnerProfile() {
 
   if (!ownerData) {
     return (
-      <div className="min-h-[500px] bg-gradient-to-br from-[#2D3436] to-[#1A1C1E] rounded-3xl shadow-xl p-8 flex items-center justify-center">
+      <div className="min-h-[500px] bg-gradient-to-br from-[#2a241b] to-[#15130f] rounded-3xl shadow-xl p-8 flex items-center justify-center">
         <div className="text-white text-xl">Failed to load profile</div>
       </div>
     )
@@ -135,10 +135,10 @@ export default function OwnerProfile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 text-black">
-      <h2 className="text-xl font-semibold text-[#141517] mb-6">Owner Profile</h2>
+      <h2 className="text-xl font-semibold text-[#15130f] mb-6">Owner Profile</h2>
       
       <div className="relative w-32 h-32 mx-auto mb-8">
-        <div className="relative h-full w-full rounded-full overflow-hidden border-4 border-[#FF4F18] shadow-lg">
+        <div className="relative h-full w-full rounded-full overflow-hidden border-4 border-[#c9a961] shadow-lg">
           {profileImage ? (
             <Image
               src={profileImage}
@@ -147,14 +147,14 @@ export default function OwnerProfile() {
               className="object-cover"
             />
           ) : (
-            <div className="h-full bg-[#F8FAFC] flex items-center justify-center">
-              <RiUserLine className="text-4xl text-[#64748B]" />
+            <div className="h-full bg-[#15130f] flex items-center justify-center">
+              <RiUserLine className="text-4xl text-[#8b847a]" />
             </div>
           )}
         </div>
         <button
           onClick={() => document.getElementById('profileImage').click()}
-          className="absolute bottom-0 right-0 p-2 rounded-full bg-[#FF4F18] text-white hover:opacity-90 transition-all duration-200"
+          className="absolute bottom-0 right-0 p-2 rounded-full bg-[#c9a961] text-white hover:opacity-90 transition-all duration-200"
         >
           <RiCameraLine className="text-xl" />
         </button>
@@ -205,7 +205,7 @@ export default function OwnerProfile() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-2 rounded-lg bg-[#FF4F18] text-white hover:opacity-90 transition-all duration-200"
+            className="px-6 py-2 rounded-lg bg-[#c9a961] text-white hover:opacity-90 transition-all duration-200"
           >
             Save Changes
           </button>
@@ -217,7 +217,7 @@ export default function OwnerProfile() {
 
 const FormField = ({ label, name, value, onChange, type = 'text', required = false }) => (
   <div>
-    <label className="block text-sm font-medium text-[#64748B] mb-2">
+    <label className="block text-sm font-medium text-[#8b847a] mb-2">
       {label}
     </label>
     <input
@@ -226,7 +226,7 @@ const FormField = ({ label, name, value, onChange, type = 'text', required = fal
       value={value}
       onChange={onChange}
       required={required}
-      className="w-full px-4 py-2 rounded-lg border border-[#E2E8F0] focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200"
+      className="w-full px-4 py-2 rounded-lg border border-[#2a241b] focus:border-[#c9a961] focus:ring-1 focus:ring-[#c9a961] outline-none transition-all duration-200"
     />
   </div>
 )
